@@ -1,3 +1,4 @@
+import json
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -5,7 +6,7 @@ from django.utils.translation import gettext as _
 # Create your models here.
 
 def profile_picture_dir(instance, filename):
-    return '{0}/{1}/{2}'.format(instance.user.user_type, instance.user.username, filename)
+    return '{0}/{1}/{2}/{3}'.format('media', instance.user.user_type, instance.user.username, filename)
 
 
 class Department(models.Model):
@@ -24,4 +25,19 @@ class Student(models.Model):
     placement_location = models.ForeignKey("industry_based_supervisor.PlacementCentre", verbose_name=_("Placement Location"), null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
+        # return json.dumps(dict(self))
         return self.user.username
+    
+    # @property
+    # def stdDetails(self):
+    #     std = {
+    #         'user': self.user,
+    #         'profile_pic': self.profile_pic,
+    #         'department_id': self.department_id,
+    #         'phone_no': self.phone_no,
+    #         'school_based_supervisor': self.school_based_supervisor,
+    #         'industry_based_supervisor': self.industry_based_supervisor,
+    #         'placement_location': self.placement_location
+    #     }
+
+    #     return std

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:siwes/models/entry_date_response.dart';
 import 'package:siwes/models/ind_std_list.dart';
 import 'package:siwes/models/login_response.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +11,7 @@ import 'package:siwes/models/user_response.dart';
 import 'package:siwes/models/week_dates_response.dart';
 
 import 'package:siwes/services/urls.dart';
+import 'package:siwes/utils/defaultText.dart';
 
 class RemoteServices {
   //login
@@ -102,5 +105,20 @@ class RemoteServices {
     }
 
     return <IndStdList>[];
+  }
+
+  //Entry Date
+  Future<List<EntryDateResponse>?> getEntryDate(context) async {
+    try {
+      http.Response response = await http.get(entryDateUrl);
+      if (response.statusCode == 200) {
+        return entryDateResponseFromJson(response.body);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: DefaultText(size: 15.0, text: "Server Error: $e")));
+    }
+
+    return null;
   }
 }

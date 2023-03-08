@@ -89,6 +89,21 @@ class LogbookEntryView(ListCreateAPIView):
             return qs.filter(student = self.request.user.student)
         except:
             return None
+        
+class LogbookWithDate(ListAPIView):
+    serializer_class = LogbookEntrySerializer
+
+    def get_queryset(self, *args, **kwargs):
+        qs = LogbookEntry.objects.all()
+        date = self.kwargs['date']
+        # date = self.request.query_params.get(kwargs)
+        # print(str(date))
+        if date:
+            qs = qs.filter(entry_date__date = date)
+        elif date is None:
+            return LogbookEntry.objects.none()
+        return qs
+    
 
 
 @api_view(['GET'])

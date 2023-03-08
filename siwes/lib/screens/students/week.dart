@@ -16,14 +16,8 @@ class WeekPage extends StatefulWidget {
 }
 
 class _WeekPageState extends State<WeekPage> {
-  List<DateTime> getDaysInWeek(DateTime start_date, DateTime end_date) {
-    List<DateTime> days = [];
-    for (var i = 0; i <= end_date.difference(start_date).inDays; i++) {
-      days.add(start_date.add(Duration(days: i)));
-    }
 
-    return days;
-  }
+    
 
   DateTime dt = DateTime.now();
 
@@ -35,7 +29,7 @@ class _WeekPageState extends State<WeekPage> {
     // print(routeData);
 
     List<DateTime> days =
-        getDaysInWeek(routeData['week_start'], routeData['week_end']);
+        Constants().getDaysInWeek(routeData['week_start'], routeData['week_end']);
 
     return Scaffold(
       drawer: Navbar(),

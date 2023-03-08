@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:siwes/models/entry_date_response.dart';
 import 'package:siwes/screens/industry_supervisor/navbar.dart';
+import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultButton.dart';
 import 'package:siwes/utils/defaultContainer.dart';
@@ -14,10 +16,24 @@ class StudentLogDays extends StatefulWidget {
 }
 
 class _StudentLogDaysState extends State<StudentLogDays> {
+  List<EntryDateResponse>? entryD, entD = [];
+
+  Future<List<EntryDateResponse>?> _getEntryDate() async {
+    entryD = await RemoteServices().getEntryDate(context);
+    if (entryD != null) {
+      setState(() {
+        entD = [...entD!, ...entryD!];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    List<DateTime> days = Constants()
+        .getDaysInWeek(routeData['week_start'], routeData['week_end']);
 
     print(routeData);
     return Scaffold(
@@ -35,23 +51,44 @@ class _StudentLogDaysState extends State<StudentLogDays> {
               DefaultText(
                   size: 18.0,
                   text:
-                      "Logbook Report for ${routeData['std_fname']} - ${routeData['std_lname']}"),
+                      "Logbook Report for ${routeData['std_fname']} ${routeData['std_lname']}"),
               const SizedBox(height: 20.0),
               Wrap(
                 spacing: 20.0, // gap between adjacent chips
                 runSpacing: 30.0, // gap between lines
-                children: const <Widget>[
-                  DefaultContainer(
-                      title: "Day 1",
-                      subtitle: "status",
-                      route: 'route',
-                      div_width: 2.4),
-                  DefaultContainer(
-                      title: "Day 1",
-                      subtitle: "status",
-                      route: 'route',
-                      div_width: 2.4),
-                ],
+                children: List.generate(
+                  days.length,
+                  (index) => Container(
+                    width: MediaQuery.of(context).size.width / 2.4,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      color: Colors.white,
+                    ),
+                    child: ListTile(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/entryDate', arguments: {
+                          'date':
+                              "${days[index].day}/${days[index].month}/${days[index].year}"
+                        });
+                      },
+                      title: DefaultText(
+                        size: 18,
+                        text: "Day $index",
+                        color: Colors.green,
+                        weight: FontWeight.w500,
+                      ),
+                      subtitle: DefaultText(
+                        size: 15,
+                        text:
+                            "${days[index].day}/${days[index].month}/${days[index].year}"
+                                .toString(),
+                        color: Colors.green,
+                        weight: FontWeight.w500,
+                      ),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 20.0),
               const DefaultTextFormField(

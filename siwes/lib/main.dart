@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siwes/onboard.dart';
 import 'package:siwes/screens/industry_supervisor/comment.dart';
 import 'package:siwes/screens/industry_supervisor/dashboard.dart';
+import 'package:siwes/screens/industry_supervisor/entry_date.dart';
 import 'package:siwes/screens/industry_supervisor/placement_centre.dart';
 import 'package:siwes/screens/industry_supervisor/student_log.dart';
 import 'package:siwes/screens/industry_supervisor/student_log_days.dart';
@@ -58,12 +59,15 @@ Route<dynamic> _getRoutes(RouteSettings settings) {
 
     case "/logEntry":
       return _buildRoute(settings, LogEntry(settings.arguments));
-    
+
     case "/studentLog":
       return _buildRoute(settings, StudentLog(settings.arguments));
 
     case "/studentLogDays":
       return _buildRoute(settings, StudentLogDays(settings.arguments));
+
+    case "/entryDate":
+      return _buildRoute(settings, EntryDate(settings.arguments));
 
     default:
       return _buildRoute(settings, OnBoard());

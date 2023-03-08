@@ -70,7 +70,7 @@ class Navbar extends StatelessWidget {
                   ),
                   title: Text(_activities[index]),
                   onTap: () {
-                    Navigator.popAndPushNamed(context, _onTap[index]);
+                    Navigator.pushReplacementNamed(context, _onTap[index]);
                   },
                 );
               }),

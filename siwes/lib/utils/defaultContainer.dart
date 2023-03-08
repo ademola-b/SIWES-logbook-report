@@ -25,14 +25,13 @@ class DefaultContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-
     return Container(
       width: MediaQuery.of(context).size.width / div_width,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
         color: Colors.white,
       ),
+      margin: const EdgeInsets.only(bottom: 10.0),
       child: ListTile(
         onTap: () {
           Navigator.pushNamed(context, route, arguments: {
@@ -41,6 +40,7 @@ class DefaultContainer extends StatelessWidget {
             'week_end': weekEnd,
           });
         },
+        
         leading: leading,
         title: DefaultText(
           size: 15,

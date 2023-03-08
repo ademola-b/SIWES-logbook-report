@@ -11,7 +11,7 @@ class ProgramDateSerializer(serializers.ModelSerializer):
 class WeekDateSerializer(serializers.ModelSerializer):
     class Meta:
         model = WeekDates
-        fields = ['start_date', 'end_date']
+        fields = ['id','start_date', 'end_date']
 
 class WeekCommentSerializer(serializers.ModelSerializer):
     class Meta:

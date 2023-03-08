@@ -93,7 +93,7 @@ class _WeekPageState extends State<WeekPage> {
                   child: Wrap(
                     spacing: 20.0,
                     runSpacing: 20.0,
-                    children: List.generate(days.length ?? 0, (index) {
+                    children: List.generate(days.length, (index) {
                       return Container(
                         width: MediaQuery.of(context).size.width / 2.4,
                         decoration: const BoxDecoration(

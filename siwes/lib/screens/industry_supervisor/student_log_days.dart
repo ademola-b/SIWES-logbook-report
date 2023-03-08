@@ -16,6 +16,10 @@ class StudentLogDays extends StatefulWidget {
 class _StudentLogDaysState extends State<StudentLogDays> {
   @override
   Widget build(BuildContext context) {
+    final routeData =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    print(routeData);
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
       drawer: Navbar(),
@@ -28,8 +32,10 @@ class _StudentLogDaysState extends State<StudentLogDays> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const DefaultText(
-                  size: 18.0, text: "Logbook Report for Student's Name"),
+              DefaultText(
+                  size: 18.0,
+                  text:
+                      "Logbook Report for ${routeData['std_fname']} - ${routeData['std_lname']}"),
               const SizedBox(height: 20.0),
               Wrap(
                 spacing: 20.0, // gap between adjacent chips

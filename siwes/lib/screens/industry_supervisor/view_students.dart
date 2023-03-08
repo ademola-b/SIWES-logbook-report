@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:siwes/models/ind_std_list.dart';
 import 'package:siwes/screens/industry_supervisor/navbar.dart';
+import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultText.dart';
 
@@ -13,6 +15,24 @@ class IndStudent extends StatefulWidget {
 }
 
 class _IndStudentState extends State<IndStudent> {
+  List<IndStdList>? indStd = [];
+
+  Future<List<IndStdList>?> _getIndStdList() async {
+    List<IndStdList>? stdL = await RemoteServices().getIndStdList();
+    if (stdL != null) {
+      setState(() {
+        indStd = [...indStd!, ...stdL];
+      });
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    _getIndStdList();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,38 +55,54 @@ class _IndStudentState extends State<IndStudent> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                      color: Colors.white,
-                    ),
-                    child: ListTile(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/studentDetails');
-                      },
-                      leading: ClipOval(
-                          child: Image.asset(
-                        "assets/images/avatar.jpg",
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                      )),
-                      title: const DefaultText(
-                        size: 18,
-                        text: "Student's Name",
-                        color: Colors.green,
-                        weight: FontWeight.w500,
-                      ),
-                      subtitle: const DefaultText(
-                        size: 15,
-                        text: "reg. no",
-                        color: Colors.green,
-                        weight: FontWeight.w500,
-                      ),
-                      trailing: const Icon(Icons.arrow_forward_ios),
-                    ),
-                  ),
+                  child: indStd!.isNotEmpty
+                      ? ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: indStd!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 10.0),
+                              width: MediaQuery.of(context).size.width,
+                              decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: Colors.white,
+                              ),
+                              child: ListTile(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, '/studentDetails');
+                                },
+                                leading: ClipOval(
+                                    child: Image.memory(
+                                  indStd![index].picMem,
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                )),
+                                title: DefaultText(
+                                  size: 18,
+                                  text:
+                                      "${indStd![index].user.firstName} ${indStd![index].user.lastName}",
+                                  color: Colors.green,
+                                  weight: FontWeight.w500,
+                                ),
+                                subtitle: DefaultText(
+                                  size: 15,
+                                  text: indStd![index].user.username,
+                                  color: Colors.green,
+                                  weight: FontWeight.w500,
+                                ),
+                                trailing: const Icon(Icons.arrow_forward_ios),
+                              ),
+                            );
+                          },
+                        )
+                      : const DefaultText(
+                          text: "No student on your supervision",
+                          size: 18.0,
+                        ),
                 ),
               )
             ],

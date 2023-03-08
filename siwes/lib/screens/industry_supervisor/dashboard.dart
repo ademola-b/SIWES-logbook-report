@@ -16,7 +16,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   String _username = "Loading...";
-  List<IndStdList>? IndStd = [];
+  List<IndStdList>? indStd = [];
 
   Future<UserResponse?> _getUser() async {
     UserResponse? user = await RemoteServices().getUser();
@@ -32,7 +32,8 @@ class _DashboardState extends State<Dashboard> {
     List<IndStdList>? stdL = await RemoteServices().getIndStdList();
     if (stdL != null) {
       setState(() {
-        IndStd = [...IndStd!, ...stdL];
+        indStd = [...indStd!, ...stdL];
+        // print(IndStd);
       });
     }
   }
@@ -100,8 +101,8 @@ class _DashboardState extends State<Dashboard> {
               Wrap(
                 spacing: 20.0,
                 runSpacing: 20.0,
-                children: List.generate(IndStd!.length, (index) {
-                  return IndStd == null
+                children: List.generate(indStd!.length, (index) {
+                  return indStd == null
                       ? const DefaultText(
                           size: 15,
                           text: "No student is under your supervision")
@@ -116,19 +117,19 @@ class _DashboardState extends State<Dashboard> {
                             onTap: () {
                               Navigator.pushNamed(context, '/studentLog',
                                   arguments: {
-                                    'username': IndStd![index].user.username
+                                    'username': indStd![index].user.username
                                   });
                             },
                             title: DefaultText(
                               size: 15,
                               text:
-                                  "${IndStd![index].user.firstName} ${IndStd![index].user.lastName}",
+                                  "${indStd![index].user.firstName} ${indStd![index].user.lastName}",
                               color: Colors.green,
                               weight: FontWeight.w500,
                             ),
                             subtitle: DefaultText(
                               size: 13,
-                              text: IndStd![index].user.username,
+                              text: indStd![index].user.username,
                               color: Colors.green,
                               weight: FontWeight.w500,
                             ),

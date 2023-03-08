@@ -7,7 +7,7 @@ class DefaultText extends StatelessWidget {
   final Color? color;
   final TextAlign? align;
 
-  const DefaultText({
+  const DefaultText( {
     Key? key,
     required this.size,
     required this.text,

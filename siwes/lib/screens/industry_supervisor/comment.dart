@@ -21,7 +21,7 @@ class _IndCommentState extends State<IndComment> {
     if (wkd != null) {
       setState(() {
         wkDates = [...wkDates, ...wkd];
-        // print(wkDates);
+        print(wkDates);
       });
     }
     return <WeekDatesResponse>[];

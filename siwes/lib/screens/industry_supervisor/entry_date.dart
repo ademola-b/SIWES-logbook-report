@@ -24,10 +24,10 @@ class _EntryDateState extends State<EntryDate> {
 
   @override
   Widget build(BuildContext context) {
-    // final routeData =
-    // ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final routeData =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    // print(routeData);
+    print(routeData);
 
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -59,8 +59,7 @@ class _EntryDateState extends State<EntryDate> {
                     const SizedBox(height: 20.0),
                     DefaultText(
                       size: 25.0,
-                      text: "Date",
-                      // "Date - ${routeData['date'].day}/${routeData['date'].month}/${routeData['date'].year}",
+                      text: "Date - ${routeData['date'].toString()}",
                       color: Constants.primaryColor,
                     ),
                   ],

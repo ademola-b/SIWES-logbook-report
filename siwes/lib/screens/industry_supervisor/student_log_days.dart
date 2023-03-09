@@ -17,23 +17,23 @@ class StudentLogDays extends StatefulWidget {
 
 class _StudentLogDaysState extends State<StudentLogDays> {
   List<EntryDateResponse>? entryD, entD = [];
-
-  Future<List<EntryDateResponse>?> _getEntryDate() async {
-    entryD = await RemoteServices().getEntryDate(context);
-    if (entryD != null) {
-      setState(() {
-        entD = [...entD!, ...entryD!];
-      });
-    }
-  }
-
+  late String _date;
+  
+  // Future<List<EntryDateResponse>?> _getEntryDate(String date) async {
+  //   entryD = await RemoteServices().getEntryDate(date, context);
+  //   if (entryD != null) {
+  //     setState(() {
+  //       entD = [...entD!, ...entryD!];
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    List<DateTime> days = Constants()
+    List<dynamic> days = Constants()
         .getDaysInWeek(routeData['week_start'], routeData['week_end']);
 
     print(routeData);
@@ -68,25 +68,28 @@ class _StudentLogDaysState extends State<StudentLogDays> {
                     child: ListTile(
                       onTap: () {
                         Navigator.pushNamed(context, '/entryDate', arguments: {
-                          'date':
-                              "${days[index].day}/${days[index].month}/${days[index].year}"
+                          'fname': routeData['std_fname'],
+                          'lname': routeData['std_lname'],
+                          'username': routeData['std_username'],
+                          'date': days[index]
+                          // "${days[index].day}/${days[index].month}/${days[index].year}"
                         });
                       },
                       title: DefaultText(
-                        size: 18,
-                        text: "Day $index",
+                        size: 15,
+                        text: "Day ${index + 1}",
                         color: Colors.green,
                         weight: FontWeight.w500,
                       ),
                       subtitle: DefaultText(
                         size: 15,
-                        text:
-                            "${days[index].day}/${days[index].month}/${days[index].year}"
-                                .toString(),
+                        text: days[index],
+                        // "${days[index].day}/${days[index].month}/${days[index].year}"
+                        // .toString(),
                         color: Colors.green,
                         weight: FontWeight.w500,
                       ),
-                      trailing: const Icon(Icons.arrow_forward_ios),
+                      // trailing: const Icon(Icons.arrow_forward_ios),
                     ),
                   ),
                 ),

@@ -16,9 +16,6 @@ class WeekPage extends StatefulWidget {
 }
 
 class _WeekPageState extends State<WeekPage> {
-
-    
-
   DateTime dt = DateTime.now();
 
   @override
@@ -28,8 +25,8 @@ class _WeekPageState extends State<WeekPage> {
 
     // print(routeData);
 
-    List<DateTime> days =
-        Constants().getDaysInWeek(routeData['week_start'], routeData['week_end']);
+    List<dynamic> days = Constants()
+        .getDaysInWeek(routeData['week_start'], routeData['week_end']);
 
     return Scaffold(
       drawer: Navbar(),

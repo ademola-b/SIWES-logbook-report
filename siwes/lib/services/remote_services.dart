@@ -108,9 +108,9 @@ class RemoteServices {
   }
 
   //Entry Date
-  Future<List<EntryDateResponse>?> getEntryDate(context) async {
+  Future<List<EntryDateResponse>?> getEntryDate(String date, context) async {
     try {
-      http.Response response = await http.get(entryDateUrl);
+      http.Response response = await http.get(Uri.parse("$base_url/api/entry_date/$date"));
       if (response.statusCode == 200) {
         return entryDateResponseFromJson(response.body);
       }

@@ -6,13 +6,14 @@ class DefaultText extends StatelessWidget {
   final FontWeight? weight;
   final Color? color;
   final TextAlign? align;
+  final FontStyle? italic;
 
   const DefaultText( {
     Key? key,
     required this.size,
     required this.text,
     this.color,
-    this.weight, this.align,
+    this.weight, this.align, this.italic,
   }) : super(key: key);
 
   @override
@@ -25,6 +26,7 @@ class DefaultText extends StatelessWidget {
         fontSize: size,
         fontWeight: weight,
         fontFamily: 'Poppins',
+        fontStyle: italic
         
       ),
     );

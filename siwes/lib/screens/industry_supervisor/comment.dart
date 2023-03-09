@@ -5,6 +5,7 @@ import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultContainer.dart';
 import 'package:siwes/utils/defaultText.dart';
+import 'package:intl/intl.dart';
 
 class IndComment extends StatefulWidget {
   const IndComment({super.key});
@@ -15,15 +16,25 @@ class IndComment extends StatefulWidget {
 
 class _IndCommentState extends State<IndComment> {
   List<WeekDatesResponse> wkDates = [];
+  List newSWkDate = [];
+  List newEWkDate = [];
 
   Future<List<WeekDatesResponse>> _getWeekDates() async {
     List<WeekDatesResponse> wkd = await RemoteServices().getWeekDates();
     if (wkd != null) {
       setState(() {
         wkDates = [...wkDates, ...wkd];
-        print(wkDates);
+        for (var date in wkDates) {
+          String newStartDate = DateFormat("yyyy-MM-dd")
+              .format(DateTime.parse(date.startDate.toString()));
+          String newEndDate = DateFormat("yyyy-MM-dd")
+              .format(DateTime.parse(date.endDate.toString()));
+          newSWkDate.add(newStartDate);
+          newEWkDate.add(newEndDate);
+        }
       });
     }
+    print("$newSWkDate - $newEWkDate");
     return <WeekDatesResponse>[];
   }
 
@@ -78,9 +89,9 @@ class _IndCommentState extends State<IndComment> {
                           ),
                           subtitle: DefaultText(
                             size: 15,
-                            text:
-                                "${wkDates[index].startDate.day}/${wkDates[index].startDate.month}/${wkDates[index].startDate.year} - ${wkDates[index].endDate.day}/${wkDates[index].endDate.month}/${wkDates[index].endDate.year}"
-                                    .toString(),
+                            text: "${newSWkDate[index]} - ${newEWkDate[index]}",
+                            // "${wkDates[index].startDate.day}/${wkDates[index].startDate.month}/${wkDates[index].startDate.year} - ${wkDates[index].endDate.day}/${wkDates[index].endDate.month}/${wkDates[index].endDate.year}"
+                            // .toString(),
                             color: Colors.green,
                             weight: FontWeight.w500,
                           ),

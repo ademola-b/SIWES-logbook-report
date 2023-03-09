@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+# from datetime import date, datetime, timedelta
 import pandas
 from itertools import zip_longest
 
@@ -50,7 +50,8 @@ class ProgramDateView(ListCreateAPIView):
 
 class WeekDatesView(ListAPIView):
     queryset = WeekDates.objects.all()
-    serializer_class = WeekDateSerializer    
+    serializer_class = WeekDateSerializer 
+      
 
 class WeekCommentView(ListCreateAPIView):
     queryset = WeekComment.objects.all()

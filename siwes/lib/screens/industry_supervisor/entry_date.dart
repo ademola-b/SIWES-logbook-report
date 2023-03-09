@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:siwes/models/entry_date_response.dart';
+import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/screens/students/navbar.dart';
 import 'package:siwes/utils/defaultButton.dart';
@@ -19,14 +21,30 @@ class EntryDate extends StatefulWidget {
 
 class _EntryDateState extends State<EntryDate> {
   File? _image;
+  List<EntryDateResponse>? entry_Date = [];
 
-  void _submit() {}
+  late String date;
+
+  Future<List<EntryDateResponse>?> _getEntryDate(String date) async {
+    entry_Date = await RemoteServices().getEntryDate(date, context);
+    if (entry_Date != null) {
+      print(entry_Date);
+    }
+
+    return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
+    _getEntryDate(routeData['date']);
     print(routeData);
 
     Size size = MediaQuery.of(context).size;
@@ -51,16 +69,35 @@ class _EntryDateState extends State<EntryDate> {
                     borderRadius: BorderRadius.all(Radius.circular(30.0))),
                 child: Column(
                   children: [
-                    DefaultText(
-                      size: 25.0,
-                      text: "Week ".toString(),
-                      color: Constants.primaryColor,
+                    Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: DefaultText(
+                            size: 20.0,
+                            text: "${routeData['fname']} ${routeData['lname']}",
+                            color: Constants.primaryColor,
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: DefaultText(
+                            size: 15.0,
+                            text: "${routeData['username']}",
+                            color: Constants.primaryColor,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 20.0),
-                    DefaultText(
-                      size: 25.0,
-                      text: "Date - ${routeData['date'].toString()}",
-                      color: Constants.primaryColor,
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: DefaultText(
+                        size: 15.0,
+                        text: "Date: ${routeData['date'].toString()}",
+                        color: Constants.primaryColor,
+                        italic: FontStyle.italic,
+                      ),
                     ),
                   ],
                 ),

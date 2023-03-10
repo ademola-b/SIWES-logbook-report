@@ -5,6 +5,7 @@ import 'package:siwes/models/ind_std_list.dart';
 import 'package:siwes/screens/industry_supervisor/navbar.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
+import 'package:siwes/utils/defaultButton.dart';
 import 'package:siwes/utils/defaultText.dart';
 
 class IndStudent extends StatefulWidget {
@@ -104,7 +105,12 @@ class _IndStudentState extends State<IndStudent> {
                           size: 18.0,
                         ),
                 ),
-              )
+              ),
+              const SizedBox(height: 20.0),
+              SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: DefaultButton(
+                      onPressed: () {}, text: "Export", textSize: 20.0)),
             ],
           ),
         ),

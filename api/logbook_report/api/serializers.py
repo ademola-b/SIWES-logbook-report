@@ -20,6 +20,7 @@ class WeekCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = WeekComment
         fields = [
+            'id',
             'student',
             'week',
             'industry_comment',

@@ -28,8 +28,9 @@ class WeekDates(models.Model):
 class WeekComment(models.Model):
     student = models.ForeignKey("students.Student", verbose_name=_("Student Id"), on_delete=models.CASCADE)
     week = models.ForeignKey("api.WeekDates", verbose_name=_("Week Id"), null=True, on_delete=models.CASCADE)
-    industry_comment = models.CharField(_("Industry Supervisor Comment"), max_length=1000)
-    school_comment = models.CharField(_("School Supervisor Comment"), max_length=1000)
+    industry_comment = models.CharField(_("Industry Supervisor Comment"), max_length=1000, null=True, blank=True)
+    school_comment = models.CharField(_("School Supervisor Comment"), max_length=1000, null=True, blank=True)
+    
     
 
 class LogbookEntry(models.Model):

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView
 from accounts.models import CustomUser
 from api.models import LogbookEntry
 from students.models import Student
@@ -58,5 +58,6 @@ class LogbookEntryView(ListAPIView):
         #     LogbookEntry.objects.filter(student__industry_based_supervisor = request.user.industrysupervisor)
         return qs.filter(student__industry_based_supervisor = request.user.industrysupervisor)
         
-    
+class WeekComment(CreateAPIView):
+    pass
     

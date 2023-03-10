@@ -18,7 +18,7 @@ class StudentLogDays extends StatefulWidget {
 class _StudentLogDaysState extends State<StudentLogDays> {
   List<EntryDateResponse>? entryD, entD = [];
   late String _date;
-  
+
   // Future<List<EntryDateResponse>?> _getEntryDate(String date) async {
   //   entryD = await RemoteServices().getEntryDate(date, context);
   //   if (entryD != null) {
@@ -96,6 +96,7 @@ class _StudentLogDaysState extends State<StudentLogDays> {
               ),
               const SizedBox(height: 20.0),
               const DefaultTextFormField(
+                  label: "Industry Based Supervisor Comment",
                   maxLines: 5,
                   hintText: "Industry Based Supervisor Comment",
                   fontSize: 15.0),

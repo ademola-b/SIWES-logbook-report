@@ -1,16 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:siwes/models/entry_date_response.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/screens/students/navbar.dart';
 import 'package:siwes/utils/defaultButton.dart';
+import 'package:siwes/utils/defaultContainer.dart';
 import 'package:siwes/utils/defaultText.dart';
 import 'package:siwes/utils/defaultTextFormField.dart';
-import 'package:path/path.dart' as Path;
 
 class EntryDate extends StatefulWidget {
   const EntryDate(Object? arguments, {super.key});
@@ -22,20 +20,29 @@ class EntryDate extends StatefulWidget {
 class _EntryDateState extends State<EntryDate> {
   File? _image;
   List<EntryDateResponse>? entry_Date = [];
+  List<EntryDateResponse>? entD = [];
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descController = TextEditingController();
 
   late String date;
 
-  Future<List<EntryDateResponse>?> _getEntryDate(String date) async {
-    entry_Date = await RemoteServices().getEntryDate(date, context);
-    if (entry_Date != null) {
-      print(entry_Date);
-    }
+  // Future<List<EntryDateResponse>?> _getEntryDate(String date) async {
+  //   entry_Date = await RemoteServices().getEntryDate(date, context);
+  //   if (entry_Date != null) {
+  //     entD = entry_Date;
+  //     titleController.text = entD![0].title;
+  //     descController.text = entD![0].description;
+  //     print(entD);
+  //     // setState(() {
+  //     // });
+  //   }
 
-    return null;
-  }
+  //   return null;
+  // }
 
   @override
   void initState() {
+    // print();
     super.initState();
   }
 
@@ -44,8 +51,8 @@ class _EntryDateState extends State<EntryDate> {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    _getEntryDate(routeData['date']);
-    print(routeData);
+    // _getEntryDate(routeData['date']);
+    // print(routeData);
 
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -103,40 +110,71 @@ class _EntryDateState extends State<EntryDate> {
                 ),
               ),
               const SizedBox(height: 20),
-              Form(
-                  child: Column(
-                children: [
-                  const DefaultTextFormField(
-                    hintText: 'Title',
-                    fontSize: 15.0,
-                    enabled: false,
-                  ),
-                  const SizedBox(height: 20),
-                  const DefaultTextFormField(
-                    hintText: "Description",
-                    maxLines: 10,
-                    fontSize: 15.0,
-                    enabled: false,
-                  ),
-                  const SizedBox(height: 20.0),
-                  const DefaultText(size: 15, text: "Diagram"),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _image != null
-                            ? Image.file(
-                                _image!,
-                                width: 200,
-                                height: 200,
-                                fit: BoxFit.contain,
-                              )
-                            : const DefaultText(size: 20.0, text: "No Diagram"),
+              FutureBuilder(
+                future:
+                    RemoteServices().getEntryDate(routeData['date'], context),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data!.isEmpty) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        color: Colors.white,
                       ),
-                      const SizedBox(width: 20.0),
-                    ],
-                  ),
-                ],
-              )),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DefaultText(
+                          align: TextAlign.center,
+                          size: 20.0,
+                          text: "No entry for this date from the student",
+                          color: Constants.primaryColor,
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasData) {
+                    var data = snapshot.data;
+                    return Column(
+                      children: [
+                        DefaultTextFormField(
+                          label: "Title",
+                          hintText: 'Title',
+                          text: titleController,
+                          fontSize: 15.0,
+                          enabled: false,
+                        ),
+                        const SizedBox(height: 20),
+                        DefaultTextFormField(
+                          label: "Description",
+                          text: descController,
+                          hintText: "Description",
+                          maxLines: 10,
+                          fontSize: 15.0,
+                          enabled: false,
+                        ),
+                        const SizedBox(height: 20.0),
+                        const DefaultText(size: 15, text: "Diagram"),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _image != null
+                                  ? Image.file(
+                                      _image!,
+                                      width: 200,
+                                      height: 200,
+                                      fit: BoxFit.contain,
+                                    )
+                                  : const DefaultText(
+                                      size: 20.0, text: "No Diagram"),
+                            ),
+                            const SizedBox(width: 20.0),
+                          ],
+                        ),
+                      ],
+                    );
+                  }
+                  return const CircularProgressIndicator();
+                },
+              ),
             ],
           ),
         ),

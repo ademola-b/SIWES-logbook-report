@@ -48,6 +48,7 @@ void main() {
       '/schComment': (context) => const SchComment(),
       '/superStudentLog': (context) => const SuperStudentLog(),
       '/superStudentLogDays': (context) => const SuperStudentLogDays(),
+      // '/entryDate':(context) => EntryDate(arguments)
     },
   ));
 }

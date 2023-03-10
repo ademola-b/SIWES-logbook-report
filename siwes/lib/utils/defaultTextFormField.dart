@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siwes/utils/constants.dart';
+import 'package:siwes/utils/defaultText.dart';
 
 class DefaultTextFormField extends StatefulWidget {
   final String hintText;
@@ -10,6 +11,7 @@ class DefaultTextFormField extends StatefulWidget {
   // final Function validator;
   final bool? obscureText, enabled;
   final int? maxLines;
+  final String? label;
   // final keyboardInputType;
 
   const DefaultTextFormField(
@@ -23,7 +25,8 @@ class DefaultTextFormField extends StatefulWidget {
       this.maxLines,
       this.obscureText,
       required this.fontSize,
-      this.enabled})
+      this.enabled,
+      this.label})
       : super(key: key);
 
   @override
@@ -35,6 +38,7 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.text,
+
       enabled: widget.enabled,
       maxLines: widget.maxLines,
       // keyboardType: widget.keyboardInputType,
@@ -52,6 +56,8 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
             borderSide: BorderSide(color: Colors.white)),
         fillColor: Colors.white,
         filled: true,
+        label: DefaultText(size: 20.0, text: "${widget.label}"),
+        labelStyle: TextStyle(color: Constants.primaryColor),
         // prefixIcon: Icon(widget.icon),
         // prefixIconColor: Constants.primaryColor,
         hintText: widget.hintText,

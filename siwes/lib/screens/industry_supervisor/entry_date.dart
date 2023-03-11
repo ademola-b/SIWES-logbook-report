@@ -133,6 +133,8 @@ class _EntryDateState extends State<EntryDate> {
                     );
                   } else if (snapshot.hasData) {
                     var data = snapshot.data;
+                    titleController.text = data![0].title;
+                    descController.text = data[0].description;
                     return Column(
                       children: [
                         DefaultTextFormField(
@@ -156,9 +158,9 @@ class _EntryDateState extends State<EntryDate> {
                         Row(
                           children: [
                             Expanded(
-                              child: _image != null
-                                  ? Image.file(
-                                      _image!,
+                              child: (data[0].diagram != null)
+                                  ? Image.memory(
+                                      data[0].diagram!,
                                       width: 200,
                                       height: 200,
                                       fit: BoxFit.contain,

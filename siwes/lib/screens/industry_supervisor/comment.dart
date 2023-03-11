@@ -3,7 +3,6 @@ import 'package:siwes/models/week_dates_response.dart';
 import 'package:siwes/screens/industry_supervisor/navbar.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
-import 'package:siwes/utils/defaultContainer.dart';
 import 'package:siwes/utils/defaultText.dart';
 import 'package:intl/intl.dart';
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siwes/models/ind_std_list.dart';
+import 'package:siwes/models/week_comment_response.dart';
 import 'package:siwes/screens/industry_supervisor/navbar.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
@@ -15,6 +16,7 @@ class StudentLog extends StatefulWidget {
 
 class _StudentLogState extends State<StudentLog> {
   List<IndStdList>? indStd = [];
+  int? wkId;
 
   Future<List<IndStdList>?> _getIndStdList() async {
     List<IndStdList>? stdL = await RemoteServices().getIndStdList();
@@ -24,6 +26,16 @@ class _StudentLogState extends State<StudentLog> {
       });
     }
     return null;
+  }
+
+  Future<WeekCommentResponse?>? checkWkComment(int sid, int wkId) async {
+    WeekCommentResponse? wkResponse = await RemoteServices()
+        .getWeekComment(context: context, studentId: sid, weekId: wkId);
+
+    if (wkResponse != null) {
+      wkId = wkResponse.id!;
+      print("Week id: $wkId");
+    }
   }
 
   @override
@@ -66,6 +78,8 @@ class _StudentLogState extends State<StudentLog> {
                             itemBuilder: (context, index) {
                               return GestureDetector(
                                 onTap: () {
+                                  checkWkComment(indStd![index].id,
+                                      routeData['week_index']);
                                   Navigator.pushNamed(
                                       context, '/studentLogDays',
                                       arguments: {

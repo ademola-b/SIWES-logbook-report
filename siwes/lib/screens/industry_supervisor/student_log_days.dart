@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:siwes/models/entry_date_response.dart';
+import 'package:siwes/models/week_comment_response.dart';
 import 'package:siwes/screens/industry_supervisor/navbar.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultButton.dart';
-import 'package:siwes/utils/defaultContainer.dart';
 import 'package:siwes/utils/defaultText.dart';
 import 'package:siwes/utils/defaultTextFormField.dart';
 
@@ -18,15 +18,36 @@ class StudentLogDays extends StatefulWidget {
 class _StudentLogDaysState extends State<StudentLogDays> {
   List<EntryDateResponse>? entryD, entD = [];
   late String _date;
+  TextEditingController indComment = TextEditingController();
 
-  // Future<List<EntryDateResponse>?> _getEntryDate(String date) async {
-  //   entryD = await RemoteServices().getEntryDate(date, context);
-  //   if (entryD != null) {
-  //     setState(() {
-  //       entD = [...entD!, ...entryD!];
-  //     });
-  //   }
-  // }
+  void submitComment(int id, int wkId, String industryComment) async {
+    WeekCommentResponse? wkResponse = await RemoteServices()
+        .getWeekComment(context:context, studentId:id, weekId:wkId, industryComment:industryComment);
+    if (wkResponse != null) {
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                content: SizedBox(
+                  height: 120.0,
+                  child: Column(
+                    children: [
+                      const DefaultText(
+                        size: 20.0,
+                        text: "Comment Saved",
+                        color: Colors.green,
+                      ),
+                      const SizedBox(height: 20.0),
+                      Icon(
+                        Icons.check_circle_outline,
+                        size: 70.0,
+                        color: Constants.backgroundColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +116,8 @@ class _StudentLogDaysState extends State<StudentLogDays> {
                 ),
               ),
               const SizedBox(height: 20.0),
-              const DefaultTextFormField(
+              DefaultTextFormField(
+                  text: indComment,
                   label: "Industry Based Supervisor Comment",
                   maxLines: 5,
                   hintText: "Industry Based Supervisor Comment",
@@ -104,7 +126,15 @@ class _StudentLogDaysState extends State<StudentLogDays> {
               SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: DefaultButton(
-                      onPressed: () {}, text: "SUBMIT", textSize: 20.0))
+                      onPressed: () {
+                        submitComment(routeData['student_id'],
+                            routeData['week_index'], indComment.text);
+                        print("Student_id: ${routeData['student_id']}");
+                        print("Week_id: ${routeData['week_index']}");
+                        print("Comment: ${indComment.text}");
+                      },
+                      text: "SUBMIT",
+                      textSize: 20.0))
             ],
           ),
         ),

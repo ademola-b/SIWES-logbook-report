@@ -27,6 +27,12 @@ class WeekCommentSerializer(serializers.ModelSerializer):
             'school_comment'
         ]
 
+    def create(self, validated_data):
+        data, _ = WeekComment.objects.get_or_create(student = validated_data['student'], week = validated_data['week'])
+        print(data)
+        return data
+
+
 class LogbookEntrySerializer(serializers.ModelSerializer):
     diagram = serializers.SerializerMethodField("get_image_memory")
     student = StudentSerializer()

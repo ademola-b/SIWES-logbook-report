@@ -8,6 +8,7 @@ import 'package:siwes/models/login_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:siwes/models/student_details.dart';
 import 'package:siwes/models/user_response.dart';
+import 'package:siwes/models/week_comment_response.dart';
 import 'package:siwes/models/week_dates_response.dart';
 
 import 'package:siwes/services/urls.dart';
@@ -110,7 +111,8 @@ class RemoteServices {
   //Entry Date
   Future<List<EntryDateResponse>?> getEntryDate(String date, context) async {
     try {
-      http.Response response = await http.get(Uri.parse("$base_url/api/entry_date/$date"));
+      http.Response response =
+          await http.get(Uri.parse("$base_url/api/entry_date/$date"));
       if (response.statusCode == 200) {
         return entryDateResponseFromJson(response.body);
       }
@@ -123,5 +125,33 @@ class RemoteServices {
   }
 
   //week comment - industry supervisor
-  Future<List<>>
+  Future<WeekCommentResponse?>? getWeekComment(
+      {context, required int studentId, required int weekId, String? industryComment}) async {
+    var data = jsonEncode({
+      'student': studentId,
+      'week': weekId,
+      'industry_comment': industryComment,
+    });
+
+    try {
+      http.Response response = await http.post(wkCommentUrl,
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: data);
+      if (response.statusCode == 201) {
+        return weekCommentResponseFromJson(response.body);
+      } else {
+        throw Exception("Failed to comment on entry");
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: DefaultText(
+        size: 15.0,
+        text: "An error occured: $e",
+      )));
+    }
+
+    return null;
+  }
 }

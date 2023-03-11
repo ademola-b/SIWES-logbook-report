@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 List<EntryDateResponse> entryDateResponseFromJson(String str) => List<EntryDateResponse>.from(json.decode(str).map((x) => EntryDateResponse.fromJson(x)));
 
 String entryDateResponseToJson(List<EntryDateResponse> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
@@ -22,7 +24,7 @@ class EntryDateResponse {
     DateTime entryDate;
     String title;
     String description;
-    String diagram;
+    Uint8List? diagram;
     Student student;
 
     factory EntryDateResponse.fromJson(Map<String, dynamic> json) => EntryDateResponse(
@@ -30,7 +32,7 @@ class EntryDateResponse {
         entryDate: DateTime.parse(json["entry_date"]),
         title: json["title"],
         description: json["description"],
-        diagram: json["diagram"],
+        diagram: base64Decode(json["diagram"]),
         student: Student.fromJson(json["student"]),
     );
 

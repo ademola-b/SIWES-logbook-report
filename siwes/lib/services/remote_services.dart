@@ -159,7 +159,32 @@ class RemoteServices {
   }
 
   //update Week comment
-  Future<WeekCommentResponse?>? updateComment(context, int id) async {
+  Future<WeekCommentResponse?>? updateComment(
+      {context,
+      required int id,
+      required int studentId,
+      required int weekId,
+      String? indComment}) async {
+    var body = jsonEncode({
+      "id": id,
+      "student": studentId,
+      "week": weekId,
+      "industry_comment": indComment,
+    });
+    http.Response response = await http.put(updateEntryUrl(id),
+        headers: <String, String>{
+          'content-type': 'application/json; charset=UTF-8'
+        },
+        body: body);
+
+    if (response.statusCode == 200) {
+      return weekCommentResponseFromJson(response.body);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: DefaultText(size: 15.0, text: "Failed to update entry")));
+      // throw Exception("Failed to update entry");
+    }
+
     return null;
   }
 }

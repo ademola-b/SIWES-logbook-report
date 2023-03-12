@@ -9,7 +9,8 @@ import 'package:siwes/utils/defaultText.dart';
 import 'package:siwes/utils/defaultTextFormField.dart';
 
 class StudentLogDays extends StatefulWidget {
-  const StudentLogDays(Object? arguments, {super.key});
+  final data;
+  StudentLogDays({super.key, this.data});
 
   @override
   State<StudentLogDays> createState() => _StudentLogDaysState();
@@ -20,9 +21,13 @@ class _StudentLogDaysState extends State<StudentLogDays> {
   late String _date;
   TextEditingController? indComment = TextEditingController();
 
-  void _updateComment(int id) async {
-    WeekCommentResponse? cmResponse =
-        await RemoteServices().updateComment(context, id);
+  void _updateComment(int id, studentId, weekId, indComment) async {
+    WeekCommentResponse? cmResponse = await RemoteServices().updateComment(
+        context: context,
+        id: id,
+        studentId: studentId,
+        weekId: weekId,
+        indComment: indComment);
     if (cmResponse != null) {
       await showDialog(
           context: context,
@@ -50,11 +55,16 @@ class _StudentLogDaysState extends State<StudentLogDays> {
   }
 
   @override
+  void initState() {
+    print("from initstate - ${widget.data}");
+    indComment!.text = widget.data['indNComment'];
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
-    indComment!.text = routeData['indNComment'];
 
     List<dynamic> days = Constants()
         .getDaysInWeek(routeData['week_start'], routeData['week_end']);
@@ -130,8 +140,10 @@ class _StudentLogDaysState extends State<StudentLogDays> {
                   child: DefaultButton(
                       onPressed: () {
                         _updateComment(
-                          routeData['week_comment_id'],
-                        );
+                            routeData['week_comment_id'],
+                            routeData['student_id'],
+                            routeData['week_index'],
+                            indComment!.text);
                       },
                       text: "SUBMIT",
                       textSize: 20.0))

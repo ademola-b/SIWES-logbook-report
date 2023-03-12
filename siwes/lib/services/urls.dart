@@ -18,5 +18,11 @@ Uri indStdListUrl = Uri.parse("$base_url/api/industry_supervisor/students/");
 //industry_logbook
 Uri entryDateUrl = Uri.parse("$base_url/api/entry_date/");
 
-//weekly comment
+//weekly comment - get or create
 Uri wkCommentUrl = Uri.parse("$base_url/api/week_comment/");
+
+//update entry with date
+Uri updateEntryUrl(int id){
+  return Uri.parse("$base_url/api/week_comment/$id/update/");
+}
+

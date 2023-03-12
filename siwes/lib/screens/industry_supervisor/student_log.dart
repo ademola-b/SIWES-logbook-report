@@ -21,9 +21,11 @@ class _StudentLogState extends State<StudentLog> {
 
   Future<List<IndStdList>?> _getIndStdList() async {
     List<IndStdList>? stdL = await RemoteServices().getIndStdList();
+
     if (stdL != null) {
       setState(() {
         indStd = [...indStd!, ...stdL];
+        for (var element in indStd!) {}
       });
     }
     return null;
@@ -54,6 +56,7 @@ class _StudentLogState extends State<StudentLog> {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     print(routeData);
+
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
       drawer: Navbar(),
@@ -85,22 +88,21 @@ class _StudentLogState extends State<StudentLog> {
                                 onTap: () {
                                   checkWkComment(indStd![index].id,
                                       routeData['week_index']);
+                                  Map<String, dynamic> data = {
+                                    'week_comment_id': wkComId,
+                                    'indNComment': indNComment,
+                                    'week_index': routeData['week_index'],
+                                    'week_start': routeData['week_start'],
+                                    'week_end': routeData['week_end'],
+                                    'student_id': indStd![index].id,
+                                    'std_fname': indStd![index].user.firstName,
+                                    'std_lname': indStd![index].user.lastName,
+                                    'std_username':
+                                        indStd![index].user.username,
+                                  };
                                   Navigator.pushNamed(
                                       context, '/studentLogDays',
-                                      arguments: {
-                                        'week_comment_id': wkComId,
-                                        'indNComment': indNComment,
-                                        'week_index': routeData['week_index'],
-                                        'week_start': routeData['week_start'],
-                                        'week_end': routeData['week_end'],
-                                        'student_id': indStd![index].id,
-                                        'std_fname':
-                                            indStd![index].user.firstName,
-                                        'std_lname':
-                                            indStd![index].user.lastName,
-                                        'std_username':
-                                            indStd![index].user.username,
-                                      });
+                                      arguments: data);
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.only(bottom: 15.0),

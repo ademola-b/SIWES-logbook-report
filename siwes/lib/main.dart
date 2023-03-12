@@ -54,6 +54,7 @@ void main() {
 }
 
 Route<dynamic> _getRoutes(RouteSettings settings) {
+  final args = settings.arguments;
   switch (settings.name) {
     case "/week":
       return _buildRoute(settings, WeekPage(settings.arguments));
@@ -65,7 +66,7 @@ Route<dynamic> _getRoutes(RouteSettings settings) {
       return _buildRoute(settings, StudentLog(settings.arguments));
 
     case "/studentLogDays":
-      return _buildRoute(settings, StudentLogDays(settings.arguments));
+      return _buildRoute(settings, StudentLogDays(data: args));
 
     case "/entryDate":
       return _buildRoute(settings, EntryDate(settings.arguments));

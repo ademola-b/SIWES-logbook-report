@@ -18,12 +18,12 @@ class StudentLogDays extends StatefulWidget {
 class _StudentLogDaysState extends State<StudentLogDays> {
   List<EntryDateResponse>? entryD, entD = [];
   late String _date;
-  TextEditingController indComment = TextEditingController();
+  TextEditingController? indComment = TextEditingController();
 
-  void submitComment(int id, int wkId, String industryComment) async {
-    WeekCommentResponse? wkResponse = await RemoteServices()
-        .getWeekComment(context:context, studentId:id, weekId:wkId, industryComment:industryComment);
-    if (wkResponse != null) {
+  void _updateComment(int id) async {
+    WeekCommentResponse? cmResponse =
+        await RemoteServices().updateComment(context, id);
+    if (cmResponse != null) {
       await showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -53,6 +53,8 @@ class _StudentLogDaysState extends State<StudentLogDays> {
   Widget build(BuildContext context) {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    indComment!.text = routeData['indNComment'];
 
     List<dynamic> days = Constants()
         .getDaysInWeek(routeData['week_start'], routeData['week_end']);
@@ -117,7 +119,7 @@ class _StudentLogDaysState extends State<StudentLogDays> {
               ),
               const SizedBox(height: 20.0),
               DefaultTextFormField(
-                  text: indComment,
+                  text: indComment!,
                   label: "Industry Based Supervisor Comment",
                   maxLines: 5,
                   hintText: "Industry Based Supervisor Comment",
@@ -127,11 +129,9 @@ class _StudentLogDaysState extends State<StudentLogDays> {
                   width: MediaQuery.of(context).size.width,
                   child: DefaultButton(
                       onPressed: () {
-                        submitComment(routeData['student_id'],
-                            routeData['week_index'], indComment.text);
-                        print("Student_id: ${routeData['student_id']}");
-                        print("Week_id: ${routeData['week_index']}");
-                        print("Comment: ${indComment.text}");
+                        _updateComment(
+                          routeData['week_comment_id'],
+                        );
                       },
                       text: "SUBMIT",
                       textSize: 20.0))

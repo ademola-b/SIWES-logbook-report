@@ -5,7 +5,7 @@ from itertools import zip_longest
 from django.shortcuts import render
 
 from rest_framework.decorators import api_view
-from rest_framework.generics import ListCreateAPIView, ListAPIView
+from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateAPIView
 from rest_framework.response import Response
 
 from . models import ProgramDate, WeekDates, LogbookEntry, WeekComment
@@ -105,22 +105,62 @@ class LogbookWithDate(ListAPIView):
             return LogbookEntry.objects.none()
         return qs
     
+class UpdateEntryWithComment(RetrieveUpdateAPIView):
+    queryset = WeekComment
+    serializer_class = WeekCommentSerializer
 
 
 @api_view(['GET'])
 def get_routes(request):
     routes = [
         {
-            'Endpoint': '/api/',
+            'Endpoint': 'api/',
             'method': 'GET',
             'body': None,
             'description': 'Returns list of routes'
         },
         {
-            'Endpoint': '/accounts/login/',
+            'Endpoint': 'api/accounts/login/',
             'method': 'POST',
             'body': 'Username/Email, Password',
             'description': 'Login and Returns the user token'
-        }
+        },
+        {
+            'Endpoint': 'api/program_date/',
+            'method': 'GET',
+            'body': None,
+            'description': 'Returns the program date'
+        },
+        {
+            'Endpoint': 'api/week_dates/',
+            'method': 'GET',
+            'body': None,
+            'description': ''
+        },
+        {
+            'Endpoint': 'api/week_comment/',
+            'method': 'GET',
+            'body': None,
+            'description': 'Returns list of weeks of the program'
+        },
+        {
+            'Endpoint': 'api/logbook_entry/',
+            'method': 'GET',
+            'body': None,
+            'description': ''
+        },
+        {
+            'Endpoint': 'api/entry_date/<str:date>/',
+            'method': 'GET',
+            'body': None,
+            'description': 'Returns entry date with a given date'
+        },
+        {
+            'Endpoint': 'api/week_comment/<int:pk>/update/',
+            'method': 'PUT',
+            'body': 'student id, Week Id, Industry Supervisor Comment, School Supervisor Comment,',
+            'description': 'Updates entry with comment'
+        },
+
     ]
     return Response(routes)

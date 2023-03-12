@@ -16,7 +16,8 @@ class StudentLog extends StatefulWidget {
 
 class _StudentLogState extends State<StudentLog> {
   List<IndStdList>? indStd = [];
-  int? wkId;
+  int? wkComId;
+  late String indNComment;
 
   Future<List<IndStdList>?> _getIndStdList() async {
     List<IndStdList>? stdL = await RemoteServices().getIndStdList();
@@ -33,7 +34,11 @@ class _StudentLogState extends State<StudentLog> {
         .getWeekComment(context: context, studentId: sid, weekId: wkId);
 
     if (wkResponse != null) {
-      wkId = wkResponse.id!;
+      setState(() {
+        wkComId = wkResponse.id!;
+        indNComment = wkResponse.industryComment!;
+      });
+
       print("Week id: $wkId");
     }
   }
@@ -83,6 +88,8 @@ class _StudentLogState extends State<StudentLog> {
                                   Navigator.pushNamed(
                                       context, '/studentLogDays',
                                       arguments: {
+                                        'week_comment_id': wkComId,
+                                        'indNComment': indNComment,
                                         'week_index': routeData['week_index'],
                                         'week_start': routeData['week_start'],
                                         'week_end': routeData['week_end'],

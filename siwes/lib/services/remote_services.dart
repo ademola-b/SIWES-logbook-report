@@ -126,7 +126,10 @@ class RemoteServices {
 
   //week comment - industry supervisor
   Future<WeekCommentResponse?>? getWeekComment(
-      {context, required int studentId, required int weekId, String? industryComment}) async {
+      {context,
+      required int studentId,
+      required int weekId,
+      String? industryComment}) async {
     var data = jsonEncode({
       'student': studentId,
       'week': weekId,
@@ -152,6 +155,11 @@ class RemoteServices {
       )));
     }
 
+    return null;
+  }
+
+  //update Week comment
+  Future<WeekCommentResponse?>? updateComment(context, int id) async {
     return null;
   }
 }

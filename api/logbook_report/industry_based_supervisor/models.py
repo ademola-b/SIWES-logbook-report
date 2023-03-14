@@ -15,12 +15,11 @@ class PlacementCentre(models.Model):
     def __str__(self):
         return self.name
     
-
 class IndustrySupervisor(models.Model):
     user = models.OneToOneField(get_user_model(), null=True, on_delete=models.CASCADE)
     profile_pic = models.ImageField(_("profile picture"), upload_to=profile_picture_dir)
     phone_no = models.CharField(max_length=11)
-    placement_center = models.ForeignKey("industry_based_supervisor.PlacementCentre", verbose_name=_("Placement Centre"), null=True, blank=True, on_delete=models.CASCADE)
+    placement_center = models.ForeignKey("industry_based_supervisor.PlacementCentre", verbose_name=_("Placement Centre"), null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.user.username

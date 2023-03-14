@@ -1,9 +1,8 @@
 # from datetime import date, datetime, timedelta
 import pandas
 from itertools import zip_longest
-
 from django.shortcuts import render
-
+from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateAPIView
 from rest_framework.response import Response
@@ -36,17 +35,19 @@ class ProgramDateView(ListCreateAPIView):
         program = ProgramDate.objects.create(start_date=program_data['start_date'], end_date=program_data['end_date'])
         days_gen = generate_date(program_data['start_date'], program_data['end_date'])
         week = WeekDates.objects.bulk_create(days_gen)
-        # week = WeekDates.objects.create(start_date=program_data['start_date'], end_date=program_data['end_date'])
+        data = {"start_date": program_data['start_date'], "end_date": program_data['end_date']}
         week_serializer = WeekDateSerializer(data=week)
-        program_serializer = ProgramDateSerializer(data=program)
-        if week_serializer.is_valid() and program_serializer.is_valid():
-            week_serializer.save()
+        program_serializer = ProgramDateSerializer(data=data)
+        # print(week_serializer)
+        # if week_serializer.is_valid() and program_serializer.is_valid():
+        if program_serializer.is_valid():
+            # week_serializer.save()
             program_serializer.save()
-            dates = {
-                'week': week_serializer.data,
-                'program': program_serializer.data
-            }
-        return Response(dates)
+            # dates_list = [week_serializer.data, program_serializer.data]
+            print(program_serializer.data)
+            return Response(program_serializer.data, status = status.HTTP_201_CREATED)
+        else:
+            return Response(program_serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 class WeekDatesView(ListAPIView):
     queryset = WeekDates.objects.all()
@@ -127,15 +128,15 @@ def get_routes(request):
         },
         {
             'Endpoint': 'api/program_date/',
-            'method': 'GET',
-            'body': None,
+            'method': 'GET/POST',
+            'body': 'start date, end date',
             'description': 'Returns the program date'
         },
         {
             'Endpoint': 'api/week_dates/',
             'method': 'GET',
             'body': None,
-            'description': ''
+            'description': 'Returns range of dates between the program start and end date'
         },
         {
             'Endpoint': 'api/week_comment/',

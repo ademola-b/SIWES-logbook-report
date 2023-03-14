@@ -28,16 +28,3 @@ class Student(models.Model):
         # return json.dumps(dict(self))
         return self.user.username
     
-    # @property
-    # def stdDetails(self):
-    #     std = {
-    #         'user': self.user,
-    #         'profile_pic': self.profile_pic,
-    #         'department_id': self.department_id,
-    #         'phone_no': self.phone_no,
-    #         'school_based_supervisor': self.school_based_supervisor,
-    #         'industry_based_supervisor': self.industry_based_supervisor,
-    #         'placement_location': self.placement_location
-    #     }
-
-    #     return std

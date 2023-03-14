@@ -1,10 +1,19 @@
 from django.shortcuts import render
-from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework import status
+from rest_framework.generics import ListAPIView, ListCreateAPIView
+from rest_framework.response import Response
 from accounts.models import CustomUser
 from api.models import LogbookEntry
 from students.models import Student
+from . models import (
+    PlacementCentre, 
+    IndustrySupervisor)
 
-from . serializers import StudentListSerializer, StudentLogbookEntrySerializer
+from . serializers import (StudentListSerializer, 
+                           StudentLogbookEntrySerializer, 
+                           PlacementCentreSerializer, 
+                           IndustrySupervisorSerializer)
+
 # Create your views here.
 class StudentList(ListAPIView):
     queryset = Student.objects.all()
@@ -57,7 +66,37 @@ class LogbookEntryView(ListAPIView):
         # if user.user_type == 'industry_based_supervisor':
         #     LogbookEntry.objects.filter(student__industry_based_supervisor = request.user.industrysupervisor)
         return qs.filter(student__industry_based_supervisor = request.user.industrysupervisor)
-        
-class WeekComment(CreateAPIView):
-    pass
     
+class PlacementCentreView(ListCreateAPIView):
+    queryset = PlacementCentre.objects.all()
+    serializer_class = PlacementCentreSerializer
+
+    def post(self, request):
+        placement_data = request.data
+        data = {
+            'name': placement_data['name'],
+            'longitude': placement_data['longitude'],
+            'latitude': placement_data['latitude'],
+            'radius': placement_data['radius'],
+        }
+        placement_serializer = PlacementCentreSerializer(data=data)
+
+        if placement_serializer.is_valid():
+            placement = PlacementCentre.objects.create(
+                        name=placement_data['name'], 
+                        longitude=placement_data['longitude'], 
+                        latitude=placement_data['latitude'], 
+                        radius=placement_data['radius']
+                        ) 
+            
+            user = request.user
+            industry = IndustrySupervisor.objects.get(user=user)
+            industry.placement_center = placement
+            industry.save()
+            # industry_serializer.save()
+            placement_serializer.save()
+            print(placement_serializer.data)
+
+            return Response(placement_serializer.data, status=status.HTTP_201_CREATED) 
+        else:
+            return Response(placement_serializer.errors, status = status.HTTP_400_BAD_REQUEST)

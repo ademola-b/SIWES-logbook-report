@@ -3,7 +3,8 @@ from rest_framework import serializers
 from accounts.serializers import UserDetailSerializer
 from api.models import LogbookEntry
 from students.models import Student
-from . models import IndustrySupervisor
+from . models import PlacementCentre
+from . models import IndustrySupervisor, PlacementCentre
 
 class IndustrySupervisorSerializer(serializers.ModelSerializer):
     user = UserDetailSerializer()
@@ -39,4 +40,9 @@ class StudentListSerializer(serializers.ModelSerializer):
 class StudentLogbookEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = LogbookEntry
+        fields = '__all__'
+
+class PlacementCentreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlacementCentre
         fields = '__all__'

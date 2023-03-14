@@ -3,7 +3,7 @@ import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultText.dart';
 
 class DefaultTextFormField extends StatefulWidget {
-  final String hintText;
+  final String? hintText;
   final double fontSize;
   final IconData? icon;
   final TextEditingController? text;
@@ -16,7 +16,7 @@ class DefaultTextFormField extends StatefulWidget {
 
   const DefaultTextFormField(
       {Key? key,
-      required this.hintText,
+      this.hintText,
       this.text,
       this.icon,
       // required this.onSaved,

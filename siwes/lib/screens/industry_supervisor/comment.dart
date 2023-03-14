@@ -20,7 +20,7 @@ class _IndCommentState extends State<IndComment> {
 
   Future<List<WeekDatesResponse>> _getWeekDates() async {
     List<WeekDatesResponse> wkd = await RemoteServices().getWeekDates();
-    if (wkd != null) {
+    if (wkd.isNotEmpty) {
       setState(() {
         wkDates = [...wkDates, ...wkd];
         for (var date in wkDates) {
@@ -57,48 +57,69 @@ class _IndCommentState extends State<IndComment> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const DefaultText(size: 20.0, text: "Comment on Logbook"),
+              DefaultText(
+                  size: 20.0,
+                  text: "Comment on Logbook",
+                  color: Constants.primaryColor),
               const SizedBox(height: 20.0),
               Padding(
                   padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
-                  child: Wrap(
-                    spacing: 20.0,
-                    runSpacing: 20.0,
-                    children: List.generate(wkDates.length, (index) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          color: Colors.white,
-                        ),
-                        child: ListTile(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/studentLog',
-                                arguments: {
-                                  'week_index': wkDates[index].id,
-                                  'week_start': wkDates[index].startDate,
-                                  'week_end': wkDates[index].endDate
-                                });
-                          },
-                          title: DefaultText(
-                            size: 18,
-                            text: "Week $index",
-                            color: Colors.green,
-                            weight: FontWeight.w500,
+                  child: wkDates.isEmpty
+                      ? Container(
+                          padding: const EdgeInsets.all(20.0),
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30.0))),
+                          child: DefaultText(
+                            size: 20.0,
+                            align: TextAlign.center,
+                            text:
+                                'Program Date has not been set by the school',
+                            color: Constants.primaryColor,
                           ),
-                          subtitle: DefaultText(
-                            size: 15,
-                            text: "${newSWkDate[index]} - ${newEWkDate[index]}",
-                            // "${wkDates[index].startDate.day}/${wkDates[index].startDate.month}/${wkDates[index].startDate.year} - ${wkDates[index].endDate.day}/${wkDates[index].endDate.month}/${wkDates[index].endDate.year}"
-                            // .toString(),
-                            color: Colors.green,
-                            weight: FontWeight.w500,
-                          ),
-                          trailing: const Icon(Icons.arrow_forward_ios),
-                        ),
-                      );
-                    }),
-                  )),
+                        )
+                      : Wrap(
+                          spacing: 20.0,
+                          runSpacing: 20.0,
+                          children: List.generate(wkDates.length, (index) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width,
+                              decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                                color: Colors.white,
+                              ),
+                              child: ListTile(
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/studentLog',
+                                      arguments: {
+                                        'week_index': wkDates[index].id,
+                                        'week_start':
+                                            wkDates[index].startDate,
+                                        'week_end': wkDates[index].endDate
+                                      });
+                                },
+                                title: DefaultText(
+                                  size: 18,
+                                  text: "Week $index",
+                                  color: Colors.green,
+                                  weight: FontWeight.w500,
+                                ),
+                                subtitle: DefaultText(
+                                  size: 15,
+                                  text:
+                                      "${newSWkDate[index]} - ${newEWkDate[index]}",
+                                  // "${wkDates[index].startDate.day}/${wkDates[index].startDate.month}/${wkDates[index].startDate.year} - ${wkDates[index].endDate.day}/${wkDates[index].endDate.month}/${wkDates[index].endDate.year}"
+                                  // .toString(),
+                                  color: Colors.green,
+                                  weight: FontWeight.w500,
+                                ),
+                                trailing: const Icon(Icons.arrow_forward_ios),
+                              ),
+                            );
+                          }),
+                        )),
             ],
           ),
         ),

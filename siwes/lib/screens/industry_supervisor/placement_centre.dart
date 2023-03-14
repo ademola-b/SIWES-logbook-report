@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:siwes/screens/industry_supervisor/navbar.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultButton.dart';
@@ -15,6 +14,36 @@ class IndPlacementCentre extends StatefulWidget {
 }
 
 class _IndPlacementCentreState extends State<IndPlacementCentre> {
+  Position? _position;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController longController = TextEditingController();
+  TextEditingController latController = TextEditingController();
+  TextEditingController radiusController = TextEditingController();
+
+  Future _getCurrentLocation() async {
+    Position position = await _determinePosition();
+    setState(() {
+      _position = position;
+    });
+  }
+
+  Future<Position> _determinePosition() async {
+    LocationPermission permission;
+    //turn on user's location
+    //check permission
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location Permissions are denied');
+      }
+    }
+
+    return Geolocator.getCurrentPosition();
+  }
+
+  void submitPlacementDetails() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +71,12 @@ class _IndPlacementCentreState extends State<IndPlacementCentre> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   DefaultButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await _getCurrentLocation();
+                        longController.text = _position!.longitude.toString();
+                        latController.text = _position!.latitude.toString();
+                        radiusController.text = "100";
+                      },
                       text: "Get Coordinates",
                       textSize: 15.0),
                 ],
@@ -53,24 +87,32 @@ class _IndPlacementCentreState extends State<IndPlacementCentre> {
               Form(
                 child: Column(
                   children: [
-                    const DefaultTextFormField(
+                    DefaultTextFormField(
                       fontSize: 15.0,
-                      hintText: 'Name',
+                      label: 'Name',
+                      text: nameController,
+                      // hintText: 'Name',
                     ),
                     const SizedBox(height: 20.0),
-                    const DefaultTextFormField(
+                    DefaultTextFormField(
                       fontSize: 15.0,
-                      hintText: 'Longitude',
+                      label: 'Longitude',
+                      text: longController,
+                      enabled: false,
                     ),
                     const SizedBox(height: 20.0),
-                    const DefaultTextFormField(
-                      hintText: "Latitude",
+                    DefaultTextFormField(
+                      label: "Latitude",
                       fontSize: 15.0,
+                      text: latController,
+                      enabled: false,
                     ),
                     const SizedBox(height: 20.0),
-                    const DefaultTextFormField(
-                      hintText: "Radius",
+                    DefaultTextFormField(
+                      label: "Radius",
                       fontSize: 15.0,
+                      text: radiusController,
+                      enabled: false,
                     ),
                     const SizedBox(height: 20.0),
                     SizedBox(

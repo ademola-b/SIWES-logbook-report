@@ -63,7 +63,7 @@ class WeekCommentView(ListCreateAPIView):
         user = self.request.user
         try:
             if not user.is_authenticated:
-                WeekComment.objects.none
+                WeekComment.objects.none()
             elif user.is_staff:
                 WeekComment.objects.all()
             

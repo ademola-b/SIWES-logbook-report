@@ -36,21 +36,22 @@ class _StudentLogDaysState extends State<StudentLogDays> {
                   height: 120.0,
                   child: Column(
                     children: [
-                      const DefaultText(
-                        size: 20.0,
-                        text: "Comment Saved",
-                        color: Colors.green,
-                      ),
-                      const SizedBox(height: 20.0),
                       Icon(
                         Icons.check_circle_outline,
                         size: 70.0,
                         color: Constants.backgroundColor,
                       ),
+                      const SizedBox(height: 20.0),
+                      const DefaultText(
+                        size: 20.0,
+                        text: "Comment Saved",
+                        color: Colors.green,
+                      ),
                     ],
                   ),
                 ),
               ));
+      Navigator.pop(context);
     }
   }
 

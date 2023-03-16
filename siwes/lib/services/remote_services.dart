@@ -190,11 +190,56 @@ class RemoteServices {
   }
 
   //Placement centre
-  Future<PlacementCentreResponse?>? getPlacementCentre() async {
-    var data = jsonEncode({});
+  //get
+  Future<List<PlacementCentreResponse>?>? getPlacementCentre(context) async {
+    //get user token
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var token = pref.getString("token");
+
     try {
-      http.Response response = await http.post(placementCentreUri);
-    } catch (e) {}
+      http.Response response = await http.get(placementCentreUri, 
+          headers: <String, String>{
+            'content-type': 'application/json; charset=UTF-8',
+            'Authorization': 'Token $token'
+          });
+      if (response.statusCode == 200) {
+        return placementCentreResponseFromJson(response.body);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: DefaultText(size: 15.0, text: "An error occurred: $e")));
+    }
+
+    return null;
+  }
+
+  //Post Placement Centre
+  Future<PlacementCentreResponse?>? addPlacementCentre(context, String name,
+      String longitude, String latitude, String radius) async {
+    //get user token
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var token = pref.getString("token");
+
+    var data = jsonEncode({
+      'name': name,
+      'longitude': longitude,
+      'latitude': latitude,
+      'radius': radius
+    });
+    try {
+      http.Response response = await http.post(placementCentreUri, 
+          headers: <String, String>{
+            'content-type': 'application/json; charset=UTF-8',
+            'Authorization': 'Token $token'
+          },
+          body: data);
+      if (response.statusCode == 201) {
+        return PlacementCentreResponse.fromJson(jsonDecode(response.body));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: DefaultText(size: 15.0, text: "An error occurred: $e")));
+    }
 
     return null;
   }

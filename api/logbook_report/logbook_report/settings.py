@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-$x&#u%f)_5l(7gm822$9r8d^m5wutje+zbkx-y)23uvak!0r1+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.43.130', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.43.130', '127.0.0.1', '192.168.1.116']
 
 
 # Application definition
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'corsheaders',
     
     'rest_framework',
     'rest_framework.authtoken',
@@ -50,6 +52,7 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+# CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -59,6 +62,10 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -143,6 +150,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = ['accounts.models.EmailBackend']
 
-# REST_AUTH_SERIALIZERS = {
-# 'USER_DETAILS_SERIALIZER': 'accounts.serializers.UserDetailsSerializer',
-# }
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    'http://192.168.43.130:8000', 
+    'http://192.168.1.116:8000'
+]

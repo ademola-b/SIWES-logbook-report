@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:siwes/models/user_response.dart';
+import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
+import 'package:siwes/utils/defaultText.dart';
 
-class Navbar extends StatelessWidget {
+class Navbar extends StatefulWidget {
   Navbar({super.key});
 
+  @override
+  State<Navbar> createState() => _NavbarState();
+}
+
+class _NavbarState extends State<Navbar> {
   final List<String> _labels = [
     "Account Information",
     "Settings",
@@ -37,6 +45,27 @@ class Navbar extends StatelessWidget {
     '/industryPlacementCentre',
   ];
 
+  RemoteServices _remote = RemoteServices();
+
+  String? _username, _email;
+
+  Future<UserResponse?> _getUser() async {
+    UserResponse? user = await _remote.getUser();
+    if (user != null) {
+      setState(() {
+        _username = user.username;
+        _email = user.email;
+      });
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    _getUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -44,8 +73,9 @@ class Navbar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: const Text("UserName"),
-            accountEmail: const Text("Email Address"),
+            accountName: DefaultText(size: 15.0, text: _username ?? 'username'),
+            accountEmail:
+                DefaultText(size: 15.0, text: _email ?? 'emailAddress'),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.asset(

@@ -83,7 +83,6 @@ class PlacementCentreView(ListCreateAPIView):
             return PlacementCentre.objects.filter(id = placement)
         return qs
     
-
     def post(self, request):
         placement_data = request.data
         data = {
@@ -107,8 +106,8 @@ class PlacementCentreView(ListCreateAPIView):
             industry.placement_center = placement
             industry.save()
             # industry_serializer.save()
-            placement_serializer.save()
-            print(placement_serializer.data)
+            # placement_serializer.save()
+            # print(placement_serializer.data)
 
             return Response(placement_serializer.data, status=status.HTTP_201_CREATED) 
         else:

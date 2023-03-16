@@ -77,7 +77,7 @@ class _LoginState extends State<Login> {
       //check if response returns any error
       if (loginResponse.nonFieldErrors != null) {
         for (var element in loginResponse.nonFieldErrors!) {
-          ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: DefaultText(size: 15, text: element.toString())));
         }
       }
@@ -99,7 +99,7 @@ class _LoginState extends State<Login> {
               child: Column(
                 children: [
                   TextFormField(
-                    style: const TextStyle(fontSize: 18.0),
+                    style: const TextStyle(fontSize: 22.0),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Username is required";
@@ -145,7 +145,7 @@ class _LoginState extends State<Login> {
                       hintText: "Password",
                     ),
                     style: const TextStyle(
-                      fontSize: 18.0,
+                      fontSize: 22.0,
                     ),
                     validator: (value) {
                       if (value!.isEmpty) {

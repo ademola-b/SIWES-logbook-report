@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:siwes/models/placement_centre_response.dart';
 import 'package:siwes/screens/industry_supervisor/navbar.dart';
+import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultButton.dart';
 import 'package:siwes/utils/defaultText.dart';
@@ -14,6 +16,7 @@ class IndPlacementCentre extends StatefulWidget {
 }
 
 class _IndPlacementCentreState extends State<IndPlacementCentre> {
+  RemoteServices _remote = RemoteServices();
   Position? _position;
   TextEditingController nameController = TextEditingController();
   TextEditingController longController = TextEditingController();
@@ -42,7 +45,57 @@ class _IndPlacementCentreState extends State<IndPlacementCentre> {
     return Geolocator.getCurrentPosition();
   }
 
-  void submitPlacementDetails() {}
+  Future<List<PlacementCentreResponse>?>? _getPlacementCentre() async {
+    List<PlacementCentreResponse>? _placement =
+        await _remote.getPlacementCentre(context);
+    if (_placement != null) {
+      setState(() {
+         
+        nameController.text = _placement[0].name;
+        longController.text = _placement[0].longitude;
+        latController.text = _placement[0].latitude;
+        radiusController.text = _placement[0].radius;
+        // print(_placement.);
+      });
+      return _placement;
+    }
+  }
+
+  void submitPlacementDetails(
+      String name, String longitude, String latitude, String radius) async {
+    PlacementCentreResponse? placement = await _remote.addPlacementCentre(
+        context, name, longitude, latitude, radius);
+    if (placement != null) {
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                content: SizedBox(
+                  height: 120.0,
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.check_circle_outline,
+                        size: 70.0,
+                        color: Constants.backgroundColor,
+                      ),
+                      const SizedBox(height: 20.0),
+                      const DefaultText(
+                        size: 20.0,
+                        text: "Placement Saved",
+                        color: Colors.green,
+                      ),
+                    ],
+                  ),
+                ),
+              ));
+    }
+  }
+
+  @override
+  void initState() {
+    _getPlacementCentre();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +171,15 @@ class _IndPlacementCentreState extends State<IndPlacementCentre> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: DefaultButton(
-                          onPressed: () {}, text: "SUBMIT", textSize: 18.0),
+                          onPressed: () {
+                            submitPlacementDetails(
+                                nameController.text,
+                                longController.text,
+                                latController.text,
+                                radiusController.text);
+                          },
+                          text: "SUBMIT",
+                          textSize: 18.0),
                     ),
                   ],
                 ),

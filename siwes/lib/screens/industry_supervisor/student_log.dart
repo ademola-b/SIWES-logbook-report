@@ -17,7 +17,7 @@ class StudentLog extends StatefulWidget {
 class _StudentLogState extends State<StudentLog> {
   List<IndStdList>? indStd = [];
   int? wkComId;
-  late String indNComment;
+  String? indNComment;
 
   Future<List<IndStdList>?> _getIndStdList() async {
     List<IndStdList>? stdL = await RemoteServices().getIndStdList();
@@ -38,7 +38,9 @@ class _StudentLogState extends State<StudentLog> {
     if (wkResponse != null) {
       setState(() {
         wkComId = wkResponse.id!;
-        indNComment = wkResponse.industryComment!;
+        print("Wkcom after set: $wkComId");
+        indNComment = wkResponse.industryComment ?? '';
+        print("IndNComment after set: $indNComment");
       });
 
       print("Week id: $wkId");
@@ -85,9 +87,11 @@ class _StudentLogState extends State<StudentLog> {
                             itemCount: indStd!.length,
                             itemBuilder: (context, index) {
                               return GestureDetector(
-                                onTap: () {
-                                  checkWkComment(indStd![index].id,
+                                onTap: () async {
+                                  await checkWkComment(indStd![index].id,
                                       routeData['week_index']);
+                                  // print("Chk clicked: $wkComId");
+                                  // print("chk clicked: Ind $indNComment");
                                   Map<String, dynamic> data = {
                                     'week_comment_id': wkComId,
                                     'indNComment': indNComment,

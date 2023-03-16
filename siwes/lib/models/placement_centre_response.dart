@@ -10,14 +10,14 @@ String placementCentreResponseToJson(List<PlacementCentreResponse> data) => json
 
 class PlacementCentreResponse {
     PlacementCentreResponse({
-        required this.id,
+        this.id,
         required this.name,
         required this.longitude,
         required this.latitude,
         required this.radius,
     });
 
-    int id;
+    int? id;
     String name;
     String longitude;
     String latitude;

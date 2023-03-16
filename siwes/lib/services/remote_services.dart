@@ -6,6 +6,7 @@ import 'package:siwes/models/entry_date_response.dart';
 import 'package:siwes/models/ind_std_list.dart';
 import 'package:siwes/models/login_response.dart';
 import 'package:http/http.dart' as http;
+import 'package:siwes/models/placement_centre_response.dart';
 import 'package:siwes/models/student_details.dart';
 import 'package:siwes/models/user_response.dart';
 import 'package:siwes/models/week_comment_response.dart';
@@ -184,6 +185,16 @@ class RemoteServices {
           content: DefaultText(size: 15.0, text: "Failed to update entry")));
       // throw Exception("Failed to update entry");
     }
+
+    return null;
+  }
+
+  //Placement centre
+  Future<PlacementCentreResponse?>? getPlacementCentre() async {
+    var data = jsonEncode({});
+    try {
+      http.Response response = await http.post(placementCentreUri);
+    } catch (e) {}
 
     return null;
   }

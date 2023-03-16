@@ -15,9 +15,11 @@ import 'package:siwes/screens/school_supervisor/student_log.dart';
 import 'package:siwes/screens/school_supervisor/student_log_days.dart';
 import 'package:siwes/screens/students/dashboard.dart';
 import 'package:siwes/screens/industry_supervisor/student_details.dart';
+import 'package:siwes/screens/students/industry_supervisor_details.dart';
 import 'package:siwes/screens/students/logEntry.dart';
 import 'package:siwes/screens/students/placement_centre.dart';
 import 'package:siwes/screens/students/reports.dart';
+import 'package:siwes/screens/students/school_supervisor_details.dart';
 import 'package:siwes/screens/students/supervisor.dart';
 import 'package:siwes/screens/students/week.dart';
 
@@ -34,6 +36,9 @@ void main() {
       // '/logEntry': (context) => const LogEntry(),
       // '/week': (context) => const WeekPage(),
       '/supervisor': (context) => const SupervisorDetails(),
+      '/schoolSupervisorDetails': (context) => const SchoolSupervisorDetails(),
+      '/industrySupervisorDetails': (context) =>
+          const IndustrySupervisorDetails(),
       '/placementCentre': (context) => const PlacementCentre(),
       '/reports': (context) => const Reports(),
       '/industryDashboard': (context) => const Dashboard(),

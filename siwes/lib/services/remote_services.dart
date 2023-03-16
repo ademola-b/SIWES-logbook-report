@@ -72,8 +72,11 @@ class RemoteServices {
     try {
       var response = await http
           .get(stdDetailsUrl, headers: {"Authorization": "Token $token"});
+      print("enee");
       if (response.statusCode == 200) {
+        print("eneeaaaa");
         final std = studentDetailResponseFromJson(response.body);
+        print(std);
         return std;
       } else {
         print("Server error");
@@ -197,11 +200,11 @@ class RemoteServices {
     var token = pref.getString("token");
 
     try {
-      http.Response response = await http.get(placementCentreUri, 
-          headers: <String, String>{
-            'content-type': 'application/json; charset=UTF-8',
-            'Authorization': 'Token $token'
-          });
+      http.Response response =
+          await http.get(placementCentreUri, headers: <String, String>{
+        'content-type': 'application/json; charset=UTF-8',
+        'Authorization': 'Token $token'
+      });
       if (response.statusCode == 200) {
         return placementCentreResponseFromJson(response.body);
       }
@@ -227,7 +230,7 @@ class RemoteServices {
       'radius': radius
     });
     try {
-      http.Response response = await http.post(placementCentreUri, 
+      http.Response response = await http.post(placementCentreUri,
           headers: <String, String>{
             'content-type': 'application/json; charset=UTF-8',
             'Authorization': 'Token $token'

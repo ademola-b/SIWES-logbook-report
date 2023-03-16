@@ -99,8 +99,8 @@ class _LogEntryState extends State<LogEntry> {
                     const SizedBox(height: 20.0),
                     DefaultText(
                       size: 25.0,
-                      text:
-                          "Date - ${routeData['date'].day}/${routeData['date'].month}/${routeData['date'].year}",
+                      text: "Date - ${routeData['date']}",
+                      // "Date - ${routeData['date'].day}/${routeData['date'].month}/${routeData['date'].year}",
                       color: Constants.primaryColor,
                     ),
                   ],

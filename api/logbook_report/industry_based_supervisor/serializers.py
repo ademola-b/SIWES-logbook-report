@@ -2,13 +2,22 @@ import base64
 from rest_framework import serializers
 from accounts.serializers import UserDetailSerializer
 from api.models import LogbookEntry
+
 from students.models import Student
+
 from . models import PlacementCentre
 from . models import IndustrySupervisor, PlacementCentre
+
+
+class PlacementCentreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlacementCentre
+        fields = '__all__'
 
 class IndustrySupervisorSerializer(serializers.ModelSerializer):
     user = UserDetailSerializer()
     profile_no_memory = serializers.SerializerMethodField("get_image_memory")
+    placement_center = PlacementCentreSerializer()
     class Meta:
         model = IndustrySupervisor
         fields = [
@@ -40,9 +49,4 @@ class StudentListSerializer(serializers.ModelSerializer):
 class StudentLogbookEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = LogbookEntry
-        fields = '__all__'
-
-class PlacementCentreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PlacementCentre
         fields = '__all__'

@@ -74,8 +74,7 @@ class _IndCommentState extends State<IndComment> {
                           child: DefaultText(
                             size: 20.0,
                             align: TextAlign.center,
-                            text:
-                                'Program Date has not been set by the school',
+                            text: 'Program Date has not been set by the school',
                             color: Constants.primaryColor,
                           ),
                         )
@@ -95,21 +94,20 @@ class _IndCommentState extends State<IndComment> {
                                   Navigator.pushNamed(context, '/studentLog',
                                       arguments: {
                                         'week_index': wkDates[index].id,
-                                        'week_start':
-                                            wkDates[index].startDate,
+                                        'week_start': wkDates[index].startDate,
                                         'week_end': wkDates[index].endDate
                                       });
                                 },
                                 title: DefaultText(
                                   size: 18,
-                                  text: "Week $index",
+                                  text: "Week ${index + 1}",
                                   color: Colors.green,
                                   weight: FontWeight.w500,
                                 ),
                                 subtitle: DefaultText(
                                   size: 15,
                                   text:
-                                      "${newSWkDate[index]} - ${newEWkDate[index]}",
+                                      "${newSWkDate[index]} / ${newEWkDate[index]}",
                                   // "${wkDates[index].startDate.day}/${wkDates[index].startDate.month}/${wkDates[index].startDate.year} - ${wkDates[index].endDate.day}/${wkDates[index].endDate.month}/${wkDates[index].endDate.year}"
                                   // .toString(),
                                   color: Colors.green,

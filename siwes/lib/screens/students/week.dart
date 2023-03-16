@@ -23,7 +23,7 @@ class _WeekPageState extends State<WeekPage> {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    // print(routeData);
+    print(routeData);
 
     List<dynamic> days = Constants()
         .getDaysInWeek(routeData['week_start'], routeData['week_end']);
@@ -104,15 +104,15 @@ class _WeekPageState extends State<WeekPage> {
                           },
                           title: DefaultText(
                             size: 18,
-                            text: "Day $index",
+                            text: "Day ${index + 1}",
                             color: Colors.green,
                             weight: FontWeight.w500,
                           ),
                           subtitle: DefaultText(
                             size: 15,
-                            text:
-                                "${days[index].day}/${days[index].month}/${days[index].year}"
-                                    .toString(),
+                            text: days[index],
+                            // "${days[index].day}/${days[index].month}/${days[index].year}"
+                            //     .toString(),
                             color: Colors.green,
                             weight: FontWeight.w500,
                           ),

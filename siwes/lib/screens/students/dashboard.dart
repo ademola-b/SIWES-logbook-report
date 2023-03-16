@@ -98,24 +98,24 @@ class _StudentDashboardState extends State<StudentDashboard> {
                 thickness: 1.5,
                 color: Colors.green,
               ),
-              FutureBuilder<List<WeekDatesResponse>>(
-                  future: futureWeekDate,
-                  builder: (context, snapshot) {
-                    var dates = snapshot.data;
-                    if (snapshot.hasData) {
-                      return SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemCount: dates == null ? 0 : dates.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 20.0),
-                                  child: DefaultContainer(
-                                    title: "Week $index",
+              const SizedBox(height: 20.0),
+              Center(
+                child: FutureBuilder<List<WeekDatesResponse>>(
+                    future: futureWeekDate,
+                    builder: (context, snapshot) {
+                      var dates = snapshot.data;
+                      if (snapshot.hasData) {
+                        return SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount: dates == null ? 0 : dates.length,
+                                itemBuilder: (context, index) {
+                                  return DefaultContainer(
+                                    title: "Week ${index + 1}",
                                     subtitle:
                                         "Week Date ${dates![index].startDate.day}/${dates[index].startDate.month}/${dates[index].startDate.year} - ${dates[index].endDate.day}/${dates[index].endDate.month}/${dates[index].endDate.year}",
                                     route: "/week",
@@ -123,19 +123,19 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                     weekStart: dates[index].startDate,
                                     weekEnd: dates[index].endDate,
                                     div_width: 1,
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text("${snapshot.error}");
-                    }
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
 
-                    return const CircularProgressIndicator();
-                  }),
+                      return const CircularProgressIndicator();
+                    }),
+              ),
             ],
           ),
         ),

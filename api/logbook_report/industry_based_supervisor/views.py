@@ -71,6 +71,19 @@ class PlacementCentreView(ListCreateAPIView):
     queryset = PlacementCentre.objects.all()
     serializer_class = PlacementCentreSerializer
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        request = self.request
+        user = request.user
+        if not user.is_authenticated:
+            return PlacementCentre.objects.none()
+        elif user.user_type == 'industry_based_supervisor':
+            indRecord = IndustrySupervisor.objects.get(user = user)
+            placement = indRecord.placement_center.id
+            return PlacementCentre.objects.filter(id = placement)
+        return qs
+    
+
     def post(self, request):
         placement_data = request.data
         data = {

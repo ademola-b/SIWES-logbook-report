@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-from students.models import profile_picture_dir
+# from students.models import profile_picture_dir
 
 # Create your models here.
 class ProgramDate(models.Model):
@@ -31,10 +31,14 @@ class WeekComment(models.Model):
     industry_comment = models.CharField(_("Industry Supervisor Comment"), max_length=1000, null=True, blank=True)
     school_comment = models.CharField(_("School Supervisor Comment"), max_length=1000, null=True, blank=True)
 
+def profile_picture_dir(instance, filename):
+    return f"{instance.student.user.username}/{filename}" 
+# '{1}/{2}/{3}'.format('media', instance.student.user.username, filename)
+
 class LogbookEntry(models.Model):
     week = models.ForeignKey("api.WeekDates", verbose_name=_("Week Id"), null=True, on_delete=models.SET_NULL)
     student = models.ForeignKey("students.Student", verbose_name=_("Student Id"), on_delete=models.CASCADE)
-    entry_date = models.DateTimeField()
+    entry_date = models.DateField()
     title = models.CharField(_("Title"), max_length=50)
     description = models.CharField(_("Description"), max_length=1000)
     diagram = models.ImageField(_("Diagram"), upload_to=profile_picture_dir)
@@ -43,5 +47,5 @@ class LogbookEntry(models.Model):
         verbose_name_plural = "Logbook Entries"
 
     def __str__(self):
-        return '{0} - {1}'.format(self.entry_date, self.student.user.username)
+        return f"{self.student.user.username} - {self.entry_date}"
     

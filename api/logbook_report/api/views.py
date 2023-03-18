@@ -8,7 +8,9 @@ from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpda
 from rest_framework.response import Response
 
 from . models import ProgramDate, WeekDates, LogbookEntry, WeekComment
-from . serializers import ProgramDateSerializer, WeekDateSerializer, WeekCommentSerializer, LogbookEntrySerializer
+from . serializers import (ProgramDateSerializer, WeekDateSerializer, 
+                           WeekCommentSerializer, LogbookEntrySerializer, 
+                           GetLogbookEntrySerializer)
 # Create your views here.
 def generate_date(start_date, end_date):
     dates = pandas.date_range(start_date, end_date).strftime('%Y-%m-%d').tolist()
@@ -49,11 +51,11 @@ class ProgramDateView(ListCreateAPIView):
         else:
             return Response(program_serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
+
 class WeekDatesView(ListAPIView):
     queryset = WeekDates.objects.all()
     serializer_class = WeekDateSerializer 
       
-
 class WeekCommentView(ListCreateAPIView):
     queryset = WeekComment.objects.all()
     serializer_class = WeekCommentSerializer
@@ -85,7 +87,7 @@ class LogbookEntryView(ListCreateAPIView):
         student = request.user
         try:
             if not student.is_authenticated:
-                LogbookEntry.objects.none
+                LogbookEntry.objects.none()
             elif student.is_staff:
                 LogbookEntry.objects.all()
             return qs.filter(student = self.request.user.student)
@@ -93,7 +95,7 @@ class LogbookEntryView(ListCreateAPIView):
             return None
         
 class LogbookWithDate(ListAPIView):
-    serializer_class = LogbookEntrySerializer
+    serializer_class = GetLogbookEntrySerializer
 
     def get_queryset(self, *args, **kwargs):
         qs = LogbookEntry.objects.all()
@@ -101,7 +103,7 @@ class LogbookWithDate(ListAPIView):
         # date = self.request.query_params.get(kwargs)
         # print(str(date))
         if date:
-            qs = qs.filter(entry_date__date = date)
+            qs = qs.filter(entry_date = date)
         elif date is None:
             return LogbookEntry.objects.none()
         return qs

@@ -8,6 +8,7 @@ import 'package:siwes/screens/industry_supervisor/student_log.dart';
 import 'package:siwes/screens/industry_supervisor/student_log_days.dart';
 import 'package:siwes/screens/industry_supervisor/view_students.dart';
 import 'package:siwes/screens/login.dart';
+import 'package:siwes/screens/profile.dart';
 import 'package:siwes/screens/school_supervisor/comment.dart';
 import 'package:siwes/screens/school_supervisor/dashboard.dart'
     as schoolSupervisorDashboard;
@@ -27,7 +28,7 @@ void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(primarySwatch: Colors.green),
-    initialRoute: '/',
+    initialRoute: '/profile',
     onGenerateRoute: _getRoutes,
     routes: {
       '/': (context) => const OnBoard(),
@@ -53,7 +54,7 @@ void main() {
       '/schComment': (context) => const SchComment(),
       '/superStudentLog': (context) => const SuperStudentLog(),
       '/superStudentLogDays': (context) => const SuperStudentLogDays(),
-      // '/entryDate':(context) => EntryDate(arguments)
+      '/profile': (context) => Profile()
     },
   ));
 }

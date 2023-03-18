@@ -8,11 +8,14 @@ class DefaultTextFormField extends StatefulWidget {
   final IconData? icon;
   final TextEditingController? text;
   // final Function onSaved;
-  // final Function validator;
-  final bool? obscureText, enabled;
+  final String? Function(String?)? validator;
+  final bool? obscureText;
+
+  final bool? enabled;
   final int? maxLines;
   final String? label;
   // final keyboardInputType;
+  final Key? k;
 
   const DefaultTextFormField(
       {Key? key,
@@ -20,13 +23,14 @@ class DefaultTextFormField extends StatefulWidget {
       this.text,
       this.icon,
       // required this.onSaved,
-      // required this.validator,
+      this.validator,
       // required this.keyboardInputType,
       this.maxLines,
       this.obscureText,
       required this.fontSize,
       this.enabled,
-      this.label})
+      this.label,
+      this.k})
       : super(key: key);
 
   @override
@@ -37,12 +41,13 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.disabled,
+      key: widget.k,
       controller: widget.text,
-
       enabled: widget.enabled,
       maxLines: widget.maxLines,
       // keyboardType: widget.keyboardInputType,
-      // validator: (value) => widget.validator(value),
+      validator: widget.validator,
       // onSaved: (value) => widget.onSaved(value),
       decoration: InputDecoration(
         border: const UnderlineInputBorder(
@@ -54,6 +59,7 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
         focusedBorder: const UnderlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
             borderSide: BorderSide(color: Colors.white)),
+
         fillColor: Colors.white,
         filled: true,
         label: DefaultText(size: 20.0, text: "${widget.label}"),

@@ -14,12 +14,18 @@ class Constants {
     }
 
     for (var date in days) {
-          String newDate = DateFormat("yyyy-MM-dd")
-              .format(DateTime.parse(date.toString()));
-          converted_days.add(newDate);
-        }
-    
+      String newDate =
+          DateFormat("yyyy-MM-dd").format(DateTime.parse(date.toString()));
+      converted_days.add(newDate);
+    }
 
     return converted_days;
+  }
+
+  static String? validator(String? value) {
+    if (value!.isEmpty) {
+      return "This Field is required";
+    }
+    return null;
   }
 }

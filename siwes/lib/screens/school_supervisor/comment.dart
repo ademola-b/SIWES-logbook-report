@@ -26,8 +26,6 @@ class _SchCommentState extends State<SchComment> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const DefaultText(size: 20.0, text: "Comment on Logbook"),
-              const SizedBox(height: 20.0),
               Wrap(
                 spacing: 20.0, // gap between adjacent chips
                 runSpacing: 30.0, // gap between lines

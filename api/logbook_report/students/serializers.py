@@ -22,7 +22,7 @@ class StudentSerializer(serializers.ModelSerializer):
         "department_id",
         "school_based_supervisor",
         "industry_based_supervisor",
-        "placement_location",
+        # "placement_location",
         ]
 
     def get_image_memory(request, student:Student):

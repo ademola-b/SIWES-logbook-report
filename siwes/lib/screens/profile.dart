@@ -3,6 +3,7 @@ import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultButton.dart';
 import 'package:siwes/utils/defaultText.dart';
 import 'package:siwes/utils/defaultTextFormField.dart';
+import 'package:siwes/utils/dropdown.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -14,7 +15,32 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final _form = GlobalKey<FormState>();
   final _key = GlobalKey<FormFieldState>();
-  dynamic value;
+  late String _email, _name, _phone, _dept;
+
+  late TextEditingController nameController;
+  late TextEditingController emailController;
+  late TextEditingController phoneController;
+  late TextEditingController deptController;
+
+  var dropdownval;
+  bool enable = false;
+  Color? fill;
+
+  void _updateInfo() {
+    bool isValid = _form.currentState!.validate();
+    if (!isValid) return;
+    _form.currentState!.save();
+  }
+
+  @override
+  void initState() {
+    nameController = TextEditingController(text: "Name");
+    emailController = TextEditingController(text: "Email Address");
+    phoneController = TextEditingController(text: "Phone Number");
+    deptController = TextEditingController(text: "Department");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,15 +64,15 @@ class _ProfileState extends State<Profile> {
                     const Spacer(),
                     InkWell(
                       onTap: () {
-                        bool enable = _key.currentState!.widget.enabled;
-                        if (!enable) {
-                          setState(() {
-                            enable = true;
-                             _key.currentState!.widget.enabled;
-                          });
-                          print("Enable: $enable");
-                          print(_key.currentState!.widget.enabled);
-                        }
+                        // _key.currentState!.;
+                        setState(() {
+                          enable = !enable;
+                          if (enable) {
+                            fill = Colors.white;
+                          } else {
+                            fill = const Color.fromRGBO(255, 255, 255, 0.1);
+                          }
+                        });
                       },
                       child: Icon(
                         Icons.edit,
@@ -76,41 +102,75 @@ class _ProfileState extends State<Profile> {
                     children: [
                       DefaultTextFormField(
                         k: _key,
+                        text: nameController,
                         fontSize: 18.0,
                         label: 'Name',
-                        enabled: false,
-                        text: TextEditingController(
-                            text: "First Name - Last Name"),
+                        enabled: enable,
+                        fillColor: fill,
                         validator: Constants.validator,
+                        onSaved: (value) {
+                          _name = value!;
+                        },
                       ),
                       const SizedBox(height: 20.0),
                       DefaultTextFormField(
                         fontSize: 18.0,
                         label: 'Email Address',
-                        enabled: false,
-                        text: TextEditingController(text: "Email Address"),
+                        enabled: enable,
+                        fillColor: fill,
+                        text: emailController,
                         validator: Constants.validator,
+                        onSaved: (value) {
+                          _email = value!;
+                        },
                       ),
                       const SizedBox(height: 20.0),
                       DefaultTextFormField(
                         label: "Phone Number",
                         fontSize: 15.0,
-                        enabled: false,
-                        text: TextEditingController(text: "Phone Number"),
+                        enabled: enable,
+                        fillColor: fill,
+                        text: phoneController,
                         validator: Constants.validator,
+                        onSaved: (value) {
+                          _phone = value!;
+                        },
                       ),
                       const SizedBox(height: 20.0),
                       DefaultTextFormField(
-                          label: "Department",
-                          fontSize: 15.0,
-                          enabled: false,
-                          text: TextEditingController(text: "Department"),
-                          validator: Constants.validator),
+                        label: "Department",
+                        fontSize: 15.0,
+                        text: deptController,
+                        enabled: enable,
+                        fillColor: fill,
+                        validator: Constants.validator,
+                        onSaved: (value) {
+                          _dept = value!;
+                        },
+                      ),
+
+                      // DefaultDropDown(
+                      //     value: dropdownval,
+                      //     onChanged: (value) {
+                      //       dropdownval = value;
+                      //     },
+                      //     dropdownMenuItemList: ['computer science', 'sss']
+                      //         .map((item) => DropdownMenuItem(
+                      //             value: item,
+                      //             child: DefaultText(
+                      //               text: item,
+                      //               size: 18,
+                      //             )))
+                      //         .toList(),
+                      //     text: 'Department'),
+
                       const SizedBox(height: 20.0),
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: DefaultButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _updateInfo();
+                            },
                             text: "UPDATE PROFILE",
                             textSize: 20.0),
                       ),

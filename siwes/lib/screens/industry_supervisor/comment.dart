@@ -57,11 +57,6 @@ class _IndCommentState extends State<IndComment> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              DefaultText(
-                  size: 20.0,
-                  text: "Comment on Logbook",
-                  color: Constants.primaryColor),
-              const SizedBox(height: 20.0),
               Padding(
                   padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
                   child: wkDates.isEmpty

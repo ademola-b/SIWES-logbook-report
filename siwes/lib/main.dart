@@ -14,6 +14,7 @@ import 'package:siwes/screens/school_supervisor/dashboard.dart'
     as schoolSupervisorDashboard;
 import 'package:siwes/screens/school_supervisor/student_log.dart';
 import 'package:siwes/screens/school_supervisor/student_log_days.dart';
+import 'package:siwes/screens/school_supervisor/students_list.dart';
 import 'package:siwes/screens/students/dashboard.dart';
 import 'package:siwes/screens/industry_supervisor/student_details.dart';
 import 'package:siwes/screens/students/industry_supervisor_details.dart';
@@ -28,14 +29,12 @@ void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(primarySwatch: Colors.green),
-    initialRoute: '/profile',
+    initialRoute: '/studentDashboard',
     onGenerateRoute: _getRoutes,
     routes: {
       '/': (context) => const OnBoard(),
       '/login': (context) => const Login(),
       '/studentDashboard': (context) => const StudentDashboard(),
-      // '/logEntry': (context) => const LogEntry(),
-      // '/week': (context) => const WeekPage(),
       '/supervisor': (context) => const SupervisorDetails(),
       '/schoolSupervisorDetails': (context) => const SchoolSupervisorDetails(),
       '/industrySupervisorDetails': (context) =>
@@ -47,14 +46,13 @@ void main() {
       '/indComment': (context) => const IndComment(),
       '/industryPlacementCentre': (context) => const IndPlacementCentre(),
       '/studentDetails': (context) => const StudentDetails(),
-      // '/studentLog': (context) => const StudentLog(),
-      // '/studentLogDays': (context) => const StudentLogDays(),
       '/schoolSupervisorDashboard': (context) =>
           const schoolSupervisorDashboard.Dashboard(),
       '/schComment': (context) => const SchComment(),
+      '/schStudentList': (context) => const StudentsList(),
       '/superStudentLog': (context) => const SuperStudentLog(),
       '/superStudentLogDays': (context) => const SuperStudentLogDays(),
-      '/profile': (context) => Profile()
+      '/profile': (context) => const Profile(),
     },
   ));
 }

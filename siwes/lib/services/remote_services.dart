@@ -7,6 +7,7 @@ import 'package:siwes/models/ind_std_list.dart';
 import 'package:siwes/models/login_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:siwes/models/placement_centre_response.dart';
+import 'package:siwes/models/sch_std_list_response.dart';
 import 'package:siwes/models/student_details.dart';
 import 'package:siwes/models/user_response.dart';
 import 'package:siwes/models/week_comment_response.dart';
@@ -246,4 +247,26 @@ class RemoteServices {
 
     return null;
   }
+
+  // School Based supervisor Services
+  // get students
+  static Future<List<SchStdListResponse?>?> getSchStdList(context) async {
+    try {
+      http.Response response = await http.get(schStdListUri);
+      if (response.statusCode == 200) {
+        return schStdListResponseFromJson(response.body);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content:
+                DefaultText(size: 15.0, text: "Failed to load students list")));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: DefaultText(size: 15.0, text: "Server error: $e")));
+    }
+
+    return <SchStdListResponse>[];
+  }
+
+  //get Logbook
 }

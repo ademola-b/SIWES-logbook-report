@@ -18,7 +18,7 @@ class Navbar extends StatelessWidget {
 
   final List<String> _onTap = [
     '/schoolSupervisorDashboard',
-    '/',
+    '/schStudentList',
     '/schComment',
   ];
 

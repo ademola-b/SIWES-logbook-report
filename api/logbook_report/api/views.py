@@ -51,7 +51,6 @@ class ProgramDateView(ListCreateAPIView):
         else:
             return Response(program_serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
-
 class WeekDatesView(ListAPIView):
     queryset = WeekDates.objects.all()
     serializer_class = WeekDateSerializer 
@@ -87,9 +86,9 @@ class LogbookEntryView(ListCreateAPIView):
         student = request.user
         try:
             if not student.is_authenticated:
-                LogbookEntry.objects.none()
+                return LogbookEntry.objects.none()
             elif student.is_staff:
-                LogbookEntry.objects.all()
+                return LogbookEntry.objects.all()
             return qs.filter(student = self.request.user.student)
         except:
             return None

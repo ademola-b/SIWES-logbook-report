@@ -7,13 +7,13 @@ class DefaultTextFormField extends StatefulWidget {
   final double fontSize;
   final IconData? icon;
   final TextEditingController? text;
-  // final Function onSaved;
+  final void Function(String?)? onSaved;
   final String? Function(String?)? validator;
   final bool? obscureText;
-
   final bool? enabled;
   final int? maxLines;
   final String? label;
+  final Color? fillColor;
   // final keyboardInputType;
   final Key? k;
 
@@ -30,7 +30,8 @@ class DefaultTextFormField extends StatefulWidget {
       required this.fontSize,
       this.enabled,
       this.label,
-      this.k})
+      this.k,
+      this.onSaved, this.fillColor})
       : super(key: key);
 
   @override
@@ -48,7 +49,7 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
       maxLines: widget.maxLines,
       // keyboardType: widget.keyboardInputType,
       validator: widget.validator,
-      // onSaved: (value) => widget.onSaved(value),
+      onSaved: widget.onSaved,
       decoration: InputDecoration(
         border: const UnderlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -60,7 +61,8 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
             borderRadius: BorderRadius.all(Radius.circular(10.0)),
             borderSide: BorderSide(color: Colors.white)),
 
-        fillColor: Colors.white,
+        // fillColor: Colors.white,
+        fillColor: widget.fillColor,
         filled: true,
         label: DefaultText(size: 20.0, text: "${widget.label}"),
         labelStyle: TextStyle(color: Constants.primaryColor),

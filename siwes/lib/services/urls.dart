@@ -30,3 +30,7 @@ Uri updateEntryUrl(int id) {
 //placement centre URL
 Uri placementCentreUri =
     Uri.parse("$base_url/api/industry_supervisor/add-placement/");
+
+// School supervisor URLS
+// get students
+Uri schStdListUri = Uri.parse("$base_url/api/school_supervisor/students/");

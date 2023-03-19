@@ -57,60 +57,75 @@ class _IndStudentState extends State<IndStudent> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: indStd!.isNotEmpty
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: indStd!.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              margin: const EdgeInsets.only(bottom: 10.0),
-                              width: MediaQuery.of(context).size.width,
-                              decoration: const BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                color: Colors.white,
-                              ),
-                              child: ListTile(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, '/studentDetails');
-                                },
-                                leading: ClipOval(
-                                    child: Image.memory(
-                                  indStd![index].picMem,
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.cover,
-                                )),
-                                title: DefaultText(
-                                  size: 18,
-                                  text:
-                                      "${indStd![index].user.firstName} ${indStd![index].user.lastName}",
-                                  color: Colors.green,
-                                  weight: FontWeight.w500,
-                                ),
-                                subtitle: DefaultText(
-                                  size: 15,
-                                  text: indStd![index].user.username,
-                                  color: Colors.green,
-                                  weight: FontWeight.w500,
-                                ),
-                                trailing: const Icon(Icons.arrow_forward_ios),
-                              ),
-                            );
-                          },
+                      ? Column(
+                          children: [
+                            ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: indStd!.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Container(
+                                  margin: const EdgeInsets.only(bottom: 10.0),
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20.0)),
+                                    color: Colors.white,
+                                  ),
+                                  child: ListTile(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, '/studentDetails');
+                                    },
+                                    leading: ClipOval(
+                                        child: Image.memory(
+                                      indStd![index].picMem,
+                                      width: 50,
+                                      height: 50,
+                                      fit: BoxFit.cover,
+                                    )),
+                                    title: DefaultText(
+                                      size: 18,
+                                      text:
+                                          "${indStd![index].user.firstName} ${indStd![index].user.lastName}",
+                                      color: Colors.green,
+                                      weight: FontWeight.w500,
+                                    ),
+                                    subtitle: DefaultText(
+                                      size: 15,
+                                      text: indStd![index].user.username,
+                                      color: Colors.green,
+                                      weight: FontWeight.w500,
+                                    ),
+                                    trailing:
+                                        const Icon(Icons.arrow_forward_ios),
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 20.0),
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: DefaultButton(
+                                    onPressed: () {},
+                                    text: "Export",
+                                    textSize: 20.0)),
+                          ],
                         )
-                      : const DefaultText(
-                          text: "No student on your supervision",
-                          size: 18.0,
+                      : Container(
+                          padding: const EdgeInsets.all(20.0),
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30.0))),
+                          child: DefaultText(
+                            text: "No student on your supervision",
+                            size: 18.0,
+                            color: Constants.primaryColor,
+                          ),
                         ),
                 ),
               ),
-              const SizedBox(height: 20.0),
-              SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: DefaultButton(
-                      onPressed: () {}, text: "Export", textSize: 20.0)),
             ],
           ),
         ),

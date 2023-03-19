@@ -14,10 +14,12 @@ from . serializers import (StudentListSerializer,
                            PlacementCentreSerializer, 
                            IndustrySupervisorSerializer)
 
+from students.serializers import StudentSerializer
+
 # Create your views here.
 class StudentList(ListAPIView):
     queryset = Student.objects.all()
-    serializer_class = StudentListSerializer
+    serializer_class = StudentSerializer
 
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
@@ -26,35 +28,15 @@ class StudentList(ListAPIView):
         
         if not user.is_authenticated:
             return Student.objects.none()
-        return qs.filter(industry_based_supervisor = request.user.industrysupervisor)
-
-
+        # elif user.user_type == 'school_based_supervisor':
+        #     return qs.filter(school_based_supervisor = request.user.schoolsupervisor)
+        elif user.user_type == 'industry_based_supervisor':
+            return qs.filter(industry_based_supervisor = request.user.industrysupervisor)
+        return None
+    
 class LogbookEntryView(ListAPIView):
     queryset = LogbookEntry.objects.all()
     serializer_class = StudentLogbookEntrySerializer
-
-    # def get_queryset(self):
-        # user = self.request.user
-    
-        # # If user is not authenticated, return empty queryset
-        # if not user.is_authenticated:
-        #     return LogbookEntry.objects.none()
-    
-        # # If user is not a student, return empty queryset
-        # if not hasattr(user, 'student'):
-        #     return LogbookEntry.objects.all()
-    
-        # # Get the industry supervisor for the student
-        # supervisor = user.student.industry_based_supervisor
-    
-        # # If student does not have an industry supervisor, return empty queryset
-        # if supervisor is None:
-        #     return LogbookEntry.objects.none()
-    
-        # # Filter logbook entries based on the industry supervisor
-        # queryset = LogbookEntry.objects.filter(student__industrysupervisor=supervisor)
-    
-        # return queryset
 
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
@@ -63,9 +45,13 @@ class LogbookEntryView(ListAPIView):
         
         if not user.is_authenticated:
             return LogbookEntry.objects.none()
-        # if user.user_type == 'industry_based_supervisor':
-        #     LogbookEntry.objects.filter(student__industry_based_supervisor = request.user.industrysupervisor)
-        return qs.filter(student__industry_based_supervisor = request.user.industrysupervisor)
+        elif user.user_type == 'industry_based_supervisor':
+            return LogbookEntry.objects.filter(student__industry_based_supervisor = request.user.industrysupervisor)
+        elif user.user_type == 'school_based_supervisor':
+            return LogbookEntry.objects.filter(student__school_based_supervisor = request.user.schoolsupervisor)
+        
+        return None
+        # return qs.filter(student__industry_based_supervisor = request.user.industrysupervisor)
     
 class PlacementCentreView(ListCreateAPIView):
     queryset = PlacementCentre.objects.all()

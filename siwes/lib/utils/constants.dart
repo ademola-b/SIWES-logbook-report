@@ -23,7 +23,7 @@ class Constants {
   }
 
   static String? validator(String? value) {
-    if (value!.isEmpty) {
+    if (value == null || value.isEmpty) {
       return "This Field is required";
     }
     return null;

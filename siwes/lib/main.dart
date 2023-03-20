@@ -29,7 +29,7 @@ void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(primarySwatch: Colors.green),
-    initialRoute: '/studentDashboard',
+    initialRoute: '/',
     onGenerateRoute: _getRoutes,
     routes: {
       '/': (context) => const OnBoard(),

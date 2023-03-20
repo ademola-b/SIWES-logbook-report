@@ -1,4 +1,5 @@
 import base64
+from django.core.files.storage import default_storage
 from rest_framework import serializers
 from accounts.serializers import UserDetailSerializer
 from api.models import LogbookEntry
@@ -30,7 +31,7 @@ class IndustrySupervisorSerializer(serializers.ModelSerializer):
         ]
 
     def get_image_memory(request, ind:IndustrySupervisor):
-        with open(ind.profile_pic.name, 'rb') as loadedfile:
+        with default_storage.open(ind.profile_pic.name, 'rb') as loadedfile:
             return base64.b64encode(loadedfile.read())
 
 class StudentListSerializer(serializers.ModelSerializer):
@@ -43,7 +44,7 @@ class StudentListSerializer(serializers.ModelSerializer):
         ]
 
     def get_img_mem(request, std:Student):
-        with open(std.profile_pic.name, 'rb') as loadedfile:
+        with default_storage.open(std.profile_pic.name, 'rb') as loadedfile:
             return base64.b64encode(loadedfile.read())
 
 class StudentLogbookEntrySerializer(serializers.ModelSerializer):

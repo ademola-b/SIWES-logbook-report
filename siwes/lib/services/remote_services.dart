@@ -83,7 +83,7 @@ class RemoteServices {
         print("Server error");
       }
     } catch (e) {
-      print("An error occurred $e");
+      print("Server Error: $e");
     }
 
     return <StudentDetailResponse>[];

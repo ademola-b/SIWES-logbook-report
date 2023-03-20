@@ -1,4 +1,5 @@
 import base64
+from django.core.files.storage import default_storage
 from rest_framework import serializers
 
 from students.models import Student
@@ -49,12 +50,12 @@ class LogbookEntrySerializer(serializers.ModelSerializer):
         ]
 
     def get_image_memory(request, diagram:LogbookEntry):
-        with open(diagram.diagram.name, 'rb') as loadedfile:
+        with default_storage.open(diagram.diagram.name, 'rb') as loadedfile:
             return base64.b64encode(loadedfile.read())
 
 class GetLogbookEntrySerializer(serializers.ModelSerializer):
     diagram = serializers.SerializerMethodField("get_image_memory")
-    student = StudentSerializer()
+    # student = StudentSerializer()
     class Meta:
         model = LogbookEntry
         fields = [
@@ -63,9 +64,9 @@ class GetLogbookEntrySerializer(serializers.ModelSerializer):
             'title',
             'description',
             'diagram',
-            'student'
+            # 'student'
         ]
 
     def get_image_memory(request, diagram:LogbookEntry):
-        with open(diagram.diagram.name, 'rb') as loadedfile:
+        with default_storage.open(diagram.diagram.name, 'rb') as loadedfile:
             return base64.b64encode(loadedfile.read())

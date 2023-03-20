@@ -7,6 +7,8 @@ from rest_framework.decorators import api_view
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateAPIView
 from rest_framework.response import Response
 
+from students.models import Student
+
 from . models import ProgramDate, WeekDates, LogbookEntry, WeekComment
 from . serializers import (ProgramDateSerializer, WeekDateSerializer, 
                            WeekCommentSerializer, LogbookEntrySerializer, 
@@ -98,13 +100,29 @@ class LogbookWithDate(ListAPIView):
 
     def get_queryset(self, *args, **kwargs):
         qs = LogbookEntry.objects.all()
+        request = self.request
+        user = request.user
         date = self.kwargs['date']
+        student_id = self.kwargs['student']
         # date = self.request.query_params.get(kwargs)
         # print(str(date))
-        if date:
+        if student_id and date:
             qs = qs.filter(entry_date = date)
+            if not user.is_authenticated:
+                return LogbookEntry.objects.none()
+            elif user.user_type == 'student':
+                return qs.filter(student = user.student)
+            elif user.user_type == 'industry_based_supervisor' or user.user_type == 'school_based_supervisor':
+                # std_obj = Student.objects.filter(school_based_supervisor = user.schoolsupervisor)
+                # print(std_obj)
+                # print(std_obj[student_id].id)
+                # return qs.filter(student = std_obj[student_id].id)
+                return qs.filter(student = student_id)
+            # elif user.user_type == 'school_based_supervisor':
+            #     return None
         elif date is None:
             return LogbookEntry.objects.none()
+            
         return qs
     
 class UpdateEntryWithComment(RetrieveUpdateAPIView):

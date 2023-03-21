@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:siwes/models/student_details.dart';
 import 'package:siwes/models/user_response.dart';
 import 'package:siwes/models/week_dates_response.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
-import 'package:siwes/utils/defaultButton.dart';
 import 'package:siwes/utils/defaultContainer.dart';
 import 'package:siwes/utils/defaultText.dart';
 import 'package:siwes/screens/students/navbar.dart';
-import 'package:siwes/utils/defaultTextFormField.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -21,12 +18,25 @@ class StudentDashboard extends StatefulWidget {
 class _StudentDashboardState extends State<StudentDashboard> {
   late Future<List<WeekDatesResponse>> futureWeekDate;
   String _username = 'Loading...';
+  int? _studentId;
 
-  Future<UserResponse?> _getUser() async {
-    UserResponse? user = await RemoteServices().getUser();
-    if (user != null) {
+  // Future<UserResponse?> _getUser() async {
+  //   UserResponse? user = await RemoteServices().getUser();
+  //   if (user != null) {
+  //     setState(() {
+  //       _studentId = user.pk;
+  //       _username = user.username;
+  //     });
+  //   }
+  //   return null;
+  // }
+
+  Future<StudentDetailResponse?> _getStdDetails() async {
+    List<StudentDetailResponse>? std = await RemoteServices.getStdDetails();
+    if (std != null) {
       setState(() {
-        _username = user.username;
+        _studentId = std[0].id;
+        print("id: $_studentId");
       });
     }
     return null;
@@ -35,19 +45,10 @@ class _StudentDashboardState extends State<StudentDashboard> {
   @override
   void initState() {
     futureWeekDate = RemoteServices().getWeekDates();
-    _getUser();
+    // _getUser();
+    _getStdDetails();
     super.initState();
   }
-
-  // Future<List<WeekDatesResponse>?> _weekDates() async {
-  //   List<WeekDatesResponse?>? weekDate = await RemoteServices().getWeekDates();
-  //   if (weekDate != null) {
-  //     print("Week Dates - $weekDate");
-  //     for (var dt in weekDate) {
-  //       print(dt!.startDate);
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +115,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                 shrinkWrap: true,
                                 itemCount: dates == null ? 0 : dates.length,
                                 itemBuilder: (context, index) {
+                                  // print("Student Id: $_studentId");
                                   return DefaultContainer(
                                     title: "Week ${index + 1}",
                                     subtitle:
@@ -122,6 +124,8 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                     weekIndex: index,
                                     weekStart: dates[index].startDate,
                                     weekEnd: dates[index].endDate,
+                                    studentId: _studentId,
+                                    wkIndex: dates[index].id,
                                     div_width: 1,
                                   );
                                 },

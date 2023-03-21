@@ -61,6 +61,7 @@ Route<dynamic> _getRoutes(RouteSettings settings) {
   final args = settings.arguments;
   switch (settings.name) {
     case "/week":
+      // return _buildRoute(settings, WeekPage(data: args));
       return _buildRoute(settings, WeekPage(settings.arguments));
 
     case "/logEntry":

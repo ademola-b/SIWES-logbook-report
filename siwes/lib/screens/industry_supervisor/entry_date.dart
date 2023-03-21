@@ -52,7 +52,7 @@ class _EntryDateState extends State<EntryDate> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
     // _getEntryDate(routeData['date']);
-    // print(routeData);
+    print("route: $routeData");
 
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -111,8 +111,8 @@ class _EntryDateState extends State<EntryDate> {
               ),
               const SizedBox(height: 20),
               FutureBuilder(
-                future:
-                    RemoteServices().getEntryDate(routeData['date'], context),
+                future: RemoteServices().getEntryDate(
+                    routeData['student_id'], routeData['date'], context),
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data!.isEmpty) {
                     return Container(
@@ -133,6 +133,7 @@ class _EntryDateState extends State<EntryDate> {
                     );
                   } else if (snapshot.hasData) {
                     var data = snapshot.data;
+
                     titleController.text = data![0].title;
                     descController.text = data[0].description;
                     return Column(
@@ -141,8 +142,9 @@ class _EntryDateState extends State<EntryDate> {
                           label: "Title",
                           hintText: 'Title',
                           text: titleController,
-                          fontSize: 15.0,
+                          fontSize: 20.0,
                           enabled: false,
+                          fillColor: Colors.white,
                         ),
                         const SizedBox(height: 20),
                         DefaultTextFormField(
@@ -150,8 +152,9 @@ class _EntryDateState extends State<EntryDate> {
                           text: descController,
                           hintText: "Description",
                           maxLines: 10,
-                          fontSize: 15.0,
+                          fontSize: 20.0,
                           enabled: false,
+                          fillColor: Colors.white,
                         ),
                         const SizedBox(height: 20.0),
                         const DefaultText(size: 15, text: "Diagram"),
@@ -165,6 +168,7 @@ class _EntryDateState extends State<EntryDate> {
                                       height: 200,
                                       fit: BoxFit.contain,
                                     )
+                                    
                                   : const DefaultText(
                                       size: 20.0, text: "No Diagram"),
                             ),

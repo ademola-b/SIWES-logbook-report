@@ -1,13 +1,21 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:siwes/models/entry_date_response.dart';
+import 'package:siwes/models/logbook_entry_response.dart';
+import 'package:siwes/models/week_comment_response.dart';
 
 import 'package:siwes/screens/students/navbar.dart';
+import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
+import 'package:siwes/utils/defaultButton.dart';
 import 'package:siwes/utils/defaultText.dart';
 import 'package:siwes/utils/defaultTextFormField.dart';
 
 class WeekPage extends StatefulWidget {
+  final arguments;
+
   const WeekPage(
-    Object? arguments, {
+    Object? this.arguments, {
     super.key,
   });
 
@@ -18,12 +26,45 @@ class WeekPage extends StatefulWidget {
 class _WeekPageState extends State<WeekPage> {
   DateTime dt = DateTime.now();
 
+  int? wkComId;
+  String? indNComment, schNComment, _title, _description;
+  Uint8List? _diagram;
+
+  TextEditingController indComment = TextEditingController();
+  TextEditingController schComment = TextEditingController();
+
+  Future<EntryDateResponse?>? checkLogEntryDate(int sid, String date) async {
+    List<EntryDateResponse?>? logEntryResponse =
+        await RemoteServices().getEntryDate(sid, date, context);
+    if (logEntryResponse != null && logEntryResponse.isNotEmpty) {
+      setState(() {
+        _title = logEntryResponse[0]!.title;
+        _description = logEntryResponse[0]!.description;
+        _diagram = logEntryResponse[0]!.diagram;
+
+        // print();
+      });
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    print("Widget data: ${widget.arguments}");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    print(routeData);
+    // print(routeData);
+
+    // checkWkComment(widget.arguments['student_id'], widget.arguments['wkIndex']);
+    // indComment.text = indNComment!;
+    // schComment.text = schNComment!;
+    // print(wkComment);
 
     List<dynamic> days = Constants()
         .getDaysInWeek(routeData['week_start'], routeData['week_end']);
@@ -92,13 +133,19 @@ class _WeekPageState extends State<WeekPage> {
                           color: Colors.white,
                         ),
                         child: ListTile(
-                          onTap: () {
+                          onTap: () async {
+                            await checkLogEntryDate(
+                                widget.arguments['student_id'], days[index]);
+
                             Navigator.pushNamed(
                               context,
                               '/logEntry',
                               arguments: {
                                 'week_index': routeData['week_index'],
-                                'date': days[index]
+                                'date': days[index],
+                                'title': _title ?? '',
+                                'desc': _description ?? '',
+                                'diagram': _diagram ?? []
                               },
                             );
                           },
@@ -121,18 +168,64 @@ class _WeekPageState extends State<WeekPage> {
                       );
                     }),
                   )),
-              const DefaultTextFormField(
+              // FutureBuilder(
+              //     future: RemoteServices.getWeekComment(
+              //         context: context,
+              //         studentId: widget.arguments['student_id'],
+              //         weekId: widget.arguments['wkIndex']),
+              //     builder: (context, snapshot) {
+              //       print("student_id: ${widget.arguments['student_id']}");
+              //       print("week_index: ${widget.arguments['wkIndex']}");
+              //       if (snapshot.hasData) {
+              //         var data = snapshot.data;
+              //         indComment.text = data!.industryComment.toString();
+              //         schComment.text = data.schoolComment.toString();
+              //         return Column(
+              //           children: [
+              //             DefaultTextFormField(
+              //               text: indComment,
+              //               label: "Industry Based Supervisor Comment",
+              //               hintText: "Industry Based Supervisor Comment",
+              //               fontSize: 15.0,
+              //               maxLines: 5,
+              //               enabled: false,
+              //               fillColor: Colors.white,
+              //             ),
+              //             const SizedBox(height: 20.0),
+              //             DefaultTextFormField(
+              //               text: schComment,
+              //               label: "School Based Supervisor Comment",
+              //               hintText: "School Based Supervisor Comment",
+              //               fontSize: 15.0,
+              //               maxLines: 5,
+              //               enabled: false,
+              //               fillColor: Colors.white,
+              //             )
+              //           ],
+              //         );
+              //       }
+
+              //       return Container();
+              //     }),
+
+              DefaultTextFormField(
+                text: indComment,
+                label: "Industry Based Supervisor Comment",
                 hintText: "Industry Based Supervisor Comment",
                 fontSize: 15.0,
                 maxLines: 5,
                 enabled: false,
+                fillColor: Colors.white,
               ),
               const SizedBox(height: 20.0),
-              const DefaultTextFormField(
+              DefaultTextFormField(
+                text: schComment,
+                label: "School Based Supervisor Comment",
                 hintText: "School Based Supervisor Comment",
                 fontSize: 15.0,
                 maxLines: 5,
                 enabled: false,
+                fillColor: Colors.white,
               )
             ],
           ),

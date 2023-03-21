@@ -19,7 +19,7 @@ from students.serializers import StudentSerializer
 # Create your views here.
 class StudentList(ListAPIView):
     queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+    serializer_class = StudentListSerializer
 
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)

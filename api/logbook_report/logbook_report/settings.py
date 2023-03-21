@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-$x&#u%f)_5l(7gm822$9r8d^m5wutje+zbkx-y)23uvak!0r1+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.43.130', '127.0.0.1', '192.168.1.116']
+ALLOWED_HOSTS = ['192.168.43.130', '127.0.0.1', '192.168.1.116', '192.168.43.182']
 
 
 # Application definition
@@ -156,5 +156,6 @@ AUTHENTICATION_BACKENDS = ['accounts.models.EmailBackend']
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
     'http://192.168.43.130:8000', 
+    'http://192.168.43.182:8000', 
     'http://192.168.1.116:8000'
 ]

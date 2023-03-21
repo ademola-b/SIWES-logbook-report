@@ -10,18 +10,21 @@ class DefaultContainer extends StatelessWidget {
   final int? weekIndex;
   final DateTime? weekStart;
   final DateTime? weekEnd;
+  final int? studentId;
+  final int? wkIndex;
 
-  const DefaultContainer({
-    Key? key,
-    required this.title,
-    required this.subtitle,
-    required this.route,
-    this.leading,
-    required this.div_width,
-    this.weekIndex,
-    this.weekStart,
-    this.weekEnd,
-  }) : super(key: key);
+  const DefaultContainer(
+      {Key? key,
+      required this.title,
+      required this.subtitle,
+      required this.route,
+      this.leading,
+      required this.div_width,
+      this.weekIndex,
+      this.weekStart,
+      this.weekEnd,
+      this.studentId, this.wkIndex})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,8 @@ class DefaultContainer extends StatelessWidget {
             'week_index': weekIndex,
             'week_start': weekStart,
             'week_end': weekEnd,
+            'student_id': studentId,
+            'wkIndex': wkIndex,
           });
         },
         leading: leading,

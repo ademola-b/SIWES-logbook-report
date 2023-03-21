@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:siwes/models/entry_date_response.dart';
 import 'package:siwes/models/ind_std_list.dart';
+import 'package:siwes/models/logbook_entry_response.dart';
 import 'package:siwes/models/login_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:siwes/models/placement_centre_response.dart';
@@ -66,18 +67,17 @@ class RemoteServices {
   }
 
   //student detail
-  Future<List<StudentDetailResponse>> getStdDetails() async {
+  static Future<List<StudentDetailResponse>> getStdDetails() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var token = pref.getString("token");
 
     try {
       var response = await http
           .get(stdDetailsUrl, headers: {"Authorization": "Token $token"});
-      print("enee");
+
       if (response.statusCode == 200) {
-        print("eneeaaaa");
         final std = studentDetailResponseFromJson(response.body);
-        print(std);
+        // print(std);
         return std;
       } else {
         print("Server error");
@@ -107,21 +107,23 @@ class RemoteServices {
         throw Exception("Failed to get Student List");
       }
     } catch (e) {
-      print("Server from error $e");
+      print("Server error: $e");
     }
 
     return <IndStdList>[];
   }
 
   //Entry Date
-  Future<List<EntryDateResponse>?> getEntryDate(String date, context) async {
+  Future<List<EntryDateResponse>?> getEntryDate(
+      int studentId, String date, context) async {
     try {
-      http.Response response =
-          await http.get(Uri.parse("$base_url/api/entry_date/$date"));
+      http.Response response = await http
+          .get(Uri.parse("$base_url/api/entry_date/$studentId/$date"));
       if (response.statusCode == 200) {
         return entryDateResponseFromJson(response.body);
       }
     } catch (e) {
+      print("Server Error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: DefaultText(size: 15.0, text: "Server Error: $e")));
     }
@@ -130,15 +132,17 @@ class RemoteServices {
   }
 
   //week comment - industry supervisor
-  Future<WeekCommentResponse?>? getWeekComment(
+  static Future<WeekCommentResponse?>? getWeekComment(
       {context,
       required int studentId,
       required int weekId,
-      String? industryComment}) async {
+      String? industryComment,
+      String? schoolComment}) async {
     var data = jsonEncode({
       'student': studentId,
       'week': weekId,
       'industry_comment': industryComment,
+      'school_comment': schoolComment,
     });
 
     try {
@@ -153,11 +157,7 @@ class RemoteServices {
         throw Exception("Failed to comment on entry");
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: DefaultText(
-        size: 15.0,
-        text: "An error occured: $e",
-      )));
+      print("Server Error: $e");
     }
 
     return null;
@@ -252,7 +252,7 @@ class RemoteServices {
   // get students
   static Future<List<SchStdListResponse?>?> getSchStdList(context) async {
     try {
-      http.Response response = await http.get(schStdListUri);
+      http.Response response = await http.get(schStdListUrl);
       if (response.statusCode == 200) {
         return schStdListResponseFromJson(response.body);
       } else {
@@ -269,4 +269,22 @@ class RemoteServices {
   }
 
   //get Logbook
+
+  //Student Services
+  //get or create entry
+  Future<List<LogbookEntryResponse>?>? getPostLogEntry(
+      {required int studentId, required String entry_date}) async {
+    try {
+      http.Response response = await http.get(logEntryUrl);
+      if (response.statusCode == 200) {
+        return logbookEntryResponseFromJson(response.body);
+      } else {
+        throw Exception("Failed to get log entry");
+      }
+    } catch (e) {
+      print("Server Error: $e");
+    }
+
+    return [];
+  }
 }

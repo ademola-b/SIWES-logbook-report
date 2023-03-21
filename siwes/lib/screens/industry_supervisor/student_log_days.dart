@@ -57,7 +57,7 @@ class _StudentLogDaysState extends State<StudentLogDays> {
 
   @override
   void initState() {
-    print("from initstate - ${widget.data}");
+    // print("from initstate - ${widget.data}");
     indComment!.text = widget.data['indNComment'];
     super.initState();
   }
@@ -70,7 +70,7 @@ class _StudentLogDaysState extends State<StudentLogDays> {
     List<dynamic> days = Constants()
         .getDaysInWeek(routeData['week_start'], routeData['week_end']);
 
-    print(routeData);
+    // print(routeData);
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
       drawer: Navbar(),
@@ -84,9 +84,11 @@ class _StudentLogDaysState extends State<StudentLogDays> {
           child: Column(
             children: [
               DefaultText(
-                  size: 18.0,
-                  text:
-                      "Logbook Report for ${routeData['std_fname']} ${routeData['std_lname']}"),
+                size: 18.0,
+                text:
+                    "Logbook Report for ${routeData['std_fname']} ${routeData['std_lname']}",
+                color: Constants.primaryColor,
+              ),
               const SizedBox(height: 20.0),
               Wrap(
                 spacing: 20.0, // gap between adjacent chips
@@ -105,7 +107,8 @@ class _StudentLogDaysState extends State<StudentLogDays> {
                           'fname': routeData['std_fname'],
                           'lname': routeData['std_lname'],
                           'username': routeData['std_username'],
-                          'date': days[index]
+                          'date': days[index],
+                          'student_id': routeData['student_id']
                           // "${days[index].day}/${days[index].month}/${days[index].year}"
                         });
                       },
@@ -130,11 +133,13 @@ class _StudentLogDaysState extends State<StudentLogDays> {
               ),
               const SizedBox(height: 20.0),
               DefaultTextFormField(
-                  text: indComment!,
-                  label: "Industry Based Supervisor Comment",
-                  maxLines: 5,
-                  hintText: "Industry Based Supervisor Comment",
-                  fontSize: 15.0),
+                text: indComment!,
+                label: "Industry Based Supervisor Comment",
+                maxLines: 5,
+                hintText: "Industry Based Supervisor Comment",
+                fontSize: 15.0,
+                fillColor: Colors.white,
+              ),
               const SizedBox(height: 20.0),
               SizedBox(
                   width: MediaQuery.of(context).size.width,

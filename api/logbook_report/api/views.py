@@ -66,10 +66,10 @@ class WeekCommentView(ListCreateAPIView):
         user = self.request.user
         try:
             if not user.is_authenticated:
-                WeekComment.objects.none()
+                return WeekComment.objects.none()
             elif user.is_staff:
-                WeekComment.objects.all()
-            
+                return WeekComment.objects.all()
+
             return qs.filter(student = self.request.user.student)
         except:
             return None
@@ -106,22 +106,27 @@ class LogbookWithDate(ListAPIView):
         student_id = self.kwargs['student']
         # date = self.request.query_params.get(kwargs)
         # print(str(date))
+
         if student_id and date:
-            qs = qs.filter(entry_date = date)
-            if not user.is_authenticated:
-                return LogbookEntry.objects.none()
-            elif user.user_type == 'student':
-                return qs.filter(student = user.student)
-            elif user.user_type == 'industry_based_supervisor' or user.user_type == 'school_based_supervisor':
-                # std_obj = Student.objects.filter(school_based_supervisor = user.schoolsupervisor)
-                # print(std_obj)
-                # print(std_obj[student_id].id)
-                # return qs.filter(student = std_obj[student_id].id)
-                return qs.filter(student = student_id)
-            # elif user.user_type == 'school_based_supervisor':
-            #     return None
+            qs = qs.filter(entry_date = date, student = student_id)
+            return qs            
+        
         elif date is None:
             return LogbookEntry.objects.none()
+            
+
+        # if student_id and date:
+        #     qs = qs.filter(entry_date = date)
+        #     if not user.is_authenticated:
+        #         return LogbookEntry.objects.none()
+        #     elif user.user_type == 'student':
+        #         return qs.filter(student = user.student)
+        #     elif user.user_type == 'industry_based_supervisor' or user.user_type == 'school_based_supervisor':
+        #         return qs.filter(student = student_id)
+        #     # elif user.user_type == 'school_based_supervisor':
+        #     #     return None
+        # elif date is None:
+        #     return LogbookEntry.objects.none()
             
         return qs
     

@@ -30,24 +30,28 @@ class WeekCommentSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         data, _ = WeekComment.objects.get_or_create(student = validated_data['student'], week = validated_data['week'])
-        print(data)
+        # print(data)
         return data
 
 
 class LogbookEntrySerializer(serializers.ModelSerializer):
-    # diagram_mem = serializers.SerializerMethodField("get_image_memory")
+    diagram_mem = serializers.SerializerMethodField("get_image_memory")
     # student = StudentSerializer()
     class Meta:
         model = LogbookEntry
         fields = [
+            'student',
             'week',
             'entry_date', 
             'title',
             'description',
             'diagram',
-            # 'diagram_mem'
-            # 'student'
+            'diagram_mem'
         ]
+
+    # def create(self, validated_data):
+    #     data, _ = LogbookEntry.objects.get_or_create(entry_date = validated_data['entry_date'], student = validated_data['student'])
+    #     return data
 
     def get_image_memory(request, diagram:LogbookEntry):
         with default_storage.open(diagram.diagram.name, 'rb') as loadedfile:

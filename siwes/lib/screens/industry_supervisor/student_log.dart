@@ -32,18 +32,18 @@ class _StudentLogState extends State<StudentLog> {
   }
 
   Future<WeekCommentResponse?>? checkWkComment(int sid, int wkId) async {
-    WeekCommentResponse? wkResponse = await RemoteServices()
+    WeekCommentResponse? wkResponse = await RemoteServices
         .getWeekComment(context: context, studentId: sid, weekId: wkId);
 
     if (wkResponse != null) {
       setState(() {
         wkComId = wkResponse.id!;
-        print("Wkcom after set: $wkComId");
+        // print("Wkcom after set: $wkComId");
         indNComment = wkResponse.industryComment ?? '';
-        print("IndNComment after set: $indNComment");
+        // print("IndNComment after set: $indNComment");
       });
 
-      print("Week id: $wkId");
+      // print("Week id: $wkId");
     }
   }
 
@@ -57,7 +57,7 @@ class _StudentLogState extends State<StudentLog> {
   Widget build(BuildContext context) {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    print(routeData);
+    // print(routeData);
 
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
@@ -90,8 +90,7 @@ class _StudentLogState extends State<StudentLog> {
                                 onTap: () async {
                                   await checkWkComment(indStd![index].id,
                                       routeData['week_index']);
-                                  // print("Chk clicked: $wkComId");
-                                  // print("chk clicked: Ind $indNComment");
+                                  
                                   Map<String, dynamic> data = {
                                     'week_comment_id': wkComId,
                                     'indNComment': indNComment,

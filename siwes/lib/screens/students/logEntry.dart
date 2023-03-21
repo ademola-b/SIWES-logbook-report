@@ -11,7 +11,9 @@ import 'package:siwes/utils/defaultTextFormField.dart';
 import 'package:path/path.dart' as Path;
 
 class LogEntry extends StatefulWidget {
-  const LogEntry(Object? arguments, {super.key});
+  final arguments;
+
+  const LogEntry(Object? this.arguments, {super.key});
 
   @override
   State<LogEntry> createState() => _LogEntryState();
@@ -19,6 +21,9 @@ class LogEntry extends StatefulWidget {
 
 class _LogEntryState extends State<LogEntry> {
   File? _image;
+
+  TextEditingController? titleController = TextEditingController();
+  TextEditingController? descController = TextEditingController();
 
   //get the image
   Future getImage(ImageSource source) async {
@@ -61,6 +66,14 @@ class _LogEntryState extends State<LogEntry> {
   }
 
   void _submit() {}
+
+  @override
+  void initState() {
+    print("widget data: ${widget.arguments}");
+    titleController!.text = widget.arguments['title'];
+    descController!.text = widget.arguments['desc'];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,15 +123,21 @@ class _LogEntryState extends State<LogEntry> {
               Form(
                   child: Column(
                 children: [
-                  const DefaultTextFormField(
+                  DefaultTextFormField(
+                    text: titleController,
+                    label: 'Title',
                     hintText: 'Title',
                     fontSize: 15.0,
+                    fillColor: Colors.white,
                   ),
                   const SizedBox(height: 20),
-                  const DefaultTextFormField(
+                  DefaultTextFormField(
+                    text: descController,
+                    label: "Description",
                     hintText: "Description",
                     maxLines: 10,
                     fontSize: 15.0,
+                    fillColor: Colors.white,
                   ),
                   const SizedBox(height: 20),
                   const DefaultText(size: 15, text: "Diagram"),
@@ -126,6 +145,8 @@ class _LogEntryState extends State<LogEntry> {
                     children: [
                       Expanded(
                         child: _image != null
+                            // widget.arguments['diagram'] != null
+
                             ? Image.file(
                                 _image!,
                                 width: 200,

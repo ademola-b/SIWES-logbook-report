@@ -165,17 +165,19 @@ class RemoteServices {
   }
 
   //update Week comment
-  Future<WeekCommentResponse?>? updateComment(
+  static Future<WeekCommentResponse?>? updateComment(
       {context,
       required int id,
       required int studentId,
       required int weekId,
-      String? indComment}) async {
+      String? indComment,
+      String? schComment}) async {
     var body = jsonEncode({
       "id": id,
       "student": studentId,
       "week": weekId,
       "industry_comment": indComment,
+      "school_comment": schComment
     });
     http.Response response = await http.put(updateEntryUrl(id),
         headers: <String, String>{

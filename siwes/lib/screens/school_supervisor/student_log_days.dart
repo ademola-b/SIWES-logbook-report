@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:siwes/models/week_comment_response.dart';
+import 'package:siwes/screens/school_supervisor/comment.dart';
 import 'package:siwes/screens/school_supervisor/navbar.dart';
+import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultButton.dart';
 import 'package:siwes/utils/defaultContainer.dart';
@@ -17,6 +20,41 @@ class SuperStudentLogDays extends StatefulWidget {
 class _SuperStudentLogDaysState extends State<SuperStudentLogDays> {
   TextEditingController? indComment = TextEditingController();
   TextEditingController? schComment = TextEditingController();
+
+  void _updateComment(int id, studentId, weekId, indComment, schComment) async {
+    WeekCommentResponse? cmResponse = await RemoteServices.updateComment(
+        context: context,
+        id: id,
+        studentId: studentId,
+        weekId: weekId,
+        indComment: indComment,
+        schComment: schComment);
+    if (cmResponse != null) {
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                content: SizedBox(
+                  height: 120.0,
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.check_circle_outline,
+                        size: 70.0,
+                        color: Constants.backgroundColor,
+                      ),
+                      const SizedBox(height: 20.0),
+                      const DefaultText(
+                        size: 20.0,
+                        text: "Comment Saved",
+                        color: Colors.green,
+                      ),
+                    ],
+                  ),
+                ),
+              ));
+      Navigator.pop(context);
+    }
+  }
 
   @override
   void initState() {
@@ -102,19 +140,29 @@ class _SuperStudentLogDaysState extends State<SuperStudentLogDays> {
                 fillColor: Colors.white,
               ),
               const SizedBox(height: 20.0),
-              const DefaultTextFormField(
+              DefaultTextFormField(
+                text: schComment,
                 enabled: true,
                 maxLines: 5,
                 label: "School Based Supervisor Comment",
                 hintText: "School Based Supervisor Comment",
-                fontSize: 15.0,
+                fontSize: 20.0,
                 fillColor: Colors.white,
               ),
               const SizedBox(height: 20.0),
               SizedBox(
                   width: MediaQuery.of(context).size.width,
                   child: DefaultButton(
-                      onPressed: () {}, text: "SUBMIT", textSize: 20.0))
+                      onPressed: () {
+                        _updateComment(
+                            widget.nxtdata['week_comment_id'],
+                            widget.nxtdata['student_id'],
+                            widget.nxtdata['week_index'],
+                            indComment!.text,
+                            schComment!.text);
+                      },
+                      text: "SUBMIT",
+                      textSize: 20.0))
             ],
           ),
         ),

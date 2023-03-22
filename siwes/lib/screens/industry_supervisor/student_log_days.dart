@@ -22,7 +22,7 @@ class _StudentLogDaysState extends State<StudentLogDays> {
   TextEditingController? indComment = TextEditingController();
 
   void _updateComment(int id, studentId, weekId, indComment) async {
-    WeekCommentResponse? cmResponse = await RemoteServices().updateComment(
+    WeekCommentResponse? cmResponse = await RemoteServices.updateComment(
         context: context,
         id: id,
         studentId: studentId,

@@ -9,6 +9,7 @@ import 'package:siwes/models/login_response.dart';
 import 'package:http/http.dart' as http;
 import 'package:siwes/models/placement_centre_response.dart';
 import 'package:siwes/models/sch_std_list_response.dart';
+import 'package:siwes/models/school_supervisor_profile.dart';
 import 'package:siwes/models/student_details.dart';
 import 'package:siwes/models/user_response.dart';
 import 'package:siwes/models/week_comment_response.dart';
@@ -36,7 +37,7 @@ class RemoteServices {
   }
 
   //user token
-  Future<UserResponse?> getUser() async {
+  static Future<UserResponse?> getUser() async {
     //get user token
     SharedPreferences pref = await SharedPreferences.getInstance();
     var token = pref.getString("token");
@@ -50,7 +51,7 @@ class RemoteServices {
   }
 
   //week dates
-  Future<List<WeekDatesResponse>> getWeekDates() async {
+  static Future<List<WeekDatesResponse>> getWeekDates() async {
     try {
       var response = await http.get(weekDatesUrl);
       if (response.statusCode == 200) {
@@ -249,10 +250,32 @@ class RemoteServices {
   }
 
   // School Based supervisor Services
-  // get students
-  static Future<List<SchStdListResponse?>?> getSchStdList(context) async {
+  //profile
+  static Future<List<SchoolSupervisorProfile>?> getSchProfile(context) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var token = pref.getString("token");
     try {
-      http.Response response = await http.get(schStdListUrl);
+      http.Response response = await http
+          .get(schProfileUrl, headers: {'Authorization': "Token $token"});
+      if (response.statusCode == 200) {
+        return schoolSupervisorProfileFromJson(response.body);
+      } else {
+        throw Exception("Failed to get profile");
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: DefaultText(size: 15.0, text: "Server error: $e")));
+    }
+  }
+
+  // get students
+  static Future<List<SchStdListResponse>?> getSchStdList(context) async {
+    //get user token
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var token = pref.getString("token");
+    try {
+      http.Response response = await http
+          .get(schStdListUrl, headers: {'Authorization': "Token $token"});
       if (response.statusCode == 200) {
         return schStdListResponseFromJson(response.body);
       } else {

@@ -1,9 +1,29 @@
 from django.shortcuts import render
 from rest_framework.generics import ListAPIView
-from . serializers import StudentListSerializer
+from . models import SchoolSupervisor
+from . serializers import StudentListSerializer, SchoolSupervisorSerializer
 from students.models import Student
 
 # Create your views here.
+class ProfileView(ListAPIView):
+    queryset = SchoolSupervisor.objects.all()
+    serializer_class = SchoolSupervisorSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset()
+        request = self.request
+        user = request.user
+        
+        try:
+            if not user.is_authenticated:
+                SchoolSupervisor.objects.none()
+            elif user.is_staff:
+                SchoolSupervisor.objects.all()
+
+            return qs.filter(user = request.user)
+        except:
+            return None
+        
 class StudentList(ListAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentListSerializer

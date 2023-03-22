@@ -1,8 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:siwes/models/login_response.dart';
+import 'package:siwes/models/school_supervisor_profile.dart';
 import 'package:siwes/models/user_response.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
@@ -42,7 +46,7 @@ class _LoginState extends State<Login> {
 
         // Navigator.popAndPushNamed(context, '/studentDashboard');
 
-        UserResponse? user = await RemoteServices().getUser();
+        UserResponse? user = await RemoteServices.getUser();
 
         //navigator to page according to user type
         if (user != null) {
@@ -51,6 +55,20 @@ class _LoginState extends State<Login> {
           } else if (user.userType == 'industry_based_supervisor') {
             Navigator.popAndPushNamed(context, '/industryDashboard');
           } else if (user.userType == 'school_based_supervisor') {
+            //get profile
+            List<SchoolSupervisorProfile>? profile =
+                await RemoteServices.getSchProfile(context);
+            if (profile != null) {
+              var picEncode = base64Encode(profile[0].profilePicMemory);
+              await pref.setString(
+                  "supervisor_username", profile[0].user.username);
+              await pref.setString("supervisor_email", profile[0].user.email);
+              await pref.setString("supervisor_pic", picEncode);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: DefaultText(size: 15.0, text: "Profile not found")));
+            }
+
             Navigator.popAndPushNamed(context, '/schoolSupervisorDashboard');
           } else if (user.userType == 'admin') {
             showDialog(
@@ -70,7 +88,8 @@ class _LoginState extends State<Login> {
                 });
           }
         } else {
-          print("Null returned");
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: DefaultText(size: 15.0, text: "User not found")));
         }
       }
 

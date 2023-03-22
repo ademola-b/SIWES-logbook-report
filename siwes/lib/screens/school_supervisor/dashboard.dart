@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:siwes/models/user_response.dart';
 import 'package:siwes/screens/school_supervisor/navbar.dart';
+import 'package:siwes/utils/string_extension.dart';
+import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultText.dart';
 
@@ -13,8 +14,24 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  final String _username = 'Loading...';
+  String _username = 'Loading...';
   DateTime dt = DateTime.now();
+
+  Future<UserResponse?> _getUser() async {
+    UserResponse? user = await RemoteServices.getUser();
+    if (user != null) {
+      setState(() {
+        _username = user.username;
+      });
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    _getUser();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +58,7 @@ class _DashboardState extends State<Dashboard> {
                   children: [
                     DefaultText(
                       size: 20.0,
-                      text: "Hello, \n $_username",
+                      text: "Hello, \n ${_username.titleCase()}",
                       color: Constants.primaryColor,
                       align: TextAlign.center,
                     ),

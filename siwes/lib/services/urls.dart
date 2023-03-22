@@ -1,5 +1,5 @@
-// String base_url = 'http://192.168.43.130:8000';
-String base_url = 'http://192.168.43.182:8000';
+String base_url = 'http://192.168.43.130:8000';
+// String base_url = 'http://192.168.43.182:8000';
 // String base_url = 'http://192.168.1.116:8000';
 
 //login_url
@@ -33,6 +33,9 @@ Uri placementCentreUri =
     Uri.parse("$base_url/api/industry_supervisor/add-placement/");
 
 // School supervisor URLS
+//Profile
+Uri schProfileUrl = Uri.parse("$base_url/api/school_supervisor/profile/");
+
 // get students
 Uri schStdListUrl = Uri.parse("$base_url/api/school_supervisor/students/");
 

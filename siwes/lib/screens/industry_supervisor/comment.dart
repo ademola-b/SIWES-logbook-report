@@ -19,7 +19,7 @@ class _IndCommentState extends State<IndComment> {
   List newEWkDate = [];
 
   Future<List<WeekDatesResponse>> _getWeekDates() async {
-    List<WeekDatesResponse> wkd = await RemoteServices().getWeekDates();
+    List<WeekDatesResponse> wkd = await RemoteServices.getWeekDates();
     if (wkd.isNotEmpty) {
       setState(() {
         wkDates = [...wkDates, ...wkd];

@@ -45,12 +45,12 @@ class _NavbarState extends State<Navbar> {
     '/industryPlacementCentre',
   ];
 
-  RemoteServices _remote = RemoteServices();
+  // RemoteServices _remote = RemoteServices();
 
   String? _username, _email;
 
   Future<UserResponse?> _getUser() async {
-    UserResponse? user = await _remote.getUser();
+    UserResponse? user = await RemoteServices.getUser();
     if (user != null) {
       setState(() {
         _username = user.username;
@@ -123,7 +123,9 @@ class _NavbarState extends State<Navbar> {
                   onTap: () {
                     switch (_labels[index]) {
                       case 'Exit':
-                        Navigator.popAndPushNamed(context, '/login');
+                        Constants.clearDetails();
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/login', ((route) => false));
                         break;
                       default:
                     }

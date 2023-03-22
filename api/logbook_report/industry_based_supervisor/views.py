@@ -17,6 +17,25 @@ from . serializers import (StudentListSerializer,
 from students.serializers import StudentSerializer
 
 # Create your views here.
+class ProfileView(ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = IndustrySupervisorSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset()
+        request = self.request
+        user = request.user
+        
+        try:
+            if not user.is_authenticated:
+                IndustrySupervisor.objects.none()
+            elif user.is_staff:
+                IndustrySupervisor.objects.all()
+
+            return qs.filter(user = request.user)
+        except:
+            return None
+
 class StudentList(ListAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentListSerializer

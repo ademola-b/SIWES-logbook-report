@@ -19,7 +19,7 @@ class _DashboardState extends State<Dashboard> {
   List<IndStdList>? indStd = [];
 
   Future<UserResponse?> _getUser() async {
-    UserResponse? user = await RemoteServices().getUser();
+    UserResponse? user = await RemoteServices.getUser();
     if (user != null) {
       setState(() {
         _username = user.username;

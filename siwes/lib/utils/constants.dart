@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:siwes/models/week_dates_response.dart';
+import 'package:siwes/services/remote_services.dart';
 
 class Constants {
   static Color? primaryColor = Colors.green[500];
@@ -28,4 +31,11 @@ class Constants {
     }
     return null;
   }
+
+  static clearDetails() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.clear();
+  }
+
+
 }

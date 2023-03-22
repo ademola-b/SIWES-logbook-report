@@ -1,9 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:siwes/utils/constants.dart';
+import 'dart:convert';
 
-class Navbar extends StatelessWidget {
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:siwes/models/user_response.dart';
+import 'package:siwes/services/remote_services.dart';
+import 'package:siwes/utils/constants.dart';
+import 'package:siwes/utils/defaultText.dart';
+import 'package:siwes/utils/string_extension.dart';
+
+class Navbar extends StatefulWidget {
   Navbar({super.key});
 
+  @override
+  State<Navbar> createState() => _NavbarState();
+}
+
+class _NavbarState extends State<Navbar> {
   final List<String> _activities = [
     "Dashboard",
     "Students",
@@ -34,6 +47,29 @@ class Navbar extends StatelessWidget {
     Icons.logout,
   ];
 
+  List profileDetails = [];
+
+  String? _username, _email, _pic;
+
+  getProfile() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    // pref.getString("supervisor_username");
+    // pref.getString("supervisor_email");
+    // pref.getString("supervisor_pic");
+    setState(() {
+      _username = pref.getString("supervisor_username");
+      _email = pref.getString("supervisor_email");
+      _pic = pref.getString("supervisor_pic");
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // getProfile();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -41,12 +77,12 @@ class Navbar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: const Text("UserName"),
-            accountEmail: const Text("Email Address"),
+            accountName: Text("username"),
+            accountEmail: Text("email address"),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.asset(
-                  'assets/images/avatar.jpg',
+                  "assets/images/avatar.jpg",
                   width: 90,
                   height: 90,
                   fit: BoxFit.cover,
@@ -90,7 +126,9 @@ class Navbar extends StatelessWidget {
                   onTap: () {
                     switch (_labels[index]) {
                       case 'Exit':
-                        Navigator.popAndPushNamed(context, '/login');
+                        Constants.clearDetails();
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/login', ((route) => false));
                         break;
                       default:
                     }

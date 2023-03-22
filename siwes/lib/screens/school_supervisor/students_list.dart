@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'package:siwes/models/ind_std_list.dart';
+import 'package:siwes/models/sch_std_list_response.dart';
 import 'package:siwes/screens/school_supervisor/navbar.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
-import 'package:siwes/utils/defContainer.dart';
 import 'package:siwes/utils/defaultButton.dart';
 import 'package:siwes/utils/defaultText.dart';
 
@@ -16,8 +14,23 @@ class StudentsList extends StatefulWidget {
 }
 
 class _StudentsListState extends State<StudentsList> {
+  List<SchStdListResponse>? schStd = [];
+
+  Future<List<SchStdListResponse>?> _getSchStdList() async {
+    List<SchStdListResponse>? stdL =
+        await RemoteServices.getSchStdList(context);
+    if (stdL != null) {
+      setState(() {
+        schStd = [...schStd!, ...stdL];
+        print(schStd);
+      });
+    }
+    return null;
+  }
+
   @override
   void initState() {
+    _getSchStdList();
     super.initState();
   }
 
@@ -88,7 +101,7 @@ class _StudentsListState extends State<StudentsList> {
                                       },
                                       leading: ClipOval(
                                           child: Image.memory(
-                                        data[index]!.picMem,
+                                        data[index].picMem,
                                         width: 50,
                                         height: 50,
                                         fit: BoxFit.cover,
@@ -96,13 +109,13 @@ class _StudentsListState extends State<StudentsList> {
                                       title: DefaultText(
                                         size: 18,
                                         text:
-                                            "${data[index]!.user.firstName} ${data[index]!.user.lastName}",
+                                            "${data[index].user.firstName} ${data[index].user.lastName}",
                                         color: Colors.green,
                                         weight: FontWeight.w500,
                                       ),
                                       subtitle: DefaultText(
                                         size: 15,
-                                        text: data[index]!.user.username,
+                                        text: data[index].user.username,
                                         color: Colors.green,
                                         weight: FontWeight.w500,
                                       ),

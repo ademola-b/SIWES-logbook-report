@@ -44,7 +44,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   @override
   void initState() {
-    futureWeekDate = RemoteServices().getWeekDates();
+    futureWeekDate = RemoteServices.getWeekDates();
     // _getUser();
     _getStdDetails();
     super.initState();

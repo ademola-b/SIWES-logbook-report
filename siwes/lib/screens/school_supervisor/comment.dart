@@ -87,7 +87,8 @@ class _SchCommentState extends State<SchComment> {
                               ),
                               child: ListTile(
                                 onTap: () {
-                                  Navigator.pushNamed(context, '/studentLog',
+                                  Navigator.pushNamed(
+                                      context, '/superStudentLog',
                                       arguments: {
                                         'week_index': wkDates[index].id,
                                         'week_start': wkDates[index].startDate,

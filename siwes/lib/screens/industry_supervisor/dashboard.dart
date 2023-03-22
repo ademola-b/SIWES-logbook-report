@@ -29,7 +29,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<List<IndStdList>?> _getIndStdList() async {
-    List<IndStdList>? stdL = await RemoteServices().getIndStdList();
+    List<IndStdList>? stdL = await RemoteServices.getIndStdList();
     if (stdL != null) {
       setState(() {
         indStd = [...indStd!, ...stdL];

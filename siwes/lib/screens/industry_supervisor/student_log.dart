@@ -20,7 +20,7 @@ class _StudentLogState extends State<StudentLog> {
   String? indNComment;
 
   Future<List<IndStdList>?> _getIndStdList() async {
-    List<IndStdList>? stdL = await RemoteServices().getIndStdList();
+    List<IndStdList>? stdL = await RemoteServices.getIndStdList();
 
     if (stdL != null) {
       setState(() {

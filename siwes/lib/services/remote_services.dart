@@ -92,7 +92,7 @@ class RemoteServices {
 
   //Industry Supervisor Remote Services
   //student list
-  Future<List<IndStdList>?> getIndStdList() async {
+  static Future<List<IndStdList>?> getIndStdList() async {
     //get user token
     SharedPreferences pref = await SharedPreferences.getInstance();
     var token = pref.getString("token");

@@ -58,8 +58,8 @@ class _StudentLogDaysState extends State<StudentLogDays> {
   @override
   void initState() {
     // print("from initstate - ${widget.data}");
-    indComment!.text = widget.data['indNComment'];
     super.initState();
+    indComment!.text = widget.data['indNComment'];
   }
 
   @override
@@ -67,8 +67,8 @@ class _StudentLogDaysState extends State<StudentLogDays> {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    List<dynamic> days = Constants()
-        .getDaysInWeek(routeData['week_start'], routeData['week_end']);
+    List<dynamic> days =
+        Constants.getDaysInWeek(routeData['week_start'], routeData['week_end']);
 
     // print(routeData);
     return Scaffold(

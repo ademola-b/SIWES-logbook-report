@@ -66,8 +66,8 @@ class _WeekPageState extends State<WeekPage> {
     // schComment.text = schNComment!;
     // print(wkComment);
 
-    List<dynamic> days = Constants()
-        .getDaysInWeek(routeData['week_start'], routeData['week_end']);
+    List<dynamic> days =
+        Constants.getDaysInWeek(routeData['week_start'], routeData['week_end']);
 
     return Scaffold(
       drawer: Navbar(),

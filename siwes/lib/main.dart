@@ -50,8 +50,8 @@ void main() {
           const schoolSupervisorDashboard.Dashboard(),
       '/schComment': (context) => const SchComment(),
       '/schStudentList': (context) => const StudentsList(),
-      '/superStudentLog': (context) => const SuperStudentLog(),
-      '/superStudentLogDays': (context) => const SuperStudentLogDays(),
+      // '/superStudentLog': (context) => const SuperStudentLog(),
+      // '/superStudentLogDays': (context) => const SuperStudentLogDays(),
       '/profile': (context) => const Profile(),
     },
   ));
@@ -73,8 +73,15 @@ Route<dynamic> _getRoutes(RouteSettings settings) {
     case "/studentLogDays":
       return _buildRoute(settings, StudentLogDays(data: args));
 
+    case "/superStudentLog":
+      return _buildRoute(settings, SuperStudentLog(data: args));
+    
+    case "/superStudentLogDays":
+      return _buildRoute(settings, SuperStudentLogDays(nxtdata: args));
+    
     case "/entryDate":
       return _buildRoute(settings, EntryDate(settings.arguments));
+    
 
     default:
       return _buildRoute(settings, OnBoard());

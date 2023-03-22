@@ -7,15 +7,30 @@ import 'package:siwes/utils/defaultText.dart';
 import 'package:siwes/utils/defaultTextFormField.dart';
 
 class SuperStudentLogDays extends StatefulWidget {
-  const SuperStudentLogDays({super.key});
+  final nxtdata;
+  const SuperStudentLogDays({super.key, this.nxtdata});
 
   @override
   State<SuperStudentLogDays> createState() => _SuperStudentLogDaysState();
 }
 
 class _SuperStudentLogDaysState extends State<SuperStudentLogDays> {
+  TextEditingController? indComment = TextEditingController();
+  TextEditingController? schComment = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("Widget data: ${widget.nxtdata}");
+    indComment!.text = widget.nxtdata['indNComment'];
+    schComment!.text = widget.nxtdata['schNComment'];
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<dynamic> days = Constants.getDaysInWeek(
+        widget.nxtdata['week_start'], widget.nxtdata['week_end']);
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
       drawer: Navbar(),
@@ -28,37 +43,73 @@ class _SuperStudentLogDaysState extends State<SuperStudentLogDays> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const DefaultText(
-                  size: 18.0, text: "Logbook Report for Student's Name"),
+              DefaultText(
+                size: 20.0,
+                text:
+                    "Logbook Report for ${widget.nxtdata['std_fname']} ${widget.nxtdata['std_lname']}",
+                color: Constants.primaryColor,
+              ),
               const SizedBox(height: 20.0),
               Wrap(
                 spacing: 20.0, // gap between adjacent chips
                 runSpacing: 30.0, // gap between lines
-                children: const <Widget>[
-                  DefaultContainer(
-                      title: "Day 1",
-                      subtitle: "status",
-                      route: 'route',
-                      div_width: 2.4),
-                  DefaultContainer(
-                      title: "Day 1",
-                      subtitle: "status",
-                      route: 'route',
-                      div_width: 2.4),
-                ],
+                children: List.generate(
+                  days.length,
+                  (index) => Container(
+                    width: MediaQuery.of(context).size.width / 2.4,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      color: Colors.white,
+                    ),
+                    child: ListTile(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/entryDate', arguments: {
+                          'fname': widget.nxtdata['std_fname'],
+                          'lname': widget.nxtdata['std_lname'],
+                          'username': widget.nxtdata['std_username'],
+                          'date': days[index],
+                          'student_id': widget.nxtdata['student_id']
+                          // "${days[index].day}/${days[index].month}/${days[index].year}"
+                        });
+                      },
+                      title: DefaultText(
+                        size: 15,
+                        text: "Day ${index + 1}",
+                        color: Colors.green,
+                        weight: FontWeight.w500,
+                      ),
+                      subtitle: DefaultText(
+                        size: 15,
+                        text: days[index],
+                        // "${days[index].day}/${days[index].month}/${days[index].year}"
+                        // .toString(),
+                        color: Colors.green,
+                        weight: FontWeight.w500,
+                      ),
+                      // trailing: const Icon(Icons.arrow_forward_ios),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              DefaultTextFormField(
+                text: indComment,
+                enabled: false,
+                maxLines: 5,
+                label: "Industry Based Supervisor Comment",
+                hintText: "Industry Based Supervisor Comment",
+                fontSize: 20.0,
+                fillColor: Colors.white,
               ),
               const SizedBox(height: 20.0),
               const DefaultTextFormField(
-                  enabled: false,
-                  maxLines: 5,
-                  hintText: "Industry Based Supervisor Comment",
-                  fontSize: 15.0),
-              const SizedBox(height: 20.0),
-              const DefaultTextFormField(
-                  enabled: true,
-                  maxLines: 5,
-                  hintText: "School Based Supervisor Comment",
-                  fontSize: 15.0),
+                enabled: true,
+                maxLines: 5,
+                label: "School Based Supervisor Comment",
+                hintText: "School Based Supervisor Comment",
+                fontSize: 15.0,
+                fillColor: Colors.white,
+              ),
               const SizedBox(height: 20.0),
               SizedBox(
                   width: MediaQuery.of(context).size.width,

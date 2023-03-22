@@ -9,7 +9,7 @@ class Constants {
   static Color? backgroundColor = Colors.green[100];
   // static const Color backgroundColor = Color(0xFFabf7b1);
 
-  List<dynamic> getDaysInWeek(DateTime start_date, DateTime end_date) {
+  static List<dynamic> getDaysInWeek(DateTime start_date, DateTime end_date) {
     List<DateTime> days = [];
     List converted_days = [];
     for (var i = 0; i <= end_date.difference(start_date).inDays; i++) {

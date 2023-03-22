@@ -145,6 +145,7 @@ class _EntryDateState extends State<EntryDate> {
                           fontSize: 20.0,
                           enabled: false,
                           fillColor: Colors.white,
+                          readOnly: false,
                         ),
                         const SizedBox(height: 20),
                         DefaultTextFormField(
@@ -155,6 +156,7 @@ class _EntryDateState extends State<EntryDate> {
                           fontSize: 20.0,
                           enabled: false,
                           fillColor: Colors.white,
+                          readOnly: false,
                         ),
                         const SizedBox(height: 20.0),
                         const DefaultText(size: 15, text: "Diagram"),
@@ -168,7 +170,6 @@ class _EntryDateState extends State<EntryDate> {
                                       height: 200,
                                       fit: BoxFit.contain,
                                     )
-                                    
                                   : const DefaultText(
                                       size: 20.0, text: "No Diagram"),
                             ),

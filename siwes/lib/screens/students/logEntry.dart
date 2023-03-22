@@ -128,7 +128,7 @@ class _LogEntryState extends State<LogEntry> {
                     label: 'Title',
                     hintText: 'Title',
                     fontSize: 15.0,
-                    fillColor: Colors.white,
+                    fillColor: Colors.white,  readOnly: false,
                   ),
                   const SizedBox(height: 20),
                   DefaultTextFormField(
@@ -137,7 +137,7 @@ class _LogEntryState extends State<LogEntry> {
                     hintText: "Description",
                     maxLines: 10,
                     fontSize: 15.0,
-                    fillColor: Colors.white,
+                    fillColor: Colors.white,  readOnly: false,
                   ),
                   const SizedBox(height: 20),
                   const DefaultText(size: 15, text: "Diagram"),

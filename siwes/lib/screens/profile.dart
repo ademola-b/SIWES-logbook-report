@@ -101,11 +101,11 @@ class _ProfileState extends State<Profile> {
                   child: Column(
                     children: [
                       DefaultTextFormField(
-                        k: _key,
                         text: nameController,
                         fontSize: 18.0,
                         label: 'Name',
                         enabled: enable,
+                        readOnly: false,
                         fillColor: fill,
                         validator: Constants.validator,
                         onSaved: (value) {
@@ -117,6 +117,7 @@ class _ProfileState extends State<Profile> {
                         fontSize: 18.0,
                         label: 'Email Address',
                         enabled: enable,
+                        readOnly: false,
                         fillColor: fill,
                         text: emailController,
                         validator: Constants.validator,
@@ -129,6 +130,7 @@ class _ProfileState extends State<Profile> {
                         label: "Phone Number",
                         fontSize: 15.0,
                         enabled: enable,
+                        readOnly: false,
                         fillColor: fill,
                         text: phoneController,
                         validator: Constants.validator,
@@ -142,6 +144,7 @@ class _ProfileState extends State<Profile> {
                         fontSize: 15.0,
                         text: deptController,
                         enabled: enable,
+                        readOnly: false,
                         fillColor: fill,
                         validator: Constants.validator,
                         onSaved: (value) {

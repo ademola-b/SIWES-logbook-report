@@ -215,7 +215,7 @@ class _WeekPageState extends State<WeekPage> {
                 fontSize: 15.0,
                 maxLines: 5,
                 enabled: false,
-                fillColor: Colors.white,
+                fillColor: Colors.white,  readOnly: false,
               ),
               const SizedBox(height: 20.0),
               DefaultTextFormField(
@@ -224,7 +224,7 @@ class _WeekPageState extends State<WeekPage> {
                 hintText: "School Based Supervisor Comment",
                 fontSize: 15.0,
                 maxLines: 5,
-                enabled: false,
+                enabled: false,  readOnly: false,
                 fillColor: Colors.white,
               )
             ],

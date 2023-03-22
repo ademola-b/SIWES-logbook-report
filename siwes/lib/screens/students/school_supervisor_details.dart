@@ -67,7 +67,7 @@ class _SchoolSupervisorDetailsState extends State<SchoolSupervisorDetails> {
                             DefaultTextFormField(
                               fontSize: 18.0,
                               label: 'Name',
-                              enabled: false,
+                              enabled: false,  readOnly: false,
                               text: TextEditingController(
                                   text:
                                       "${_stdD[index].schoolBasedSupervisor.user.firstName}  ${_stdD[index].schoolBasedSupervisor.user.lastName}"),
@@ -77,7 +77,7 @@ class _SchoolSupervisorDetailsState extends State<SchoolSupervisorDetails> {
                             DefaultTextFormField(
                               fontSize: 18.0,
                               label: 'Email Address',
-                              enabled: false,
+                              enabled: false,  readOnly: false,
                               text: TextEditingController(
                                 text: _stdD[index]
                                     .schoolBasedSupervisor
@@ -89,7 +89,7 @@ class _SchoolSupervisorDetailsState extends State<SchoolSupervisorDetails> {
                             DefaultTextFormField(
                               label: "Phone Number",
                               fontSize: 15.0,
-                              enabled: false,
+                              enabled: false,  readOnly: false,
                               text: TextEditingController(
                                 text:
                                     _stdD[index].schoolBasedSupervisor.phoneNo,
@@ -99,7 +99,7 @@ class _SchoolSupervisorDetailsState extends State<SchoolSupervisorDetails> {
                             DefaultTextFormField(
                               label: "Department",
                               fontSize: 15.0,
-                              enabled: false,
+                              enabled: false,  readOnly: false,
                               text: TextEditingController(
                                   text: _stdD[index]
                                       .schoolBasedSupervisor

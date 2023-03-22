@@ -20,6 +20,7 @@ class SuperStudentLogDays extends StatefulWidget {
 class _SuperStudentLogDaysState extends State<SuperStudentLogDays> {
   TextEditingController? indComment = TextEditingController();
   TextEditingController? schComment = TextEditingController();
+  bool enabled = false;
 
   void _updateComment(int id, studentId, weekId, indComment, schComment) async {
     WeekCommentResponse? cmResponse = await RemoteServices.updateComment(
@@ -63,12 +64,14 @@ class _SuperStudentLogDaysState extends State<SuperStudentLogDays> {
     print("Widget data: ${widget.nxtdata}");
     indComment!.text = widget.nxtdata['indNComment'];
     schComment!.text = widget.nxtdata['schNComment'];
+    indComment!.text == '' ? enabled = true : enabled = false;
   }
 
   @override
   Widget build(BuildContext context) {
     List<dynamic> days = Constants.getDaysInWeek(
         widget.nxtdata['week_start'], widget.nxtdata['week_end']);
+
     return Scaffold(
       backgroundColor: Constants.backgroundColor,
       drawer: Navbar(),
@@ -138,11 +141,19 @@ class _SuperStudentLogDaysState extends State<SuperStudentLogDays> {
                 hintText: "Industry Based Supervisor Comment",
                 fontSize: 20.0,
                 fillColor: Colors.white,
+                readOnly: false,
               ),
               const SizedBox(height: 20.0),
               DefaultTextFormField(
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: DefaultText(
+                          size: 15.0,
+                          text:
+                              "You can't add comment because industry suoervisor hasn't commented")));
+                },
                 text: schComment,
-                enabled: true,
+                readOnly: enabled,
                 maxLines: 5,
                 label: "School Based Supervisor Comment",
                 hintText: "School Based Supervisor Comment",

@@ -11,11 +11,12 @@ class DefaultTextFormField extends StatefulWidget {
   final String? Function(String?)? validator;
   final bool? obscureText;
   final bool? enabled;
+  final bool readOnly;
   final int? maxLines;
   final String? label;
   final Color? fillColor;
   // final keyboardInputType;
-  final Key? k;
+  final Function()? onTap;
 
   const DefaultTextFormField(
       {Key? key,
@@ -30,8 +31,8 @@ class DefaultTextFormField extends StatefulWidget {
       required this.fontSize,
       this.enabled,
       this.label,
-      this.k,
-      this.onSaved, this.fillColor})
+      this.onSaved,
+      this.fillColor, this.onTap, required this.readOnly})
       : super(key: key);
 
   @override
@@ -42,11 +43,11 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      autovalidateMode: AutovalidateMode.disabled,
-      key: widget.k,
+      onTap: widget.onTap,
       controller: widget.text,
       enabled: widget.enabled,
       maxLines: widget.maxLines,
+      readOnly: widget.readOnly,
       // keyboardType: widget.keyboardInputType,
       validator: widget.validator,
       onSaved: widget.onSaved,

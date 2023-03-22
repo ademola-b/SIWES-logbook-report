@@ -139,6 +139,7 @@ class _StudentLogDaysState extends State<StudentLogDays> {
                 hintText: "Industry Based Supervisor Comment",
                 fontSize: 15.0,
                 fillColor: Colors.white,
+                 readOnly: false,
               ),
               const SizedBox(height: 20.0),
               SizedBox(

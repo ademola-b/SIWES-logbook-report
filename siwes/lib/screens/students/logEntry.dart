@@ -65,13 +65,13 @@ class _LogEntryState extends State<LogEntry> {
     return File(imagePath).copy(image.path);
   }
 
-  void _submit() {}
+  void _submit() {
+    
+  }
 
   @override
   void initState() {
     print("widget data: ${widget.arguments}");
-    titleController!.text = widget.arguments['title'];
-    descController!.text = widget.arguments['desc'];
     super.initState();
   }
 
@@ -81,6 +81,8 @@ class _LogEntryState extends State<LogEntry> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
     // print(routeData);
+    titleController!.text = widget.arguments['title'];
+    descController!.text = widget.arguments['desc'];
 
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -128,7 +130,8 @@ class _LogEntryState extends State<LogEntry> {
                     label: 'Title',
                     hintText: 'Title',
                     fontSize: 15.0,
-                    fillColor: Colors.white,  readOnly: false,
+                    fillColor: Colors.white,
+                    readOnly: false,
                   ),
                   const SizedBox(height: 20),
                   DefaultTextFormField(
@@ -137,7 +140,8 @@ class _LogEntryState extends State<LogEntry> {
                     hintText: "Description",
                     maxLines: 10,
                     fontSize: 15.0,
-                    fillColor: Colors.white,  readOnly: false,
+                    fillColor: Colors.white,
+                    readOnly: false,
                   ),
                   const SizedBox(height: 20),
                   const DefaultText(size: 15, text: "Diagram"),

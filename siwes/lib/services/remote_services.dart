@@ -14,6 +14,7 @@ import 'package:siwes/models/student_details.dart';
 import 'package:siwes/models/user_response.dart';
 import 'package:siwes/models/week_comment_response.dart';
 import 'package:siwes/models/week_dates_response.dart';
+import 'package:siwes/screens/students/logEntry.dart';
 
 import 'package:siwes/services/urls.dart';
 import 'package:siwes/utils/defaultText.dart';
@@ -296,20 +297,35 @@ class RemoteServices {
   //get Logbook
 
   //Student Services
-  //get or create entry
-  Future<List<LogbookEntryResponse>?>? getPostLogEntry(
-      {required int studentId, required String entry_date}) async {
-    try {
-      http.Response response = await http.get(logEntryUrl);
-      if (response.statusCode == 200) {
-        return logbookEntryResponseFromJson(response.body);
-      } else {
-        throw Exception("Failed to get log entry");
-      }
-    } catch (e) {
-      print("Server Error: $e");
-    }
+  //post entry
+  // Future<LogEntry> PostLogEntry() async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   var token = pref.getString("token");
+  //   try {
+  //     var headers = {
+  //       'Authorization': 'Token a4fa92b1b0a42148b935518d01c011375aec7050'
+  //     };
+  //     var request = http.MultipartRequest(
+  //         'POST', logEntryUrl);
+  //     request.fields.addAll({
+  //       'week': '154',
+  //       'entry_date': '2023-01-03',
+  //       'title': 'Hi Postman',
+  //       'description': 'Hello'
+  //     });
+  //     request.files.add(await http.MultipartFile.fromPath(
+  //         'diagram', '/C:/Users/ADEMOLA/Pictures/cool_bg.jpg'));
+  //     request.headers.addAll(headers);
 
-    return [];
-  }
+  //     http.StreamedResponse response = await request.send();
+
+  //     if (response.statusCode == 200) {
+  //       print(await response.stream.bytesToString());
+  //     } else {
+  //       print(response.reasonPhrase);
+  //     }
+  //   } catch (e) {
+  //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: DefaultText(size: 15.0, text: "Log Posted",)))
+  //   }
+  // }
 }

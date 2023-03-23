@@ -48,10 +48,29 @@ class _WeekPageState extends State<WeekPage> {
     return null;
   }
 
+  Future<WeekCommentResponse?>? checkWkComment(int sid, int wkId) async {
+    WeekCommentResponse? wkResponse = await RemoteServices.getWeekComment(
+        context: context, studentId: sid, weekId: wkId);
+
+    if (wkResponse != null) {
+      setState(() {
+        wkComId = wkResponse.id!;
+        indNComment = wkResponse.industryComment ?? '';
+        schNComment = wkResponse.schoolComment ?? '';
+      });
+
+      print("indNComment- $indNComment");
+      print("schNComment- $schNComment");
+      indComment.text = indNComment!;
+      schComment.text = schNComment!;
+    }
+  }
+
   @override
   void initState() {
     print("Widget data: ${widget.arguments}");
     super.initState();
+    checkWkComment(widget.arguments['student_id'], widget.arguments['wkIndex']);
   }
 
   @override
@@ -168,63 +187,25 @@ class _WeekPageState extends State<WeekPage> {
                       );
                     }),
                   )),
-              // FutureBuilder(
-              //     future: RemoteServices.getWeekComment(
-              //         context: context,
-              //         studentId: widget.arguments['student_id'],
-              //         weekId: widget.arguments['wkIndex']),
-              //     builder: (context, snapshot) {
-              //       print("student_id: ${widget.arguments['student_id']}");
-              //       print("week_index: ${widget.arguments['wkIndex']}");
-              //       if (snapshot.hasData) {
-              //         var data = snapshot.data;
-              //         indComment.text = data!.industryComment.toString();
-              //         schComment.text = data.schoolComment.toString();
-              //         return Column(
-              //           children: [
-              //             DefaultTextFormField(
-              //               text: indComment,
-              //               label: "Industry Based Supervisor Comment",
-              //               hintText: "Industry Based Supervisor Comment",
-              //               fontSize: 15.0,
-              //               maxLines: 5,
-              //               enabled: false,
-              //               fillColor: Colors.white,
-              //             ),
-              //             const SizedBox(height: 20.0),
-              //             DefaultTextFormField(
-              //               text: schComment,
-              //               label: "School Based Supervisor Comment",
-              //               hintText: "School Based Supervisor Comment",
-              //               fontSize: 15.0,
-              //               maxLines: 5,
-              //               enabled: false,
-              //               fillColor: Colors.white,
-              //             )
-              //           ],
-              //         );
-              //       }
-
-              //       return Container();
-              //     }),
-
               DefaultTextFormField(
                 text: indComment,
                 label: "Industry Based Supervisor Comment",
                 hintText: "Industry Based Supervisor Comment",
-                fontSize: 15.0,
+                fontSize: 20.0,
                 maxLines: 5,
                 enabled: false,
-                fillColor: Colors.white,  readOnly: false,
+                fillColor: Colors.white,
+                readOnly: false,
               ),
               const SizedBox(height: 20.0),
               DefaultTextFormField(
                 text: schComment,
                 label: "School Based Supervisor Comment",
                 hintText: "School Based Supervisor Comment",
-                fontSize: 15.0,
+                fontSize: 20.0,
                 maxLines: 5,
-                enabled: false,  readOnly: false,
+                enabled: false,
+                readOnly: false,
                 fillColor: Colors.white,
               )
             ],

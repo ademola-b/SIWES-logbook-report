@@ -7,6 +7,7 @@ import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultContainer.dart';
 import 'package:siwes/utils/defaultText.dart';
 import 'package:siwes/screens/students/navbar.dart';
+import 'package:siwes/utils/string_extension.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -20,21 +21,11 @@ class _StudentDashboardState extends State<StudentDashboard> {
   String _username = 'Loading...';
   int? _studentId;
 
-  // Future<UserResponse?> _getUser() async {
-  //   UserResponse? user = await RemoteServices().getUser();
-  //   if (user != null) {
-  //     setState(() {
-  //       _studentId = user.pk;
-  //       _username = user.username;
-  //     });
-  //   }
-  //   return null;
-  // }
-
   Future<StudentDetailResponse?> _getStdDetails() async {
     List<StudentDetailResponse>? std = await RemoteServices.getStdDetails();
     if (std != null) {
       setState(() {
+        _username = std[0].user.username;
         _studentId = std[0].id;
         print("id: $_studentId");
       });
@@ -45,7 +36,6 @@ class _StudentDashboardState extends State<StudentDashboard> {
   @override
   void initState() {
     futureWeekDate = RemoteServices.getWeekDates();
-    // _getUser();
     _getStdDetails();
     super.initState();
   }
@@ -76,7 +66,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                   children: [
                     DefaultText(
                       size: 20.0,
-                      text: "Hello, \n ${_username.toUpperCase()}",
+                      text: "Hello, \n ${_username.titleCase()}",
                       color: Constants.primaryColor,
                     ),
                     const Spacer(),

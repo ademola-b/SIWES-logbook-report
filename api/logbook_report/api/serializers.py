@@ -40,7 +40,7 @@ class LogbookEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = LogbookEntry
         fields = [
-            'student',
+            # 'student',
             'week',
             'entry_date', 
             'title',
@@ -49,9 +49,6 @@ class LogbookEntrySerializer(serializers.ModelSerializer):
             'diagram_mem'
         ]
 
-    # def create(self, validated_data):
-    #     data, _ = LogbookEntry.objects.get_or_create(entry_date = validated_data['entry_date'], student = validated_data['student'])
-    #     return data
 
     def get_image_memory(request, diagram:LogbookEntry):
         with default_storage.open(diagram.diagram.name, 'rb') as loadedfile:

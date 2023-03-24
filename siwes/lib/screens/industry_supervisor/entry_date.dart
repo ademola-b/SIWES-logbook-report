@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -111,7 +112,7 @@ class _EntryDateState extends State<EntryDate> {
               ),
               const SizedBox(height: 20),
               FutureBuilder(
-                future: RemoteServices().getEntryDate(
+                future: RemoteServices.getEntryDate(
                     routeData['student_id'], routeData['date'], context),
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data!.isEmpty) {
@@ -165,13 +166,16 @@ class _EntryDateState extends State<EntryDate> {
                             Expanded(
                               child: (data[0].diagram != null)
                                   ? Image.memory(
-                                      data[0].diagram!,
+                                      base64Decode(data[0].diagram!),
                                       width: 200,
                                       height: 200,
                                       fit: BoxFit.contain,
                                     )
-                                  : const DefaultText(
-                                      size: 20.0, text: "No Diagram"),
+                                  : DefaultText(
+                                      size: 20.0,
+                                      text: "No Diagram",
+                                      color: Constants.primaryColor,
+                                    ),
                             ),
                             const SizedBox(width: 20.0),
                           ],

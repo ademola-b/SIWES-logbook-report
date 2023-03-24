@@ -19,7 +19,7 @@ class EntryDateResponse {
     required this.entryDate,
     required this.title,
     required this.description,
-    required this.diagram,
+    this.diagram,
     // required this.student,
   });
 
@@ -27,7 +27,7 @@ class EntryDateResponse {
   DateTime entryDate;
   String title;
   String description;
-  Uint8List? diagram;
+  String? diagram;
   // Student student;
 
   factory EntryDateResponse.fromJson(Map<String, dynamic> json) =>
@@ -36,7 +36,7 @@ class EntryDateResponse {
         entryDate: DateTime.parse(json["entry_date"]),
         title: json["title"],
         description: json["description"],
-        diagram: base64Decode(json["diagram"]),
+        diagram: json["diagram"],
         // student: Student.fromJson(json["student"]),
       );
 

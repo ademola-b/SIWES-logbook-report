@@ -3,7 +3,7 @@ import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultText.dart';
 
 class DefaultButton extends StatelessWidget {
-  final Function onPressed;
+  final Function() onPressed;
   final String text;
   final double textSize;
   final FontWeight? textWeight;

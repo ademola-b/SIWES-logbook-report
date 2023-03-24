@@ -23,7 +23,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   Future<StudentDetailResponse?> _getStdDetails() async {
     List<StudentDetailResponse>? std = await RemoteServices.getStdDetails();
-    if (std != null) {
+    if (std.isNotEmpty) {
       setState(() {
         _username = std[0].user.username;
         _studentId = std[0].id;

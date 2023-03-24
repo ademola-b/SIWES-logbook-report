@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:siwes/models/logbook_entry_response.dart';
+import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/screens/students/navbar.dart';
 import 'package:siwes/utils/defaultButton.dart';
@@ -36,10 +39,10 @@ class _LogEntryState extends State<LogEntry> {
       // final imgTemp = File(image.path);
 
       final imgPerm = await saveImagePermanently(image.path);
-
       setState(() {
         _image = imgPerm;
       });
+      print("imagePath - $_image");
     } catch (e) {
       showDialog(
           barrierDismissible: false,
@@ -65,13 +68,42 @@ class _LogEntryState extends State<LogEntry> {
     return File(imagePath).copy(image.path);
   }
 
-  void _submit() {
-    
+  void _submit(int week, String entry_date, String title, String description,
+      File? diagram) async {
+    LogbookEntry? _logEntry = await RemoteServices.PostLogEntry(
+        week.toString(), entry_date, title, description, diagram);
+    if (_logEntry == null) {
+      print("Entry Posted");
+
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                content: SizedBox(
+                  height: 120.0,
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.check_circle_outline,
+                        size: 70.0,
+                        color: Constants.backgroundColor,
+                      ),
+                      const SizedBox(height: 20.0),
+                      const DefaultText(
+                        size: 20.0,
+                        text: "Entry Posted",
+                        color: Colors.green,
+                      ),
+                    ],
+                  ),
+                ),
+              ));
+      Navigator.pop(context);
+    }
   }
 
   @override
   void initState() {
-    print("widget data: ${widget.arguments}");
+    // print("widget data: ${widget.arguments}");
     super.initState();
   }
 
@@ -80,9 +112,9 @@ class _LogEntryState extends State<LogEntry> {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    // print(routeData);
     titleController!.text = widget.arguments['title'];
     descController!.text = widget.arguments['desc'];
+    // print(routeData);
 
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -144,52 +176,80 @@ class _LogEntryState extends State<LogEntry> {
                     readOnly: false,
                   ),
                   const SizedBox(height: 20),
-                  const DefaultText(size: 15, text: "Diagram"),
+                  DefaultText(
+                    size: 20,
+                    text: "Diagram",
+                    align: TextAlign.left,
+                    color: Constants.primaryColor,
+                  ),
                   Row(
                     children: [
                       Expanded(
-                        child: _image != null
-                            // widget.arguments['diagram'] != null
-
-                            ? Image.file(
-                                _image!,
-                                width: 200,
-                                height: 200,
-                                fit: BoxFit.contain,
-                              )
-                            : Image.asset(
-                                "assets/images/avatar.jpg",
-                                width: 200,
-                                height: 200,
-                                fit: BoxFit.contain,
-                              ),
-                      ),
-                      const SizedBox(width: 20.0),
-                      Column(
-                        children: [
-                          SelectImageBtn(
-                            icon: Icons.camera,
-                            text: 'Select from Camera',
-                            onPressed: () {
-                              getImage(ImageSource.camera);
-                            },
+                          child: (widget.arguments['diagram'] != null)
+                              ? Image.memory(
+                                  base64Decode(widget.arguments['diagram']),
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.contain,
+                                )
+                              : (_image != null)
+                                  ? Image.file(
+                                      _image!,
+                                      width: 200,
+                                      height: 200,
+                                      fit: BoxFit.contain,
+                                    )
+                                  : DefaultText(
+                                      size: 20.0,
+                                      text: 'No Diagram',
+                                      color: Constants.primaryColor,
+                                    )
+                          // : Image.asset(
+                          //     "assets/images/avatar.jpg",
+                          //     width: 200,
+                          //     height: 200,
+                          //     fit: BoxFit.contain,
+                          //   ),
                           ),
-                          SelectImageBtn(
-                            text: "Select from Gallery",
-                            icon: Icons.image_outlined,
-                            onPressed: () {
-                              getImage(ImageSource.gallery);
-                            },
-                          )
-                        ],
-                      ),
+                      const SizedBox(width: 20.0),
+                      DefaultButton(
+                          onPressed: () {
+                            
+                          },
+                          text: "Upload Image",
+                          textSize: 15.0),
+                      // Column(
+                      //   children: [
+                      //     SelectImageBtn(
+                      //       icon: Icons.camera,
+                      //       text: 'Select from Camera',
+                      //       onPressed: () {
+                      //         getImage(ImageSource.camera);
+                      //       },
+                      //     ),
+                      //     SelectImageBtn(
+                      //       text: "Select from Gallery",
+                      //       icon: Icons.image_outlined,
+                      //       onPressed: () {
+                      //         getImage(ImageSource.gallery);
+                      //       },
+                      //     )
+                      //   ],
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 20.0),
                   SizedBox(
                       width: size.width,
                       child: DefaultButton(
-                        onPressed: _submit,
+                        onPressed: () {
+                          _submit(
+                              widget.arguments['wkIndex'],
+                              widget.arguments['date'],
+                              titleController!.text,
+                              descController!.text,
+                              _image);
+                        },
                         text: 'SUBMIT',
                         textSize: 20.0,
                       ))

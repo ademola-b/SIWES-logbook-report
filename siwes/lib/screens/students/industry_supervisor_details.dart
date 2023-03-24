@@ -39,6 +39,24 @@ class _IndustrySupervisorDetailsState extends State<IndustrySupervisorDetails> {
           child: FutureBuilder(
             future: RemoteServices.getStdDetails(),
             builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.data!.isEmpty) {
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DefaultText(
+                      align: TextAlign.center,
+                      size: 20.0,
+                      text: "You haven't set your industry supervisor",
+                      color: Constants.primaryColor,
+                    ),
+                  ),
+                );
+              }
               if (snapshot.hasData) {
                 var _stdD = snapshot.data;
                 return ListView.builder(
@@ -69,25 +87,25 @@ class _IndustrySupervisorDetailsState extends State<IndustrySupervisorDetails> {
                               text:
                                   "${_stdD[index].industryBasedSupervisor.user.firstName}  ${_stdD[index].industryBasedSupervisor.user.lastName}"),
                           validator: Constants.validator,
-                           readOnly: false,
+                          readOnly: false,
                         ),
                         const SizedBox(height: 20.0),
                         DefaultTextFormField(
                           fontSize: 18.0,
                           label: 'Email Address',
                           enabled: false,
-                           readOnly: false,
+                          readOnly: false,
                           text: TextEditingController(
                             text:
                                 _stdD[index].industryBasedSupervisor.user.email,
-                                
                           ),
                         ),
                         const SizedBox(height: 20.0),
                         DefaultTextFormField(
                           label: "Phone Number",
                           fontSize: 15.0,
-                          enabled: false,  readOnly: false,
+                          enabled: false,
+                          readOnly: false,
                           text: TextEditingController(
                             text: _stdD[index].industryBasedSupervisor.phoneNo,
                           ),
@@ -96,7 +114,8 @@ class _IndustrySupervisorDetailsState extends State<IndustrySupervisorDetails> {
                         DefaultTextFormField(
                           label: "Placement Centre",
                           fontSize: 15.0,
-                          enabled: false,  readOnly: false,
+                          enabled: false,
+                          readOnly: false,
                           text: TextEditingController(
                               text: _stdD[index]
                                   .industryBasedSupervisor

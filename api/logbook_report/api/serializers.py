@@ -51,8 +51,9 @@ class LogbookEntrySerializer(serializers.ModelSerializer):
 
 
     def get_image_memory(request, diagram:LogbookEntry):
-        with default_storage.open(diagram.diagram.name, 'rb') as loadedfile:
-            return base64.b64encode(loadedfile.read())
+        if diagram.diagram.name is not None:
+            with default_storage.open(diagram.diagram.name, 'rb') as loadedfile:
+                return base64.b64encode(loadedfile.read())
 
 class GetLogbookEntrySerializer(serializers.ModelSerializer):
     diagram = serializers.SerializerMethodField("get_image_memory")
@@ -69,5 +70,6 @@ class GetLogbookEntrySerializer(serializers.ModelSerializer):
         ]
 
     def get_image_memory(request, diagram:LogbookEntry):
-        with default_storage.open(diagram.diagram.name, 'rb') as loadedfile:
-            return base64.b64encode(loadedfile.read())
+        if diagram.diagram.name:
+            with default_storage.open(diagram.diagram.name, 'rb') as loadedfile:
+                return base64.b64encode(loadedfile.read())

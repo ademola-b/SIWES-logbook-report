@@ -23,8 +23,9 @@ class SchoolSupervisorSerializer(serializers.ModelSerializer):
             ]
 
     def get_image_memory(request, sch_supervisor:SchoolSupervisor):
-        with default_storage.open(sch_supervisor.profile_pic.name, 'rb') as loadedfile:
-            return base64.b64encode(loadedfile.read())
+        if sch_supervisor.profile_pic.name is not None:
+            with default_storage.open(sch_supervisor.profile_pic.name, 'rb') as loadedfile:
+                return base64.b64encode(loadedfile.read())
 
 class StudentListSerializer(serializers.ModelSerializer):
     user = UserDetailSerializer()
@@ -37,5 +38,6 @@ class StudentListSerializer(serializers.ModelSerializer):
         ]
 
     def get_img_mem(request, std:Student):
-        with default_storage.open(std.profile_pic.name, 'rb') as loadedfile:
-            return base64.b64encode(loadedfile.read())
+        if std.profile_pic.name is not None:
+            with default_storage.open(std.profile_pic.name, 'rb') as loadedfile:
+                return base64.b64encode(loadedfile.read())

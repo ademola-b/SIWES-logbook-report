@@ -41,7 +41,7 @@ class LogbookEntry(models.Model):
     entry_date = models.DateField()
     title = models.CharField(_("Title"), max_length=50)
     description = models.CharField(_("Description"), max_length=1000)
-    diagram = models.ImageField(_("Diagram"), upload_to=profile_picture_dir)
+    diagram = models.ImageField(_("Diagram"), upload_to=profile_picture_dir, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Logbook Entries"

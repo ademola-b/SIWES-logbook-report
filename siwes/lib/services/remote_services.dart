@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -116,7 +117,7 @@ class RemoteServices {
   }
 
   //Entry Date
-  Future<List<EntryDateResponse>?> getEntryDate(
+  static Future<List<EntryDateResponse>?> getEntryDate(
       int studentId, String date, context) async {
     try {
       http.Response response = await http
@@ -126,8 +127,8 @@ class RemoteServices {
       }
     } catch (e) {
       print("Server Error: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: DefaultText(size: 15.0, text: "Server Error: $e")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: DefaultText(size: 15.0, text: "Server Errorss: $e")));
     }
 
     return null;
@@ -298,34 +299,36 @@ class RemoteServices {
 
   //Student Services
   //post entry
-  // Future<LogEntry> PostLogEntry() async {
-  //   SharedPreferences pref = await SharedPreferences.getInstance();
-  //   var token = pref.getString("token");
-  //   try {
-  //     var headers = {
-  //       'Authorization': 'Token a4fa92b1b0a42148b935518d01c011375aec7050'
-  //     };
-  //     var request = http.MultipartRequest(
-  //         'POST', logEntryUrl);
-  //     request.fields.addAll({
-  //       'week': '154',
-  //       'entry_date': '2023-01-03',
-  //       'title': 'Hi Postman',
-  //       'description': 'Hello'
-  //     });
-  //     request.files.add(await http.MultipartFile.fromPath(
-  //         'diagram', '/C:/Users/ADEMOLA/Pictures/cool_bg.jpg'));
-  //     request.headers.addAll(headers);
+  static Future<LogbookEntry?>? PostLogEntry(String week, String entry_date,
+      String title, String description, File? diagram) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var token = pref.getString("token");
+    try {
+      var headers = {'Authorization': 'Token $token'};
+      var request = http.MultipartRequest('POST', logEntryUrl);
+      request.fields.addAll({
+        'week': week,
+        'entry_date': entry_date,
+        'title': title,
+        'description': description
+      });
+      if (diagram != null) {
+        request.files
+            .add(await http.MultipartFile.fromPath('diagram', diagram.path));
+      }
 
-  //     http.StreamedResponse response = await request.send();
+      request.headers.addAll(headers);
 
-  //     if (response.statusCode == 200) {
-  //       print(await response.stream.bytesToString());
-  //     } else {
-  //       print(response.reasonPhrase);
-  //     }
-  //   } catch (e) {
-  //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: DefaultText(size: 15.0, text: "Log Posted",)))
-  //   }
-  // }
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 201) {
+        print(await response.stream.bytesToString());
+      } else {
+        print(response.reasonPhrase);
+      }
+    } catch (e) {
+      print("Server Error: $e");
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: DefaultText(size: 15.0, text: "Log Posted",)))
+    }
+  }
 }

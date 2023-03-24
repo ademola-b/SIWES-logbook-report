@@ -28,21 +28,20 @@ class _WeekPageState extends State<WeekPage> {
 
   int? wkComId;
   String? indNComment, schNComment, _title, _description;
-  Uint8List? _diagram;
+  String? _diagram;
 
   TextEditingController indComment = TextEditingController();
   TextEditingController schComment = TextEditingController();
 
   Future<EntryDateResponse?>? checkLogEntryDate(int sid, String date) async {
     List<EntryDateResponse?>? logEntryResponse =
-        await RemoteServices().getEntryDate(sid, date, context);
+        await RemoteServices.getEntryDate(sid, date, context);
     if (logEntryResponse != null && logEntryResponse.isNotEmpty) {
+      print("Diagram: ${logEntryResponse[0]!.diagram}");
       setState(() {
         _title = logEntryResponse[0]!.title;
         _description = logEntryResponse[0]!.description;
         _diagram = logEntryResponse[0]!.diagram;
-
-        // print();
       });
     }
     return null;
@@ -59,8 +58,8 @@ class _WeekPageState extends State<WeekPage> {
         schNComment = wkResponse.schoolComment ?? '';
       });
 
-      print("indNComment- $indNComment");
-      print("schNComment- $schNComment");
+      // print("indNComment- $indNComment");
+      // print("schNComment- $schNComment");
       indComment.text = indNComment!;
       schComment.text = schNComment!;
     }
@@ -161,10 +160,11 @@ class _WeekPageState extends State<WeekPage> {
                               '/logEntry',
                               arguments: {
                                 'week_index': routeData['week_index'],
+                                'wkIndex': widget.arguments['wkIndex'],
                                 'date': days[index],
                                 'title': _title ?? '',
                                 'desc': _description ?? '',
-                                'diagram': _diagram ?? []
+                                'diagram': _diagram
                               },
                             );
                           },

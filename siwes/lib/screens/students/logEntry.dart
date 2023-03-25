@@ -261,82 +261,70 @@ class _LogEntryState extends State<LogEntry> {
                                       size: 20.0,
                                       text: 'No Diagram',
                                       color: Constants.primaryColor,
-                                    )
-                          // : Image.asset(
-                          //     "assets/images/avatar.jpg",
-                          //     width: 200,
-                          //     height: 200,
-                          //     fit: BoxFit.contain,
-                          //   ),
-                          ),
+                                    )),
                       const SizedBox(width: 20.0),
-                      DefaultButton(
-                          onPressed: () {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (builder) {
-                                  return SizedBox(
-                                    height: 200,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            getImage(ImageSource.camera);
-                                          },
-                                          child: Column(
+                      !widget.arguments['comment_filled']
+                          ? DefaultButton(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: (builder) {
+                                      return SizedBox(
+                                        height: 200,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 20.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                              const Icon(Icons.camera,
-                                                  size: 70.0),
-                                              DefaultText(
-                                                  size: 25.0,
-                                                  text: "Camera",
-                                                  color: Constants.primaryColor)
+                                              GestureDetector(
+                                                onTap: () {
+                                                  getImage(ImageSource.camera);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Column(
+                                                  children: [
+                                                    const Icon(Icons.camera,
+                                                        size: 70.0),
+                                                    DefaultText(
+                                                        size: 25.0,
+                                                        text: "Camera",
+                                                        color: Constants
+                                                            .primaryColor)
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(width: 30.0),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  getImage(ImageSource.gallery);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Column(
+                                                  children: [
+                                                    const Icon(
+                                                        Icons.image_outlined,
+                                                        size: 70.0),
+                                                    DefaultText(
+                                                        size: 25.0,
+                                                        text: "Gallery",
+                                                        color: Constants
+                                                            .primaryColor)
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),
-                                        const SizedBox(width: 30.0),
-                                        GestureDetector(
-                                          onTap: () =>
-                                              getImage(ImageSource.gallery),
-                                          child: Column(
-                                            children: [
-                                              const Icon(Icons.image_outlined,
-                                                  size: 70.0),
-                                              DefaultText(
-                                                  size: 25.0,
-                                                  text: "Gallery",
-                                                  color: Constants.primaryColor)
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                });
-                          },
-                          text: "Upload Image",
-                          textSize: 15.0),
-                      // Column(
-                      //   children: [
-                      //     SelectImageBtn(
-                      //       icon: Icons.camera,
-                      //       text: 'Select from Camera',
-                      //       onPressed: () {
-                      //         getImage(ImageSource.camera);
-                      //       },
-                      //     ),
-                      //     SelectImageBtn(
-                      //       text: "Select from Gallery",
-                      //       icon: Icons.image_outlined,
-                      //       onPressed: () {
-                      //         getImage(ImageSource.gallery);
-                      //       },
-                      //     )
-                      //   ],
-                      // ),
+                                      );
+                                    });
+                              },
+                              text: "Upload Image",
+                              textSize: 15.0)
+                          : Container(),
                     ],
                   ),
                   const SizedBox(height: 20.0),

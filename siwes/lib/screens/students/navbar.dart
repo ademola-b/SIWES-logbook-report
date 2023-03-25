@@ -17,7 +17,7 @@ class _NavbarState extends State<Navbar> {
   Future<List<String>?>? _getProfile;
 
   final List<String> _labels = [
-    "Account Information",
+    "Profile",
     "Settings",
     "Exit",
   ];
@@ -30,17 +30,13 @@ class _NavbarState extends State<Navbar> {
 
   final List<String> _activities = [
     "Dashboard",
-    // "Log Entry",
-    // "View Enteries",
     "Supervisor",
     "Placement Centre",
     "Reports"
   ];
 
   final List<IconData> _activitiesIcons = [
-    Icons.home,
-    // Icons.note_add_outlined,
-    // Icons.note_outlined,
+    Icons.dashboard,
     Icons.supervisor_account,
     Icons.place_outlined,
     Icons.report,
@@ -125,7 +121,7 @@ class _NavbarState extends State<Navbar> {
                     _activitiesIcons[index],
                     color: Constants.primaryColor,
                   ),
-                  title: Text(_activities[index]),
+                  title: DefaultText(size: 17.0, text: _activities[index]),
                   onTap: () {
                     Navigator.popAndPushNamed(context, _onTap[index]);
                   },
@@ -146,9 +142,13 @@ class _NavbarState extends State<Navbar> {
                     _labelIcons[index],
                     color: Constants.primaryColor,
                   ),
-                  title: Text(_labels[index]),
+                  title: DefaultText(size: 17.0, text: _labels[index]),
                   onTap: () async {
                     switch (_labels[index]) {
+                      case 'Profile':
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/profile');
+                        break;
                       case 'Exit':
                         SharedPreferences pref =
                             await SharedPreferences.getInstance();

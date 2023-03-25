@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:siwes/models/student_details.dart';
+import 'package:siwes/screens/industry_supervisor/student_details.dart';
+import 'package:siwes/screens/industry_supervisor/view_students.dart';
+import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/screens/students/navbar.dart';
 import 'package:siwes/utils/defaultButton.dart';
@@ -15,6 +19,9 @@ class PlacementCentre extends StatefulWidget {
 class _PlacementCentreState extends State<PlacementCentre> {
   List locations = ['Location 1', 'Location 2'];
   var dropdownval;
+  TextEditingController placement = TextEditingController();
+
+  // Future<StudentDetailResponse?> getDetails
 
   @override
   Widget build(BuildContext context) {
@@ -31,36 +38,57 @@ class _PlacementCentreState extends State<PlacementCentre> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              DropdownButtonFormField(
-                  decoration: const InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                      borderSide: BorderSide(
-                        color: Color.fromARGB(255, 76, 175, 80),
-                        width: 1.0,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        borderSide: BorderSide(
-                            color: Color.fromARGB(255, 76, 175, 80),
-                            width: 1.5)),
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
-                  hint: const DefaultText(size: 18, text: "Select Location"),
-                  value: dropdownval,
-                  items: locations
-                      .map((item) => DropdownMenuItem(
-                          value: item,
-                          child: DefaultText(
-                            text: item,
-                            size: 18,
-                          )))
-                      .toList(),
-                  onChanged: (value) {
-                    dropdownval = value;
+              FutureBuilder(
+                  future: RemoteServices.getStdDetails(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      print(snapshot.data![0].industryBasedSupervisor
+                          .placementCenter.name);
+
+                      placement.text = snapshot.data![0].industryBasedSupervisor
+                          .placementCenter.name;
+                      return DefaultTextFormField(
+                        fontSize: 18.0,
+                        readOnly: true,
+                        text: placement,
+                        label: "Placement Location",
+                        fillColor: Colors.white,
+                      );
+                    }
+                    return const DefaultText(
+                        size: 20.0,
+                        text: "You haven't selected your industry supervisor");
                   }),
+              // DropdownButtonFormField(
+              //     decoration: const InputDecoration(
+              //       enabledBorder: OutlineInputBorder(
+              //         borderRadius: BorderRadius.all(Radius.circular(30.0)),
+              //         borderSide: BorderSide(
+              //           color: Color.fromARGB(255, 76, 175, 80),
+              //           width: 1.0,
+              //         ),
+              //       ),
+              //       focusedBorder: OutlineInputBorder(
+              //           borderRadius: BorderRadius.all(Radius.circular(30.0)),
+              //           borderSide: BorderSide(
+              //               color: Color.fromARGB(255, 76, 175, 80),
+              //               width: 1.5)),
+              //       filled: true,
+              //       fillColor: Colors.white,
+              //     ),
+              //     hint: const DefaultText(size: 18, text: "Select Location"),
+              //     value: dropdownval,
+              //     items: locations
+              //         .map((item) => DropdownMenuItem(
+              //             value: item,
+              //             child: DefaultText(
+              //               text: item,
+              //               size: 18,
+              //             )))
+              //         .toList(),
+              //     onChanged: (value) {
+              //       dropdownval = value;
+              //     }),
               const SizedBox(
                 height: 20.0,
               ),

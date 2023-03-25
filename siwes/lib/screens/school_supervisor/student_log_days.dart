@@ -80,7 +80,7 @@ class _SuperStudentLogDaysState extends State<SuperStudentLogDays> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+        padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -146,7 +146,7 @@ class _SuperStudentLogDaysState extends State<SuperStudentLogDays> {
               const SizedBox(height: 20.0),
               DefaultTextFormField(
                 onTap: () {
-                  indComment == ''
+                  indComment!.text.isEmpty
                       ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: DefaultText(
                               size: 15.0,
@@ -175,7 +175,8 @@ class _SuperStudentLogDaysState extends State<SuperStudentLogDays> {
                             schComment!.text);
                       },
                       text: "SUBMIT",
-                      textSize: 20.0))
+                      textSize: 20.0)),
+              const SizedBox(height: 20.0)
             ],
           ),
         ),

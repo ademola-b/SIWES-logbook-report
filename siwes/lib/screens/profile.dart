@@ -26,6 +26,8 @@ class _ProfileState extends State<Profile> {
   bool enable = false;
   Color? fill;
 
+  
+
   void _updateInfo() {
     bool isValid = _form.currentState!.validate();
     if (!isValid) return;

@@ -79,10 +79,7 @@ class _WeekPageState extends State<WeekPage> {
     super.initState();
     checkWkComment(widget.arguments['student_id'], widget.arguments['wkIndex']);
 
-    print(commentFilled);
-    // indComment.text.isNotEmpty && schComment.text.isNotEmpty
-    //     ? commentFilled = !commentFilled
-    //     : commentFilled;
+    // print(commentFilled);
   }
 
   @override
@@ -118,7 +115,7 @@ class _WeekPageState extends State<WeekPage> {
                       DefaultText(
                         align: TextAlign.center,
                         size: 20.0,
-                        text: "Week \n ${routeData['week_index']}",
+                        text: "Week \n ${routeData['week_index'] + 1}",
                         color: Constants.primaryColor,
                       ),
                       const Spacer(),
@@ -136,7 +133,7 @@ class _WeekPageState extends State<WeekPage> {
               const SizedBox(height: 30.0),
               DefaultText(
                 size: 25.0,
-                text: 'Days in Week ${routeData['week_index']}',
+                text: 'Days in Week ${routeData['week_index'] + 1}',
                 color: Constants.primaryColor,
                 weight: FontWeight.w500,
               ),

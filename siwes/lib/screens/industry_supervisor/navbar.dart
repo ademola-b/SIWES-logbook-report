@@ -17,7 +17,7 @@ class Navbar extends StatefulWidget {
 
 class _NavbarState extends State<Navbar> {
   final List<String> _labels = [
-    "Account Information",
+    "Profile",
     "Settings",
     "Exit",
   ];
@@ -36,7 +36,7 @@ class _NavbarState extends State<Navbar> {
   ];
 
   final List<IconData> _activitiesIcons = [
-    Icons.home,
+    Icons.dashboard,
     Icons.supervisor_account,
     Icons.comment,
     Icons.place_outlined,
@@ -49,7 +49,7 @@ class _NavbarState extends State<Navbar> {
     '/industryPlacementCentre',
   ];
 
-   Future<List<String>?>? _getProfile;
+  Future<List<String>?>? _getProfile;
 
   @override
   void initState() {
@@ -123,7 +123,7 @@ class _NavbarState extends State<Navbar> {
                     _activitiesIcons[index],
                     color: Constants.primaryColor,
                   ),
-                  title: Text(_activities[index]),
+                  title: DefaultText(size: 17.0, text: _activities[index]),
                   onTap: () {
                     Navigator.pushReplacementNamed(context, _onTap[index]);
                   },
@@ -144,9 +144,13 @@ class _NavbarState extends State<Navbar> {
                     _labelIcons[index],
                     color: Constants.primaryColor,
                   ),
-                  title: Text(_labels[index]),
+                  title: DefaultText(size: 17.0, text: _labels[index]),
                   onTap: () {
                     switch (_labels[index]) {
+                      case 'Profile':
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, '/profile');
+                        break;
                       case 'Exit':
                         Constants.clearDetails();
                         Navigator.pushNamedAndRemoveUntil(

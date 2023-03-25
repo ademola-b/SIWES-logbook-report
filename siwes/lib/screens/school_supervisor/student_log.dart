@@ -126,9 +126,13 @@ class _SuperStudentLogState extends State<SuperStudentLog> {
                                   height: 50,
                                   fit: BoxFit.cover,
                                 )),
-                                title: Text(
-                                    "${data[index].user.firstName} ${data[index].user.lastName}"),
-                                subtitle: Text(data[index].user.username),
+                                title: DefaultText(
+                                    size: 15.0,
+                                    text:
+                                        "${data[index].user.firstName} ${data[index].user.lastName}"),
+                                subtitle: DefaultText(
+                                    size: 15.0,
+                                    text: data[index].user.username),
                                 trailing: const Icon(Icons.arrow_forward_ios),
                                 // route: '/studentLogDays',
                               ),

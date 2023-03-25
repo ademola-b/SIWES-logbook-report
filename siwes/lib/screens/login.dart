@@ -5,8 +5,11 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:siwes/models/entry_date_response.dart';
+import 'package:siwes/models/industry_supervisor_details.dart';
 import 'package:siwes/models/login_response.dart';
 import 'package:siwes/models/school_supervisor_profile.dart';
+import 'package:siwes/models/student_details.dart';
 import 'package:siwes/models/user_response.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
@@ -35,6 +38,36 @@ class _LoginState extends State<Login> {
     });
   }
 
+  getProfiles() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    List<SchoolSupervisorProfile>? schProfile =
+        await RemoteServices.getSchProfile(context);
+
+    List<StudentDetailResponse> stdProfile =
+        await RemoteServices.getStdDetails();
+
+    List<IndustrySupervisorDetails>? indProfile =
+        await RemoteServices.getIndProfile();
+
+    if (schProfile != null && schProfile.isNotEmpty) {
+      var picEncode = base64Encode(schProfile[0].profilePicMemory);
+      await pref.setStringList('profile',
+          [schProfile[0].user.username, schProfile[0].user.email, picEncode]);
+    } else if (stdProfile.isNotEmpty) {
+      var picEncode = base64Encode(stdProfile[0].profilePicMem);
+      await pref.setStringList('profile',
+          [stdProfile[0].user.username, stdProfile[0].user.email, picEncode]);
+    } else if (indProfile != null && indProfile.isNotEmpty) {
+      var picEncode = base64Encode(indProfile[0].profileNoMemory);
+      await pref.setStringList('profile',
+          [indProfile[0].user.username, indProfile[0].user.email, picEncode]);
+    }
+    // else {
+    //   Constants.DialogBox(
+    //       context, "Profile not found", Colors.white, Icons.warning_rounded);
+    // }
+  }
+
   void _login() async {
     var isValid = _form.currentState!.validate(); //validation
     if (!isValid) return;
@@ -58,27 +91,14 @@ class _LoginState extends State<Login> {
         //navigator to page according to user type
         if (user != null) {
           if (user.userType == 'student') {
+            getProfiles();
             Navigator.popAndPushNamed(context, '/studentDashboard');
           } else if (user.userType == 'industry_based_supervisor') {
+            getProfiles();
             Navigator.popAndPushNamed(context, '/industryDashboard');
           } else if (user.userType == 'school_based_supervisor') {
             //get profile
-            List<SchoolSupervisorProfile>? profile =
-                await RemoteServices.getSchProfile(context);
-            if (profile != null) {
-              var picEncode = base64Encode(profile[0].profilePicMemory);
-              // await pref.setString(
-              //     "supervisor_username", profile[0].user.username);
-              // await pref.setString("supervisor_email", profile[0].user.email);
-              // await pref.setString("supervisor_pic", picEncode);
-
-              await pref.setStringList('profile',
-                  [profile[0].user.username, profile[0].user.email, picEncode]);
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: DefaultText(size: 15.0, text: "Profile not found")));
-            }
-
+            getProfiles();
             Navigator.popAndPushNamed(context, '/schoolSupervisorDashboard');
           } else if (user.userType == 'admin') {
             showDialog(

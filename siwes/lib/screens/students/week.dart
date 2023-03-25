@@ -29,6 +29,7 @@ class _WeekPageState extends State<WeekPage> {
   int? wkComId;
   String? indNComment, schNComment, _title, _description;
   String? _diagram;
+  bool commentFilled = false;
 
   TextEditingController indComment = TextEditingController();
   TextEditingController schComment = TextEditingController();
@@ -61,11 +62,14 @@ class _WeekPageState extends State<WeekPage> {
         indNComment = wkResponse.industryComment ?? '';
         schNComment = wkResponse.schoolComment ?? '';
       });
-
-      // print("indNComment- $indNComment");
-      // print("schNComment- $schNComment");
       indComment.text = indNComment!;
       schComment.text = schNComment!;
+      if (indComment.text.isNotEmpty && schComment.text.isNotEmpty) {
+        setState(() {
+          commentFilled = !commentFilled;
+          print("from method - $commentFilled");
+        });
+      }
     }
   }
 
@@ -74,19 +78,17 @@ class _WeekPageState extends State<WeekPage> {
     print("Widget data: ${widget.arguments}");
     super.initState();
     checkWkComment(widget.arguments['student_id'], widget.arguments['wkIndex']);
+
+    print(commentFilled);
+    // indComment.text.isNotEmpty && schComment.text.isNotEmpty
+    //     ? commentFilled = !commentFilled
+    //     : commentFilled;
   }
 
   @override
   Widget build(BuildContext context) {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
-    // print(routeData);
-
-    // checkWkComment(widget.arguments['student_id'], widget.arguments['wkIndex']);
-    // indComment.text = indNComment!;
-    // schComment.text = schNComment!;
-    // print(wkComment);
 
     List<dynamic> days =
         Constants.getDaysInWeek(routeData['week_start'], routeData['week_end']);
@@ -158,8 +160,6 @@ class _WeekPageState extends State<WeekPage> {
                           onTap: () async {
                             await checkLogEntryDate(
                                 routeData['student_id'], days[index]);
-                            // await checkLogEntryDate(
-                            //     widget.arguments['student_id'], days[index]);
 
                             Navigator.pushNamed(
                               context,
@@ -170,7 +170,8 @@ class _WeekPageState extends State<WeekPage> {
                                 'date': days[index],
                                 'title': _title ?? '',
                                 'desc': _description ?? '',
-                                'diagram': _diagram
+                                'diagram': _diagram,
+                                'comment_filled': commentFilled
                               },
                             );
 

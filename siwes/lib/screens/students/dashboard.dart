@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siwes/models/student_details.dart';
 import 'package:siwes/models/user_response.dart';
 import 'package:siwes/models/week_dates_response.dart';
+import 'package:siwes/utils/string_extension.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultContainer.dart';

@@ -111,13 +111,14 @@ class _LogEntryState extends State<LogEntry> {
   stopStreaming() {
     // if (mounted){
     //   setState(() {
-      
+
     // });
     // }
     EasyGeofencing.stopGeofenceService();
-      geofenceStatusStream!.cancel();
-      geofenceStatusStream = null;
-      print('Streaming stopped');
+    if (geofenceStatusStream == null) return;
+    geofenceStatusStream!.cancel();
+    geofenceStatusStream = null;
+    print('Streaming stopped');
   }
 
   getLocation() async {
@@ -128,48 +129,26 @@ class _LogEntryState extends State<LogEntry> {
 
   void _submit(int week, String entry_date, String title, String description,
       File? diagram) async {
-    await getLocation();
-    if (geofenceStatus == 'GeofenceStatus.exit') {
-      Constants.DialogBox(context, "You are not in the designated area",
-          Colors.red[900], Icons.warning_amber_rounded);
-    } else if (geofenceStatus == 'GeofenceStatus.enter') {
-      LogbookEntry? _logEntry = await RemoteServices.PostLogEntry(
-          context, week.toString(), entry_date, title, description, diagram);
-      await Constants.DialogBox(
-          context, "Entry Saved", Colors.white, Icons.check_circle_outline);
+    if (widget.arguments['comment_filled']) {
+      Constants.DialogBox(
+          context,
+          "You can't submit logbook because both supervisors have commented",
+          Colors.amber,
+          Icons.dangerous_rounded);
+    } else {
+      await getLocation();
+      if (geofenceStatus == 'GeofenceStatus.exit') {
+        Constants.DialogBox(context, "You are not in the designated area",
+            Colors.red[900], Icons.location_off_outlined);
+      } else if (geofenceStatus == 'GeofenceStatus.enter') {
+        LogbookEntry? _logEntry = await RemoteServices.PostLogEntry(
+            context, week.toString(), entry_date, title, description, diagram);
+        await Constants.DialogBox(
+            context, "Entry Saved", Colors.white, Icons.check_circle_outline);
 
-      Navigator.pop(context);
+        Navigator.pop(context);
+      }
     }
-
-    // LogbookEntry? _logEntry = await RemoteServices.PostLogEntry(
-    //     week.toString(), entry_date, title, description, diagram);
-    // if (_logEntry == null) {
-    //   print("Entry Posted");
-
-    //   await showDialog(
-    //       context: context,
-    //       builder: (context) => AlertDialog(
-    //             content: SizedBox(
-    //               height: 120.0,
-    //               child: Column(
-    //                 children: [
-    //                   Icon(
-    //                     Icons.check_circle_outline,
-    //                     size: 70.0,
-    //                     color: Constants.backgroundColor,
-    //                   ),
-    //                   const SizedBox(height: 20.0),
-    //                   const DefaultText(
-    //                     size: 20.0,
-    //                     text: "Entry Posted",
-    //                     color: Colors.green,
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           ));
-    //
-    // }
   }
 
   @override
@@ -181,11 +160,10 @@ class _LogEntryState extends State<LogEntry> {
 
   @override
   void initState() {
-    // print("widget data: ${widget.arguments}");
+    print("widget data: ${widget.arguments}");
     super.initState();
     titleController!.text = widget.arguments['title'];
     descController!.text = widget.arguments['desc'];
-    // _getStdDetails();
   }
 
   @override
@@ -293,7 +271,52 @@ class _LogEntryState extends State<LogEntry> {
                           ),
                       const SizedBox(width: 20.0),
                       DefaultButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (builder) {
+                                  return SizedBox(
+                                    height: 200,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            getImage(ImageSource.camera);
+                                          },
+                                          child: Column(
+                                            children: [
+                                              const Icon(Icons.camera,
+                                                  size: 70.0),
+                                              DefaultText(
+                                                  size: 25.0,
+                                                  text: "Camera",
+                                                  color: Constants.primaryColor)
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 30.0),
+                                        GestureDetector(
+                                          onTap: () =>
+                                              getImage(ImageSource.gallery),
+                                          child: Column(
+                                            children: [
+                                              const Icon(Icons.image_outlined,
+                                                  size: 70.0),
+                                              DefaultText(
+                                                  size: 25.0,
+                                                  text: "Gallery",
+                                                  color: Constants.primaryColor)
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                });
+                          },
                           text: "Upload Image",
                           textSize: 15.0),
                       // Column(

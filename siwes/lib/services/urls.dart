@@ -17,6 +17,9 @@ Uri stdDetailsUrl = Uri.parse("$base_url/api/students/");
 //industry_student
 Uri indStdListUrl = Uri.parse("$base_url/api/industry_supervisor/students/");
 
+//industry_profile
+Uri indProfile = Uri.parse("$base_url/api/industry_supervisor/profile/");
+
 //industry_logbook
 Uri entryDateUrl = Uri.parse("$base_url/api/entry_date/");
 

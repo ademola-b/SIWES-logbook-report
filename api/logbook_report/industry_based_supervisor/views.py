@@ -18,7 +18,7 @@ from students.serializers import StudentSerializer
 
 # Create your views here.
 class ProfileView(ListAPIView):
-    queryset = Student.objects.all()
+    queryset = IndustrySupervisor.objects.all()
     serializer_class = IndustrySupervisorSerializer
 
     def get_queryset(self, *args, **kwargs):

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:siwes/models/entry_date_response.dart';
 import 'package:siwes/models/ind_std_list.dart';
+import 'package:siwes/models/industry_supervisor_details.dart';
 import 'package:siwes/models/logbook_entry_response.dart';
 import 'package:siwes/models/login_response.dart';
 import 'package:http/http.dart' as http;
@@ -18,6 +19,7 @@ import 'package:siwes/models/week_dates_response.dart';
 import 'package:siwes/screens/students/logEntry.dart';
 
 import 'package:siwes/services/urls.dart';
+import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultText.dart';
 
 class RemoteServices {
@@ -93,6 +95,24 @@ class RemoteServices {
   }
 
   //Industry Supervisor Remote Services
+  static Future<List<IndustrySupervisorDetails>?>? getIndProfile() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var token = pref.getString("token");
+
+    try {
+      var response = await http
+          .get(indProfile, headers: {"Authorization": "Token $token"});
+      if (response.statusCode == 200) {
+        return industrySupervisorDetailsFromJson(response.body);
+      } else {
+        throw Exception("Failed to get details");
+      }
+    } catch (e) {
+      print("An error occurred $e");
+    }
+    return <IndustrySupervisorDetails>[];
+  }
+
   //student list
   static Future<List<IndStdList>?> getIndStdList() async {
     //get user token
@@ -294,8 +314,6 @@ class RemoteServices {
 
     return <SchStdListResponse>[];
   }
-
-  //get Logbook
 
   //Student Services
   //post entry

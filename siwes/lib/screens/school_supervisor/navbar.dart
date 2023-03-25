@@ -18,7 +18,7 @@ class Navbar extends StatefulWidget {
 
 class _NavbarState extends State<Navbar> {
   Future<List<String>?>? _getProfile;
-  
+
   final List<String> _activities = [
     "Dashboard",
     "Students",
@@ -89,7 +89,27 @@ class _NavbarState extends State<Navbar> {
                   ),
                 );
               }
-              return const CircularProgressIndicator();
+              return UserAccountsDrawerHeader(
+                accountName: const DefaultText(
+                  size: 15.0,
+                  text: "Username",
+                ),
+                accountEmail: const DefaultText(
+                  size: 15.0,
+                  text: "Email Address",
+                ),
+                currentAccountPicture: CircleAvatar(
+                  child: ClipOval(
+                    child: Image.asset(
+                      "assets/images/avatar.jpg",
+                      width: 90,
+                      height: 90,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              );
+              ;
             },
           ),
           ListView.builder(

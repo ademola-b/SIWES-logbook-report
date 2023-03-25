@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:siwes/models/user_response.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultText.dart';
+import 'package:siwes/utils/string_extension.dart';
 
 class Navbar extends StatefulWidget {
   Navbar({super.key});
@@ -45,25 +49,14 @@ class _NavbarState extends State<Navbar> {
     '/industryPlacementCentre',
   ];
 
-  // RemoteServices _remote = RemoteServices();
-
-  String? _username, _email;
-
-  Future<UserResponse?> _getUser() async {
-    UserResponse? user = await RemoteServices.getUser();
-    if (user != null) {
-      setState(() {
-        _username = user.username;
-        _email = user.email;
-      });
-    }
-    return null;
-  }
+   Future<List<String>?>? _getProfile;
 
   @override
   void initState() {
-    _getUser();
     super.initState();
+    _getProfile = SharedPreferences.getInstance().then((pref) {
+      return pref.getStringList("profile");
+    });
   }
 
   @override
@@ -72,20 +65,52 @@ class _NavbarState extends State<Navbar> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          UserAccountsDrawerHeader(
-            accountName: DefaultText(size: 15.0, text: _username ?? 'username'),
-            accountEmail:
-                DefaultText(size: 15.0, text: _email ?? 'emailAddress'),
-            currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                child: Image.asset(
-                  'assets/images/avatar.jpg',
-                  width: 90,
-                  height: 90,
-                  fit: BoxFit.cover,
+          FutureBuilder(
+            future: _getProfile,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return UserAccountsDrawerHeader(
+                  accountName: DefaultText(
+                    size: 15.0,
+                    text: snapshot.data![0].titleCase(),
+                  ),
+                  accountEmail: DefaultText(
+                    size: 15.0,
+                    text: snapshot.data![1],
+                  ),
+                  currentAccountPicture: CircleAvatar(
+                    child: ClipOval(
+                      child: Image.memory(
+                        base64Decode(snapshot.data![2]),
+                        width: 90,
+                        height: 90,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+              }
+              return UserAccountsDrawerHeader(
+                accountName: const DefaultText(
+                  size: 15.0,
+                  text: "Username",
                 ),
-              ),
-            ),
+                accountEmail: const DefaultText(
+                  size: 15.0,
+                  text: "Email Address",
+                ),
+                currentAccountPicture: CircleAvatar(
+                  child: ClipOval(
+                    child: Image.asset(
+                      "assets/images/avatar.jpg",
+                      width: 90,
+                      height: 90,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
           ListView.builder(
               padding: EdgeInsets.zero,

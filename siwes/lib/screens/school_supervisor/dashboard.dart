@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:siwes/models/user_response.dart';
 import 'package:siwes/screens/school_supervisor/navbar.dart';
 import 'package:siwes/utils/string_extension.dart';
@@ -31,6 +32,20 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     _getUser();
     super.initState();
+  }
+
+  String? _user, _email, _pic;
+  getProfile() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    // pref.getString("supervisor_username");
+    // pref.getString("supervisor_email");
+    // pref.getString("supervisor_pic");
+    setState(() {
+      _user = pref.getString("supervisor_username");
+      _email = pref.getString("supervisor_email");
+      _pic = pref.getString("supervisor_pic");
+    });
   }
 
   @override

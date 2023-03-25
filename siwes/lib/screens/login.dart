@@ -27,6 +27,13 @@ class _LoginState extends State<Login> {
 
   late String _username;
   late String _password;
+  bool _obscureText = false;
+
+  _toggle() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
 
   void _login() async {
     var isValid = _form.currentState!.validate(); //validation
@@ -60,10 +67,13 @@ class _LoginState extends State<Login> {
                 await RemoteServices.getSchProfile(context);
             if (profile != null) {
               var picEncode = base64Encode(profile[0].profilePicMemory);
-              await pref.setString(
-                  "supervisor_username", profile[0].user.username);
-              await pref.setString("supervisor_email", profile[0].user.email);
-              await pref.setString("supervisor_pic", picEncode);
+              // await pref.setString(
+              //     "supervisor_username", profile[0].user.username);
+              // await pref.setString("supervisor_email", profile[0].user.email);
+              // await pref.setString("supervisor_pic", picEncode);
+
+              await pref.setStringList('profile',
+                  [profile[0].user.username, profile[0].user.email, picEncode]);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: DefaultText(size: 15.0, text: "Profile not found")));
@@ -147,6 +157,7 @@ class _LoginState extends State<Login> {
                   ),
                   const SizedBox(height: 25.0),
                   TextFormField(
+                    obscureText: !_obscureText,
                     decoration: InputDecoration(
                       border: const UnderlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -161,6 +172,13 @@ class _LoginState extends State<Login> {
                       filled: true,
                       prefixIcon: const Icon(Icons.lock),
                       prefixIconColor: Constants.primaryColor,
+                      suffixIcon: GestureDetector(
+                          onTap: () {
+                            _toggle();
+                          },
+                          child: Icon(_obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off)),
                       hintText: "Password",
                     ),
                     style: const TextStyle(

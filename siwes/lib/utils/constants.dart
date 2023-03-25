@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:siwes/models/week_dates_response.dart';
 import 'package:siwes/services/remote_services.dart';
+import 'package:siwes/utils/defaultText.dart';
 
 class Constants {
   static Color? primaryColor = Colors.green[500];
@@ -37,5 +38,30 @@ class Constants {
     await pref.clear();
   }
 
-
+  static Future<dynamic> DialogBox(context, String? text, Color? color, IconData? icon) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              backgroundColor: color,
+              content: SizedBox(
+                height: 180.0,
+                child: Column(
+                  children: [
+                    Icon(
+                      icon,
+                      size: 70.0,
+                      color: Constants.backgroundColor,
+                    ),
+                    const SizedBox(height: 20.0),
+                    DefaultText(
+                      size: 20.0,
+                      text: text!,
+                      color: Colors.white,
+                      align: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ));
+  }
 }

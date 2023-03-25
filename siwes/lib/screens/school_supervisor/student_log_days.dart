@@ -146,11 +146,13 @@ class _SuperStudentLogDaysState extends State<SuperStudentLogDays> {
               const SizedBox(height: 20.0),
               DefaultTextFormField(
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: DefaultText(
-                          size: 15.0,
-                          text:
-                              "You can't add comment because industry suoervisor hasn't commented")));
+                  indComment == ''
+                      ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: DefaultText(
+                              size: 15.0,
+                              text:
+                                  "You can't add comment because industry suoervisor hasn't commented")))
+                      : Container();
                 },
                 text: schComment,
                 readOnly: enabled,

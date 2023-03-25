@@ -37,14 +37,18 @@ class _WeekPageState extends State<WeekPage> {
     List<EntryDateResponse?>? logEntryResponse =
         await RemoteServices.getEntryDate(sid, date, context);
     if (logEntryResponse != null && logEntryResponse.isNotEmpty) {
-      print("Diagram: ${logEntryResponse[0]!.diagram}");
       setState(() {
         _title = logEntryResponse[0]!.title;
         _description = logEntryResponse[0]!.description;
         _diagram = logEntryResponse[0]!.diagram;
       });
+    } else if (logEntryResponse != null && logEntryResponse.isEmpty) {
+      setState(() {
+        _title = '';
+        _description = '';
+        _diagram = null;
+      });
     }
-    return null;
   }
 
   Future<WeekCommentResponse?>? checkWkComment(int sid, int wkId) async {
@@ -153,7 +157,9 @@ class _WeekPageState extends State<WeekPage> {
                         child: ListTile(
                           onTap: () async {
                             await checkLogEntryDate(
-                                widget.arguments['student_id'], days[index]);
+                                routeData['student_id'], days[index]);
+                            // await checkLogEntryDate(
+                            //     widget.arguments['student_id'], days[index]);
 
                             Navigator.pushNamed(
                               context,
@@ -167,6 +173,8 @@ class _WeekPageState extends State<WeekPage> {
                                 'diagram': _diagram
                               },
                             );
+
+                            print(days[index]);
                           },
                           title: DefaultText(
                             size: 18,

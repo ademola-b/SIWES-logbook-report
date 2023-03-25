@@ -1,10 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:easy_geofencing/easy_geofencing.dart';
+import 'package:easy_geofencing/enums/geofence_status.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:siwes/models/logbook_entry_response.dart';
+import 'package:siwes/models/student_details.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/screens/students/navbar.dart';
@@ -27,6 +33,11 @@ class _LogEntryState extends State<LogEntry> {
 
   TextEditingController? titleController = TextEditingController();
   TextEditingController? descController = TextEditingController();
+
+  String? _latitude, _longitude, _radius;
+  StreamSubscription<GeofenceStatus>? geofenceStatusStream;
+
+  String geofenceStatus = '';
 
   //get the image
   Future getImage(ImageSource source) async {
@@ -68,52 +79,119 @@ class _LogEntryState extends State<LogEntry> {
     return File(imagePath).copy(image.path);
   }
 
+  Future<StudentDetailResponse?> _getStdDetails() async {
+    List<StudentDetailResponse>? std = await RemoteServices.getStdDetails();
+    if (std.isNotEmpty) {
+      setState(() {
+        _latitude = std[0].industryBasedSupervisor.placementCenter.latitude;
+        _longitude = std[0].industryBasedSupervisor.placementCenter.longitude;
+        _radius = std[0].industryBasedSupervisor.placementCenter.radius;
+      });
+    }
+    return null;
+  }
+
+  startStreaming() async {
+    EasyGeofencing.startGeofenceService(
+        pointedLatitude: _latitude,
+        pointedLongitude: _longitude,
+        radiusMeter: _radius,
+        eventPeriodInSeconds: 5);
+
+    geofenceStatusStream ??=
+        EasyGeofencing.getGeofenceStream()?.listen((GeofenceStatus status) {
+      print(status.toString());
+      print("Status - ${status.runtimeType}");
+      setState(() {
+        geofenceStatus = status.toString();
+      });
+    });
+  }
+
+  stopStreaming() {
+    // if (mounted){
+    //   setState(() {
+      
+    // });
+    // }
+    EasyGeofencing.stopGeofenceService();
+      geofenceStatusStream!.cancel();
+      geofenceStatusStream = null;
+      print('Streaming stopped');
+  }
+
+  getLocation() async {
+    await _getStdDetails();
+    await startStreaming();
+    // stopStreaming();
+  }
+
   void _submit(int week, String entry_date, String title, String description,
       File? diagram) async {
-    LogbookEntry? _logEntry = await RemoteServices.PostLogEntry(
-        week.toString(), entry_date, title, description, diagram);
-    if (_logEntry == null) {
-      print("Entry Posted");
+    await getLocation();
+    if (geofenceStatus == 'GeofenceStatus.exit') {
+      Constants.DialogBox(context, "You are not in the designated area",
+          Colors.red[900], Icons.warning_amber_rounded);
+    } else if (geofenceStatus == 'GeofenceStatus.enter') {
+      LogbookEntry? _logEntry = await RemoteServices.PostLogEntry(
+          context, week.toString(), entry_date, title, description, diagram);
+      await Constants.DialogBox(
+          context, "Entry Saved", Colors.white, Icons.check_circle_outline);
 
-      await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-                content: SizedBox(
-                  height: 120.0,
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.check_circle_outline,
-                        size: 70.0,
-                        color: Constants.backgroundColor,
-                      ),
-                      const SizedBox(height: 20.0),
-                      const DefaultText(
-                        size: 20.0,
-                        text: "Entry Posted",
-                        color: Colors.green,
-                      ),
-                    ],
-                  ),
-                ),
-              ));
       Navigator.pop(context);
     }
+
+    // LogbookEntry? _logEntry = await RemoteServices.PostLogEntry(
+    //     week.toString(), entry_date, title, description, diagram);
+    // if (_logEntry == null) {
+    //   print("Entry Posted");
+
+    //   await showDialog(
+    //       context: context,
+    //       builder: (context) => AlertDialog(
+    //             content: SizedBox(
+    //               height: 120.0,
+    //               child: Column(
+    //                 children: [
+    //                   Icon(
+    //                     Icons.check_circle_outline,
+    //                     size: 70.0,
+    //                     color: Constants.backgroundColor,
+    //                   ),
+    //                   const SizedBox(height: 20.0),
+    //                   const DefaultText(
+    //                     size: 20.0,
+    //                     text: "Entry Posted",
+    //                     color: Colors.green,
+    //                   ),
+    //                 ],
+    //               ),
+    //             ),
+    //           ));
+    //
+    // }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    stopStreaming();
   }
 
   @override
   void initState() {
     // print("widget data: ${widget.arguments}");
     super.initState();
+    titleController!.text = widget.arguments['title'];
+    descController!.text = widget.arguments['desc'];
+    // _getStdDetails();
   }
 
   @override
   Widget build(BuildContext context) {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
-    titleController!.text = widget.arguments['title'];
-    descController!.text = widget.arguments['desc'];
     // print(routeData);
 
     Size size = MediaQuery.of(context).size;
@@ -164,6 +242,7 @@ class _LogEntryState extends State<LogEntry> {
                     fontSize: 15.0,
                     fillColor: Colors.white,
                     readOnly: false,
+                    validator: Constants.validator,
                   ),
                   const SizedBox(height: 20),
                   DefaultTextFormField(
@@ -174,6 +253,7 @@ class _LogEntryState extends State<LogEntry> {
                     fontSize: 15.0,
                     fillColor: Colors.white,
                     readOnly: false,
+                    validator: Constants.validator,
                   ),
                   const SizedBox(height: 20),
                   DefaultText(
@@ -213,9 +293,7 @@ class _LogEntryState extends State<LogEntry> {
                           ),
                       const SizedBox(width: 20.0),
                       DefaultButton(
-                          onPressed: () {
-                            
-                          },
+                          onPressed: () {},
                           text: "Upload Image",
                           textSize: 15.0),
                       // Column(

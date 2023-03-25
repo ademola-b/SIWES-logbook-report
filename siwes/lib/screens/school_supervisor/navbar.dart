@@ -17,6 +17,8 @@ class Navbar extends StatefulWidget {
 }
 
 class _NavbarState extends State<Navbar> {
+  Future<List<String>?>? _getProfile;
+  
   final List<String> _activities = [
     "Dashboard",
     "Students",
@@ -47,27 +49,12 @@ class _NavbarState extends State<Navbar> {
     Icons.logout,
   ];
 
-  List profileDetails = [];
-
-  String? _username, _email, _pic;
-
-  getProfile() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-
-    // pref.getString("supervisor_username");
-    // pref.getString("supervisor_email");
-    // pref.getString("supervisor_pic");
-    setState(() {
-      _username = pref.getString("supervisor_username");
-      _email = pref.getString("supervisor_email");
-      _pic = pref.getString("supervisor_pic");
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    // getProfile();
+    _getProfile = SharedPreferences.getInstance().then((pref) {
+      return pref.getStringList("profile");
+    });
   }
 
   @override
@@ -76,19 +63,34 @@ class _NavbarState extends State<Navbar> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          UserAccountsDrawerHeader(
-            accountName: Text("username"),
-            accountEmail: Text("email address"),
-            currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                child: Image.asset(
-                  "assets/images/avatar.jpg",
-                  width: 90,
-                  height: 90,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+          FutureBuilder(
+            future: _getProfile,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var data = snapshot.data;
+                return UserAccountsDrawerHeader(
+                  accountName: DefaultText(
+                    size: 15.0,
+                    text: data![0].titleCase(),
+                  ),
+                  accountEmail: DefaultText(
+                    size: 15.0,
+                    text: data[1],
+                  ),
+                  currentAccountPicture: CircleAvatar(
+                    child: ClipOval(
+                      child: Image.memory(
+                        base64Decode(data[2]),
+                        width: 90,
+                        height: 90,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+              }
+              return const CircularProgressIndicator();
+            },
           ),
           ListView.builder(
               padding: EdgeInsets.zero,

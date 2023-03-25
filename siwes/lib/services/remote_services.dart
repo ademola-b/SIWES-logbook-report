@@ -299,8 +299,13 @@ class RemoteServices {
 
   //Student Services
   //post entry
-  static Future<LogbookEntry?>? PostLogEntry(String week, String entry_date,
-      String title, String description, File? diagram) async {
+  static Future<LogbookEntry?> PostLogEntry(
+      context,
+      String week,
+      String entry_date,
+      String title,
+      String description,
+      File? diagram) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     var token = pref.getString("token");
     try {
@@ -324,11 +329,18 @@ class RemoteServices {
       if (response.statusCode == 201) {
         print(await response.stream.bytesToString());
       } else {
-        print(response.reasonPhrase);
+        throw Exception("An error occurred: ${response.reasonPhrase}");
+        // print(response.reasonPhrase);
       }
     } catch (e) {
       print("Server Error: $e");
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: DefaultText(size: 15.0, text: "Log Posted",)))
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: DefaultText(
+        size: 15.0,
+        text: "Server Error: $e",
+      )));
     }
+
+    return null;
   }
 }

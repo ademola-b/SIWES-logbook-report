@@ -43,9 +43,7 @@ class ProgramDateView(ListCreateAPIView):
         week_serializer = WeekDateSerializer(data=week)
         program_serializer = ProgramDateSerializer(data=data)
         # print(week_serializer)
-        # if week_serializer.is_valid() and program_serializer.is_valid():
         if program_serializer.is_valid():
-            # week_serializer.save()
             program_serializer.save()
             # dates_list = [week_serializer.data, program_serializer.data]
             print(program_serializer.data)

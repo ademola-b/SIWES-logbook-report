@@ -6,6 +6,7 @@ import 'package:siwes/screens/students/dashboard.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultText.dart';
+import 'package:siwes/utils/string_extension.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -73,7 +74,7 @@ class _DashboardState extends State<Dashboard> {
                   children: [
                     DefaultText(
                       size: 20.0,
-                      text: "Hello, \n $_username",
+                      text: "Hello, \n ${_username.titleCase()}",
                       color: Constants.primaryColor,
                       align: TextAlign.center,
                     ),

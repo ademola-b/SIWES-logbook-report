@@ -167,12 +167,25 @@ class _SuperStudentLogDaysState extends State<SuperStudentLogDays> {
                   width: MediaQuery.of(context).size.width,
                   child: DefaultButton(
                       onPressed: () {
-                        _updateComment(
-                            widget.nxtdata['week_comment_id'],
-                            widget.nxtdata['student_id'],
-                            widget.nxtdata['week_index'],
-                            indComment!.text,
-                            schComment!.text);
+                        indComment!.text.isEmpty
+                            ? ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: DefaultText(
+                                        size: 15.0,
+                                        text:
+                                            "You can't add comment because industry supervisor hasn't commented")))
+                            : (schComment!.text.isEmpty)
+                                ? ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: DefaultText(
+                                            size: 15.0,
+                                            text: "Field cannot be empty")))
+                                : _updateComment(
+                                    widget.nxtdata['week_comment_id'],
+                                    widget.nxtdata['student_id'],
+                                    widget.nxtdata['week_index'],
+                                    indComment!.text,
+                                    schComment!.text);
                       },
                       text: "SUBMIT",
                       textSize: 20.0)),

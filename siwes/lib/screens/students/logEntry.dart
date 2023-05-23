@@ -196,14 +196,15 @@ class _LogEntryState extends State<LogEntry> {
                   children: [
                     DefaultText(
                       size: 25.0,
-                      text: "Week ${routeData['week_index']}".toString(),
+                      text: "Week ${routeData['week_index'] + 1}".toString(),
                       color: Constants.primaryColor,
+                      weight: FontWeight.bold,
                     ),
                     const SizedBox(height: 20.0),
                     DefaultText(
                       size: 25.0,
-                      text: "Date - ${routeData['date']}",
-                      // "Date - ${routeData['date'].day}/${routeData['date'].month}/${routeData['date'].year}",
+                      text: "Date: ${routeData['date']}",
+                      weight: FontWeight.bold,
                       color: Constants.primaryColor,
                     ),
                   ],

@@ -75,7 +75,7 @@ class _WeekPageState extends State<WeekPage> {
 
   @override
   void initState() {
-    print("Widget data: ${widget.arguments}");
+    // print("Widget data: ${widget.arguments}");
     super.initState();
     checkWkComment(widget.arguments['student_id'], widget.arguments['wkIndex']);
 

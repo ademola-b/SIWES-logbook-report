@@ -41,17 +41,20 @@ class RemoteServices {
   }
 
   //user token
-  static Future<UserResponse?> getUser() async {
+  static Future<UserResponse?> getUser(context) async {
     //get user token
     SharedPreferences pref = await SharedPreferences.getInstance();
     var token = pref.getString("token");
     try {
       var response =
           await http.get(userUrl, headers: {"Authorization": "Token $token"});
+      print(response);
       return UserResponse.fromJson(jsonDecode(response.body));
     } catch (e) {
-      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: DefaultText(size: 15.0, text: "Server Error: $e")));
     }
+    return null;
   }
 
   //week dates

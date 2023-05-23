@@ -32,11 +32,18 @@ class _LoginState extends State<Login> {
   late String _password;
   bool _obscureText = false;
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   _toggle() {
     setState(() {
       _obscureText = !_obscureText;
     });
   }
+
+
 
   getProfiles() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -86,7 +93,7 @@ class _LoginState extends State<Login> {
 
         // Navigator.popAndPushNamed(context, '/studentDashboard');
 
-        UserResponse? user = await RemoteServices.getUser();
+        UserResponse? user = await RemoteServices.getUser(context);
 
         //navigator to page according to user type
         if (user != null) {

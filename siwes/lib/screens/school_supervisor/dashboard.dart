@@ -19,7 +19,7 @@ class _DashboardState extends State<Dashboard> {
   DateTime dt = DateTime.now();
 
   Future<UserResponse?> _getUser() async {
-    UserResponse? user = await RemoteServices.getUser();
+    UserResponse? user = await RemoteServices.getUser(context);
     if (user != null) {
       setState(() {
         _username = user.username;
@@ -98,45 +98,7 @@ class _DashboardState extends State<Dashboard> {
                 thickness: 1.5,
                 color: Colors.green,
               ),
-              // Wrap(
-              //   spacing: 20.0,
-              //   runSpacing: 20.0,
-              //   children: List.generate(indStd!.length, (index) {
-              //     return indStd == null
-              //         ? const DefaultText(
-              //             size: 15,
-              //             text: "No student is under your supervision")
-              //         : Container(
-              //             width: MediaQuery.of(context).size.width / 2.4,
-              //             decoration: const BoxDecoration(
-              //               borderRadius:
-              //                   BorderRadius.all(Radius.circular(20.0)),
-              //               color: Colors.white,
-              //             ),
-              //             child: ListTile(
-              //               onTap: () {
-              //                 Navigator.pushNamed(context, '/studentLog',
-              //                     arguments: {
-              //                       'username': indStd![index].user.username
-              //                     });
-              //               },
-              //               title: DefaultText(
-              //                 size: 15,
-              //                 text:
-              //                     "${indStd![index].user.firstName} ${indStd![index].user.lastName}",
-              //                 color: Colors.green,
-              //                 weight: FontWeight.w500,
-              //               ),
-              //               subtitle: DefaultText(
-              //                 size: 13,
-              //                 text: indStd![index].user.username,
-              //                 color: Colors.green,
-              //                 weight: FontWeight.w500,
-              //               ),
-              //             ),
-              //           );
-              //   }),
-              // ),
+              
             ],
           ),
         ),

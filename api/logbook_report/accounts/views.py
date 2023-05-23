@@ -17,3 +17,4 @@ class UserDetail(ListAPIView):
 
         return qs.filter(id = request.user.id)
     
+    

@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import django_heroku
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -159,3 +161,5 @@ CORS_ALLOWED_ORIGINS = [
     'http://192.168.43.182:8000', 
     'http://192.168.1.116:8000'
 ]
+
+django_heroku.settings(locals())

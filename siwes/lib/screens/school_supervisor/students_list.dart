@@ -15,6 +15,7 @@ class StudentsList extends StatefulWidget {
 
 class _StudentsListState extends State<StudentsList> {
   List<SchStdListResponse>? schStd = [];
+  List<SchStdListResponse>? stdRepo = [];
 
   Future<List<SchStdListResponse>?> _getSchStdList() async {
     List<SchStdListResponse>? stdL =
@@ -22,10 +23,21 @@ class _StudentsListState extends State<StudentsList> {
     if (stdL != null) {
       setState(() {
         schStd = [...schStd!, ...stdL];
-        print(schStd);
+        // print(schStd);
       });
     }
     return null;
+  }
+
+  Future<bool> exportList() async {
+    try {
+      await Constants.generateCSV(stdRepo, "sup_student_list", context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: DefaultText(size: 15.0, text: "An error occurred: $e")));
+    }
+
+    return true;
   }
 
   @override
@@ -129,7 +141,19 @@ class _StudentsListState extends State<StudentsList> {
                               SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: DefaultButton(
-                                      onPressed: () {},
+                                      onPressed: () async {
+                                        await exportList()
+                                            ? Constants.DialogBox(
+                                                context,
+                                                "Students List Exported",
+                                                Constants.primaryColor,
+                                                Icons.info_outline_rounded)
+                                            : Constants.DialogBox(
+                                                context,
+                                                "An Error Occurred",
+                                                Colors.red,
+                                                Icons.warning);
+                                      },
                                       text: "Export",
                                       textSize: 20.0)),
                             ],

@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:siwes/models/week_dates_response.dart';
 import 'package:siwes/services/remote_services.dart';
@@ -64,5 +68,54 @@ class Constants {
                 ),
               ),
             ));
+  }
+
+  static Future<String> getDownloadPath(context) async {
+    Directory? dir;
+    try {
+      Platform.isIOS
+          ? dir = await getApplicationDocumentsDirectory()
+          : dir = Directory('/storage/emulated/0/Download');
+      if (!await dir.exists()) dir = await getExternalStorageDirectory();
+    } catch (err) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: DefaultText(
+              size: 15.0,
+              text:
+                  "Can't get download folder, check if storage permission is enabled")));
+    }
+
+    // print("Saved Dir: ${dir!.path}");
+    return dir!.path;
+  }
+
+  static Future<bool> generateCSV(List<dynamic>? stdRepo, String file_name, context) async {
+    try {
+      List<List<String>> csvData = [
+        <String>[
+          'Registration No',
+          'Full Name',
+        ],
+        ...stdRepo!.map((item) => [
+              item.user.username,
+              "${item.user.firstName} ${item.user.lastName}",
+            ])
+      ];
+      String csv = const ListToCsvConverter().convert(csvData);
+
+      // final String dir = (await getExternalStorageDirectory())!.path;
+      final String dir = (await getDownloadPath(context));
+      final String path = "$dir/$file_name.csv";
+      // print(path);
+      final File file = File(path);
+
+      await file.writeAsString(csv);
+
+      return true;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: DefaultText(size: 15.0, text: "An error Occurred: $e")));
+      return false;
+    }
   }
 }

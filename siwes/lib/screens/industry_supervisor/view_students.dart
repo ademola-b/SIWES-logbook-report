@@ -35,50 +35,15 @@ class _IndStudentState extends State<IndStudent> {
     return null;
   }
 
-  Future<String> getDownloadPath() async {
-    Directory? dir;
+  Future<bool> exportList() async {
     try {
-      Platform.isIOS
-          ? dir = await getApplicationDocumentsDirectory()
-          : dir = Directory('/storage/emulated/0/Download');
-      if (!await dir.exists()) dir = await getExternalStorageDirectory();
-    } catch (err, stack) {
-      print("Cannot get download folder");
-    }
-
-    print("Saved Dir: ${dir!.path}");
-    return dir.path;
-  }
-
-  Future<bool> _generateCSV() async {
-    try {
-      await getDownloadPath();
-      List<List<String>> csvData = [
-        <String>[
-          'Registration No',
-          'Full Name',
-        ],
-        ...stdRepo!.map((item) => [
-              item.user.username,
-              "${item.user.firstName} ${item.user.lastName}",
-            ])
-      ];
-      String csv = const ListToCsvConverter().convert(csvData);
-
-      // final String dir = (await getExternalStorageDirectory())!.path;
-      final String dir = (await getDownloadPath());
-      final String path = "$dir/students_list.csv";
-      print(path);
-      final File file = File(path);
-
-      await file.writeAsString(csv);
-
-      return true;
+      await Constants.generateCSV(stdRepo, "student_list", context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: DefaultText(size: 15.0, text: "An error Occurred: $e")));
-      return false;
+          content: DefaultText(size: 15.0, text: "An error occurred: $e")));
     }
+
+    return true;
   }
 
   @override
@@ -161,7 +126,7 @@ class _IndStudentState extends State<IndStudent> {
                                 width: MediaQuery.of(context).size.width,
                                 child: DefaultButton(
                                     onPressed: () async {
-                                      await _generateCSV()
+                                      await exportList()
                                           ? Constants.DialogBox(
                                               context,
                                               "Students List Exported",

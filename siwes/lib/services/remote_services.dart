@@ -293,6 +293,7 @@ class RemoteServices {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: DefaultText(size: 15.0, text: "Server error: $e")));
     }
+    return null;
   }
 
   // get students

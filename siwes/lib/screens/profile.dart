@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:siwes/models/user_response.dart';
+import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/constants.dart';
 import 'package:siwes/utils/defaultButton.dart';
 import 'package:siwes/utils/defaultText.dart';
@@ -15,6 +18,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final _form = GlobalKey<FormState>();
   final _key = GlobalKey<FormFieldState>();
+  String? userType;
   late String _email, _name, _phone, _dept;
 
   late TextEditingController nameController;
@@ -26,7 +30,17 @@ class _ProfileState extends State<Profile> {
   bool enable = false;
   Color? fill;
 
-  
+  Future<UserResponse?> _getUserType() async {
+    UserResponse? user = await RemoteServices.getUser(context);
+    if (user != null) {
+      setState(() {
+        userType = user.userType;
+      });
+      // return user;
+      // print("user Type: $userType");
+    }
+    return null;
+  }
 
   void _updateInfo() {
     bool isValid = _form.currentState!.validate();
@@ -40,6 +54,7 @@ class _ProfileState extends State<Profile> {
     emailController = TextEditingController(text: "Email Address");
     phoneController = TextEditingController(text: "Phone Number");
     deptController = TextEditingController(text: "Department");
+    _getUserType();
     super.initState();
   }
 
@@ -85,103 +100,325 @@ class _ProfileState extends State<Profile> {
                   ],
                 ),
                 const SizedBox(height: 20.0),
-                Column(
-                  children: [
-                    ClipOval(
-                        child: Image.asset("assets/images/avatar.jpg",
-                            width: 170, height: 170, fit: BoxFit.cover)),
-                    DefaultText(
-                      size: 25.0,
-                      text: "Username",
-                      color: Constants.primaryColor,
-                    )
-                  ],
-                ),
-                const SizedBox(height: 20.0),
-                Form(
-                  key: _form,
-                  child: Column(
-                    children: [
-                      DefaultTextFormField(
-                        text: nameController,
-                        fontSize: 18.0,
-                        label: 'Name',
-                        enabled: enable,
-                        readOnly: false,
-                        fillColor: fill,
-                        validator: Constants.validator,
-                        onSaved: (value) {
-                          _name = value!;
-                        },
-                      ),
-                      const SizedBox(height: 20.0),
-                      DefaultTextFormField(
-                        fontSize: 18.0,
-                        label: 'Email Address',
-                        enabled: enable,
-                        readOnly: false,
-                        fillColor: fill,
-                        text: emailController,
-                        validator: Constants.validator,
-                        onSaved: (value) {
-                          _email = value!;
-                        },
-                      ),
-                      const SizedBox(height: 20.0),
-                      DefaultTextFormField(
-                        label: "Phone Number",
-                        fontSize: 15.0,
-                        enabled: enable,
-                        readOnly: false,
-                        fillColor: fill,
-                        text: phoneController,
-                        validator: Constants.validator,
-                        onSaved: (value) {
-                          _phone = value!;
-                        },
-                      ),
-                      const SizedBox(height: 20.0),
-                      DefaultTextFormField(
-                        label: "Department",
-                        fontSize: 15.0,
-                        text: deptController,
-                        enabled: enable,
-                        readOnly: false,
-                        fillColor: fill,
-                        validator: Constants.validator,
-                        onSaved: (value) {
-                          _dept = value!;
-                        },
-                      ),
-
-                      // DefaultDropDown(
-                      //     value: dropdownval,
-                      //     onChanged: (value) {
-                      //       dropdownval = value;
-                      //     },
-                      //     dropdownMenuItemList: ['computer science', 'sss']
-                      //         .map((item) => DropdownMenuItem(
-                      //             value: item,
-                      //             child: DefaultText(
-                      //               text: item,
-                      //               size: 18,
-                      //             )))
-                      //         .toList(),
-                      //     text: 'Department'),
-
-                      const SizedBox(height: 20.0),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: DefaultButton(
-                            onPressed: () {
-                              _updateInfo();
+                userType == 'student'
+                    ? FutureBuilder(
+                        future: RemoteServices.getStdDetails(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            var data = snapshot.data![0];
+                            return Column(
+                              children: [
+                                Column(
+                                  children: [
+                                    data.profilePicMem.isEmpty
+                                        ? ClipOval(
+                                            child: Image.asset(
+                                                "assets/images/avatar.jpg",
+                                                width: 170,
+                                                height: 170,
+                                                fit: BoxFit.cover))
+                                        : ClipOval(
+                                            child: Image.memory(
+                                                data.profilePicMem,
+                                                width: 170,
+                                                height: 170,
+                                                fit: BoxFit.cover)),
+                                    DefaultText(
+                                      size: 25.0,
+                                      text: data.user.username,
+                                      color: Constants.primaryColor,
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(height: 20.0),
+                                Form(
+                                  key: _form,
+                                  child: Column(
+                                    children: [
+                                      DefaultTextFormField(
+                                        text: TextEditingController(
+                                            text:
+                                                "${data.user.firstName}  ${data.user.lastName}"),
+                                        fontSize: 18.0,
+                                        label: 'Name',
+                                        enabled: enable,
+                                        readOnly: false,
+                                        fillColor: fill,
+                                        validator: Constants.validator,
+                                        onSaved: (value) {
+                                          _name = value!;
+                                        },
+                                      ),
+                                      const SizedBox(height: 20.0),
+                                      DefaultTextFormField(
+                                        fontSize: 18.0,
+                                        label: 'Email Address',
+                                        enabled: enable,
+                                        readOnly: false,
+                                        fillColor: fill,
+                                        text: TextEditingController(
+                                            text: data.user.email),
+                                        validator: Constants.validator,
+                                        onSaved: (value) {
+                                          _email = value!;
+                                        },
+                                      ),
+                                      const SizedBox(height: 20.0),
+                                      DefaultTextFormField(
+                                        label: "Phone Number",
+                                        fontSize: 15.0,
+                                        enabled: enable,
+                                        readOnly: false,
+                                        fillColor: fill,
+                                        text: TextEditingController(
+                                            text: data.phoneNo),
+                                        validator: Constants.validator,
+                                        onSaved: (value) {
+                                          _phone = value!;
+                                        },
+                                      ),
+                                      const SizedBox(height: 20.0),
+                                      DefaultTextFormField(
+                                        label: "Department",
+                                        fontSize: 15.0,
+                                        text: TextEditingController(
+                                            text: data.departmentId),
+                                        enabled: enable,
+                                        readOnly: false,
+                                        fillColor: fill,
+                                        validator: Constants.validator,
+                                        onSaved: (value) {
+                                          _dept = value!;
+                                        },
+                                      ),
+                                      const SizedBox(height: 20.0),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: DefaultButton(
+                                            onPressed: () {
+                                              _updateInfo();
+                                            },
+                                            text: "UPDATE PROFILE",
+                                            textSize: 20.0),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                          return const CircularProgressIndicator();
+                        })
+                    : userType == 'industry_based_supervisor'
+                        ? FutureBuilder(
+                            future: RemoteServices.getIndProfile(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                var data = snapshot.data![0];
+                                return Column(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        data.profileNoMemory.isEmpty
+                                            ? ClipOval(
+                                                child: Image.asset(
+                                                    "assets/images/avatar.jpg",
+                                                    width: 170,
+                                                    height: 170,
+                                                    fit: BoxFit.cover))
+                                            : ClipOval(
+                                                child: Image.memory(
+                                                    data.profileNoMemory,
+                                                    width: 170,
+                                                    height: 170,
+                                                    fit: BoxFit.cover)),
+                                        DefaultText(
+                                          size: 25.0,
+                                          text: data.user.username,
+                                          color: Constants.primaryColor,
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20.0),
+                                    Form(
+                                      key: _form,
+                                      child: Column(
+                                        children: [
+                                          DefaultTextFormField(
+                                            text: TextEditingController(
+                                                text:
+                                                    "${data.user.firstName} ${data.user.lastName}"),
+                                            fontSize: 18.0,
+                                            label: 'Name',
+                                            enabled: enable,
+                                            readOnly: false,
+                                            fillColor: fill,
+                                            validator: Constants.validator,
+                                            onSaved: (value) {
+                                              _name = value!;
+                                            },
+                                          ),
+                                          const SizedBox(height: 20.0),
+                                          DefaultTextFormField(
+                                            fontSize: 18.0,
+                                            label: 'Email Address',
+                                            enabled: enable,
+                                            readOnly: false,
+                                            fillColor: fill,
+                                            text: TextEditingController(
+                                                text: data.user.email),
+                                            validator: Constants.validator,
+                                            onSaved: (value) {
+                                              _email = value!;
+                                            },
+                                          ),
+                                          const SizedBox(height: 20.0),
+                                          DefaultTextFormField(
+                                            label: "Phone Number",
+                                            fontSize: 15.0,
+                                            enabled: enable,
+                                            readOnly: false,
+                                            fillColor: fill,
+                                            text: TextEditingController(
+                                                text: data.phoneNo),
+                                            validator: Constants.validator,
+                                            onSaved: (value) {
+                                              _phone = value!;
+                                            },
+                                          ),
+                                          const SizedBox(height: 20.0),
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: DefaultButton(
+                                                onPressed: () {
+                                                  _updateInfo();
+                                                },
+                                                text: "UPDATE PROFILE",
+                                                textSize: 20.0),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
+                              return const CircularProgressIndicator();
                             },
-                            text: "UPDATE PROFILE",
-                            textSize: 20.0),
-                      ),
-                    ],
-                  ),
-                ),
+                          )
+                        : FutureBuilder(
+                            future: RemoteServices.getSchProfile(context),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                var data = snapshot.data![0];
+                                return Column(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        data.profilePicMemory.isEmpty
+                                            ? ClipOval(
+                                                child: Image.asset(
+                                                    "assets/images/avatar.jpg",
+                                                    width: 170,
+                                                    height: 170,
+                                                    fit: BoxFit.cover))
+                                            : ClipOval(
+                                                child: Image.memory(
+                                                    data.profilePicMemory,
+                                                    width: 170,
+                                                    height: 170,
+                                                    fit: BoxFit.cover)),
+                                        DefaultText(
+                                          size: 25.0,
+                                          text: data.user.username,
+                                          color: Constants.primaryColor,
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20.0),
+                                    Form(
+                                      key: _form,
+                                      child: Column(
+                                        children: [
+                                          DefaultTextFormField(
+                                            text: TextEditingController(
+                                                text:
+                                                    "${data.user.firstName} ${data.user.lastName}"),
+                                            fontSize: 18.0,
+                                            label: 'Name',
+                                            enabled: enable,
+                                            readOnly: false,
+                                            fillColor: fill,
+                                            validator: Constants.validator,
+                                            onSaved: (value) {
+                                              _name = value!;
+                                            },
+                                          ),
+                                          const SizedBox(height: 20.0),
+                                          DefaultTextFormField(
+                                            fontSize: 18.0,
+                                            label: 'Email Address',
+                                            enabled: enable,
+                                            readOnly: false,
+                                            fillColor: fill,
+                                            text: TextEditingController(
+                                                text: data.user.email),
+                                            validator: Constants.validator,
+                                            onSaved: (value) {
+                                              _email = value!;
+                                            },
+                                          ),
+                                          const SizedBox(height: 20.0),
+                                          DefaultTextFormField(
+                                            label: "Phone Number",
+                                            fontSize: 15.0,
+                                            enabled: enable,
+                                            readOnly: false,
+                                            fillColor: fill,
+                                            text: TextEditingController(
+                                                text: data.phoneNo),
+                                            validator: Constants.validator,
+                                            onSaved: (value) {
+                                              _phone = value!;
+                                            },
+                                          ),
+                                          const SizedBox(height: 20.0),
+                                          DefaultTextFormField(
+                                            label: "Department",
+                                            fontSize: 15.0,
+                                            text: TextEditingController(
+                                                text: data.departmentId),
+                                            enabled: enable,
+                                            readOnly: false,
+                                            fillColor: fill,
+                                            validator: Constants.validator,
+                                            onSaved: (value) {
+                                              _dept = value!;
+                                            },
+                                          ),
+                                          const SizedBox(height: 20.0),
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: DefaultButton(
+                                                onPressed: () {
+                                                  _updateInfo();
+                                                },
+                                                text: "UPDATE PROFILE",
+                                                textSize: 20.0),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
+                              return const CircularProgressIndicator();
+                            },
+                          ),
               ],
             ),
           ),

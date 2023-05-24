@@ -15,7 +15,7 @@ class DefaultTextFormField extends StatefulWidget {
   final int? maxLines;
   final String? label;
   final Color? fillColor;
-  // final keyboardInputType;
+  final keyboardInputType;
   final Function()? onTap;
 
   const DefaultTextFormField(
@@ -25,7 +25,7 @@ class DefaultTextFormField extends StatefulWidget {
       this.icon,
       // required this.onSaved,
       this.validator,
-      // required this.keyboardInputType,
+      this.keyboardInputType,
       this.maxLines,
       this.obscureText,
       required this.fontSize,
@@ -48,7 +48,7 @@ class _DefaultTextFormFieldState extends State<DefaultTextFormField> {
       enabled: widget.enabled,
       maxLines: widget.maxLines,
       readOnly: widget.readOnly,
-      // keyboardType: widget.keyboardInputType,
+      keyboardType: widget.keyboardInputType,
       validator: widget.validator,
       onSaved: widget.onSaved,
       decoration: InputDecoration(

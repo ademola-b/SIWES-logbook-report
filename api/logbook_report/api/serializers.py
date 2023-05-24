@@ -73,3 +73,11 @@ class GetLogbookEntrySerializer(serializers.ModelSerializer):
         if diagram.diagram.name:
             with default_storage.open(diagram.diagram.name, 'rb') as loadedfile:
                 return base64.b64encode(loadedfile.read())
+
+class EntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LogbookEntry
+        fields = ['week',
+                'entry_date', 
+                'title',
+                'description']

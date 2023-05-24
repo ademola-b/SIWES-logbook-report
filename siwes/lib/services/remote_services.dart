@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:siwes/models/entry_date_response.dart';
+import 'package:siwes/models/entry_report_response.dart';
 import 'package:siwes/models/ind_std_list.dart';
 import 'package:siwes/models/industry_supervisor_details.dart';
 import 'package:siwes/models/logbook_entry_response.dart';
@@ -360,6 +361,29 @@ class RemoteServices {
           content: DefaultText(
         size: 15.0,
         text: "Server Error: $e",
+      )));
+    }
+
+    return null;
+  }
+
+  static Future<List<EntryReportResponse>?> entryReport(
+      context, String from, String to) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var token = pref.getString('token');
+    try {
+      http.Response response = await http.get(
+          Uri.parse("$base_url/api/report/?from=$from&to=$to"),
+          headers: {"Authorization": "Token $token"});
+
+      if (response.statusCode == 200) {
+        return entryReportResponseFromJson(response.body);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: DefaultText(
+        size: 15.0,
+        text: "An error occurred: $e",
       )));
     }
 

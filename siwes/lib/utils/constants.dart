@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:siwes/models/entry_report_response.dart';
 import 'package:siwes/models/week_dates_response.dart';
 import 'package:siwes/services/remote_services.dart';
 import 'package:siwes/utils/defaultText.dart';
@@ -42,7 +43,8 @@ class Constants {
     await pref.clear();
   }
 
-  static Future<dynamic> DialogBox(context, String? text, Color? color, IconData? icon) {
+  static Future<dynamic> DialogBox(
+      context, String? text, Color? color, IconData? icon) {
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -89,7 +91,8 @@ class Constants {
     return dir!.path;
   }
 
-  static Future<bool> generateCSV(List<dynamic>? stdRepo, String file_name, context) async {
+  static Future<bool> generateCSV(
+      List<dynamic>? stdRepo, String file_name, context) async {
     try {
       List<List<String>> csvData = [
         <String>[
@@ -100,6 +103,32 @@ class Constants {
               item.user.username,
               "${item.user.firstName} ${item.user.lastName}",
             ])
+      ];
+      String csv = const ListToCsvConverter().convert(csvData);
+
+      // final String dir = (await getExternalStorageDirectory())!.path;
+      final String dir = (await getDownloadPath(context));
+      final String path = "$dir/$file_name.csv";
+      // print(path);
+      final File file = File(path);
+
+      await file.writeAsString(csv);
+
+      return true;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: DefaultText(size: 15.0, text: "An error Occurred: $e")));
+      return false;
+    }
+  }
+
+  static Future<bool> generateEntryCSV(
+      List<EntryReportResponse>? entryRepo, String file_name, context) async {
+    try {
+      List<List<String>> csvData = [
+        <String>['Week', 'Entry Date', 'Title', 'Description'],
+        ...entryRepo!.map((item) =>
+            ["${item.week}", "${item.entryDate}", item.title, item.description])
       ];
       String csv = const ListToCsvConverter().convert(csvData);
 

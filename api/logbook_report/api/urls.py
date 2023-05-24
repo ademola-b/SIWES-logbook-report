@@ -10,5 +10,6 @@ urlpatterns = [
     path('logbook_entry/', views.LogbookEntryView.as_view(), name='logbook_entry'),
     path('entry_date/<int:student>/<str:date>/', views.LogbookWithDate.as_view(), name='entry_with_date'),
     path('week_comment/<int:pk>/update/', views.UpdateEntryWithComment.as_view(), name='update_entry'),
+    path('report/', views.GenerateEntryReport.as_view(), name='Report'),
 
 ]

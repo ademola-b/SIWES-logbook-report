@@ -12,7 +12,7 @@ from students.models import Student
 from . models import ProgramDate, WeekDates, LogbookEntry, WeekComment
 from . serializers import (ProgramDateSerializer, WeekDateSerializer, 
                            WeekCommentSerializer, LogbookEntrySerializer, 
-                           GetLogbookEntrySerializer)
+                           GetLogbookEntrySerializer, EntrySerializer)
 # Create your views here.
 def generate_date(start_date, end_date):
     dates = pandas.date_range(start_date, end_date).strftime('%Y-%m-%d').tolist()
@@ -108,10 +108,8 @@ class LogbookWithDate(ListAPIView):
         if student_id and date:
             qs = qs.filter(entry_date = date, student = student_id)
             return qs            
-        
         elif date is None:
             return LogbookEntry.objects.none()
-            
 
         # if student_id and date:
         #     qs = qs.filter(entry_date = date)
@@ -127,7 +125,25 @@ class LogbookWithDate(ListAPIView):
         #     return LogbookEntry.objects.none()
             
         return qs
+
+class GenerateEntryReport(ListAPIView):
+    queryset = LogbookEntry.objects.all()
+    serializer_class = EntrySerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        request = self.request
+        user = request.user
+        from_date = self.request.query_params.get("from")
+        to_date = self.request.query_params.get("to")
+
+        if not user.is_authenticated:
+            return LogbookEntry.objects.none()
+        if user.user_type == 'student':
+            return LogbookEntry.objects.filter(student = request.user.student, entry_date__range = (from_date, to_date))
+        return None
     
+
 class UpdateEntryWithComment(RetrieveUpdateAPIView):
     queryset = WeekComment
     serializer_class = WeekCommentSerializer

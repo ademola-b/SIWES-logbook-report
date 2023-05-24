@@ -58,6 +58,7 @@ class Constants {
                       text: text!,
                       color: Colors.white,
                       align: TextAlign.center,
+                      weight: FontWeight.bold,
                     ),
                   ],
                 ),

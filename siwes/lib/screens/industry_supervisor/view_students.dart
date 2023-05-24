@@ -1,6 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
+
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:siwes/models/ind_std_list.dart';
 import 'package:siwes/screens/industry_supervisor/navbar.dart';
 import 'package:siwes/services/remote_services.dart';
@@ -17,6 +23,7 @@ class IndStudent extends StatefulWidget {
 
 class _IndStudentState extends State<IndStudent> {
   List<IndStdList>? indStd = [];
+  List<IndStdList>? stdRepo = [];
 
   Future<List<IndStdList>?> _getIndStdList() async {
     List<IndStdList>? stdL = await RemoteServices.getIndStdList();
@@ -26,6 +33,52 @@ class _IndStudentState extends State<IndStudent> {
       });
     }
     return null;
+  }
+
+  Future<String> getDownloadPath() async {
+    Directory? dir;
+    try {
+      Platform.isIOS
+          ? dir = await getApplicationDocumentsDirectory()
+          : dir = Directory('/storage/emulated/0/Download');
+      if (!await dir.exists()) dir = await getExternalStorageDirectory();
+    } catch (err, stack) {
+      print("Cannot get download folder");
+    }
+
+    print("Saved Dir: ${dir!.path}");
+    return dir.path;
+  }
+
+  Future<bool> _generateCSV() async {
+    try {
+      await getDownloadPath();
+      List<List<String>> csvData = [
+        <String>[
+          'Registration No',
+          'Full Name',
+        ],
+        ...stdRepo!.map((item) => [
+              item.user.username,
+              "${item.user.firstName} ${item.user.lastName}",
+            ])
+      ];
+      String csv = const ListToCsvConverter().convert(csvData);
+
+      // final String dir = (await getExternalStorageDirectory())!.path;
+      final String dir = (await getDownloadPath());
+      final String path = "$dir/students_list.csv";
+      print(path);
+      final File file = File(path);
+
+      await file.writeAsString(csv);
+
+      return true;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: DefaultText(size: 15.0, text: "An error Occurred: $e")));
+      return false;
+    }
   }
 
   @override
@@ -107,7 +160,19 @@ class _IndStudentState extends State<IndStudent> {
                             SizedBox(
                                 width: MediaQuery.of(context).size.width,
                                 child: DefaultButton(
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      await _generateCSV()
+                                          ? Constants.DialogBox(
+                                              context,
+                                              "Students List Exported",
+                                              Constants.primaryColor,
+                                              Icons.info_outline_rounded)
+                                          : Constants.DialogBox(
+                                              context,
+                                              "An Error Occurred",
+                                              Colors.red,
+                                              Icons.warning);
+                                    },
                                     text: "Export",
                                     textSize: 20.0)),
                           ],

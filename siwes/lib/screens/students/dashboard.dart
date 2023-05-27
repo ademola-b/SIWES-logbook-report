@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:siwes/models/student_details.dart';
 import 'package:siwes/models/user_response.dart';
 import 'package:siwes/models/week_dates_response.dart';
@@ -73,7 +74,9 @@ class _StudentDashboardState extends State<StudentDashboard> {
                     const Spacer(),
                     DefaultText(
                       size: 20.0,
-                      text: "Week \n Number",
+                      align: TextAlign.center,
+                      text:
+                          "Date \n ${DateFormat("dd/MM/yyyy").format(DateTime.now())}",
                       color: Constants.primaryColor,
                     ),
                   ],

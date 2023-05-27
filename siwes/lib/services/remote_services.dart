@@ -49,7 +49,7 @@ class RemoteServices {
     try {
       var response =
           await http.get(userUrl, headers: {"Authorization": "Token $token"});
-      print(response);
+      // print(response);
       return UserResponse.fromJson(jsonDecode(response.body));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

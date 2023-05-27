@@ -50,7 +50,6 @@ class _IndPlacementCentreState extends State<IndPlacementCentre> {
         await _remote.getPlacementCentre(context);
     if (_placement != null) {
       setState(() {
-         
         nameController.text = _placement[0].name;
         longController.text = _placement[0].longitude;
         latController.text = _placement[0].latitude;
@@ -144,7 +143,7 @@ class _IndPlacementCentreState extends State<IndPlacementCentre> {
                       fontSize: 15.0,
                       label: 'Name',
                       text: nameController,
-                       readOnly: false,
+                      readOnly: false,
                       // hintText: 'Name',
                     ),
                     const SizedBox(height: 20.0),
@@ -152,21 +151,24 @@ class _IndPlacementCentreState extends State<IndPlacementCentre> {
                       fontSize: 15.0,
                       label: 'Longitude',
                       text: longController,
-                      enabled: false,  readOnly: false,
+                      enabled: false,
+                      readOnly: false,
                     ),
                     const SizedBox(height: 20.0),
                     DefaultTextFormField(
                       label: "Latitude",
                       fontSize: 15.0,
                       text: latController,
-                      enabled: false,  readOnly: false,
+                      enabled: false,
+                      readOnly: false,
                     ),
                     const SizedBox(height: 20.0),
                     DefaultTextFormField(
                       label: "Radius",
                       fontSize: 15.0,
                       text: radiusController,
-                      enabled: false,  readOnly: false,
+                      enabled: false,
+                      readOnly: false,
                     ),
                     const SizedBox(height: 20.0),
                     SizedBox(
@@ -186,8 +188,8 @@ class _IndPlacementCentreState extends State<IndPlacementCentre> {
                 ),
               ),
               const SizedBox(height: 20.0),
-              const DefaultText(
-                  size: 15.0, text: "Show map if placement is set Or edit")
+              // const DefaultText(
+              //     size: 15.0, text: "Show map if placement is set Or edit")
             ],
           ),
         ),

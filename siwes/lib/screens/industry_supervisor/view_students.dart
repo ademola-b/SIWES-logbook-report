@@ -29,6 +29,7 @@ class _IndStudentState extends State<IndStudent> {
     List<IndStdList>? stdL = await RemoteServices.getIndStdList();
     if (stdL != null) {
       setState(() {
+        indStd = [];
         indStd = [...indStd!, ...stdL];
       });
     }
@@ -37,7 +38,7 @@ class _IndStudentState extends State<IndStudent> {
 
   Future<bool> exportList() async {
     try {
-      await Constants.generateCSV(stdRepo, "student_list", context);
+      await Constants.generateCSV(indStd, "student_list", context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: DefaultText(size: 15.0, text: "An error occurred: $e")));

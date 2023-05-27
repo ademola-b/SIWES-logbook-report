@@ -43,8 +43,6 @@ class _LoginState extends State<Login> {
     });
   }
 
-
-
   getProfiles() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     List<SchoolSupervisorProfile>? schProfile =
@@ -246,19 +244,18 @@ class _LoginState extends State<Login> {
                   const SizedBox(height: 10.0),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text("Trouble Logging in ?"),
+                        const DefaultText(
+                            text: "Trouble Logging in? ", size: 15.0),
                         InkWell(
                           onTap: () {},
-                          child: const Text(
-                            'Contact the School Management',
-                            style: TextStyle(
-                              color: Colors.amber,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold,
-                            ),
+                          child: const DefaultText(
+                            text: 'Contact the School Management',
+                            size: 15.0,
+                            color: Colors.amber,
                           ),
                         ),
                       ],

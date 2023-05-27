@@ -35,6 +35,7 @@ class _LogEntryState extends State<LogEntry> {
   TextEditingController? descController = TextEditingController();
 
   String? _latitude, _longitude, _radius;
+  Stream<GeofenceStatus>? geofenceBroadcastStatusStream;
   StreamSubscription<GeofenceStatus>? geofenceStatusStream;
 
   String geofenceStatus = '';
@@ -92,78 +93,84 @@ class _LogEntryState extends State<LogEntry> {
   }
 
   startStreaming() async {
+    // await stopStreaming();
+
     EasyGeofencing.startGeofenceService(
         pointedLatitude: _latitude,
         pointedLongitude: _longitude,
         radiusMeter: _radius,
         eventPeriodInSeconds: 5);
+    // await geofenceStatusStream?.cancel();
 
     geofenceStatusStream ??=
         EasyGeofencing.getGeofenceStream()?.listen((GeofenceStatus status) {
       print(status.toString());
-      print("Status - ${status.runtimeType}");
+      // print("Status - ${status.runtimeType}");
       setState(() {
         geofenceStatus = status.toString();
       });
     });
   }
 
-  stopStreaming() {
-    // if (mounted){
-    //   setState(() {
-
-    // });
-    // }
-    EasyGeofencing.stopGeofenceService();
+  stopStreaming() async {
     if (geofenceStatusStream == null) return;
     geofenceStatusStream!.cancel();
-    geofenceStatusStream = null;
+    EasyGeofencing.stopGeofenceService();
+    // geofenceStatusStream = null;
     print('Streaming stopped');
+    print(geofenceStatusStream.toString());
   }
 
   getLocation() async {
     await _getStdDetails();
-    await startStreaming();
+    startStreaming();
     // stopStreaming();
   }
 
+  @override
   void _submit(int week, String entry_date, String title, String description,
       File? diagram) async {
     if (widget.arguments['comment_filled']) {
-      Constants.DialogBox(
+      await stopStreaming();
+      await Constants.DialogBox(
           context,
           "You can't submit logbook because both supervisors have commented",
           Colors.amber,
           Icons.dangerous_rounded);
     } else {
-      await getLocation();
+      // await getLocation();
       if (geofenceStatus == 'GeofenceStatus.exit') {
-        Constants.DialogBox(context, "You are not in the designated area",
+        await stopStreaming();
+        await Constants.DialogBox(context, "You are not in the designated area",
             Colors.red[900], Icons.location_off_outlined);
+        Navigator.pop(context);
       } else if (geofenceStatus == 'GeofenceStatus.enter') {
         LogbookEntry? _logEntry = await RemoteServices.PostLogEntry(
             context, week.toString(), entry_date, title, description, diagram);
-        await Constants.DialogBox(
-            context, "Entry Saved", Colors.white, Icons.check_circle_outline);
-
+        await stopStreaming();
+        await Constants.DialogBox(context, "Entry Saved",
+            Constants.primaryColor, Icons.check_circle_outline);
         Navigator.pop(context);
       }
     }
   }
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    stopStreaming();
+  void initState() {
+    getLocation();
+    // print("widget data: ${widget.arguments}");
+    titleController!.text = widget.arguments['title'];
+    descController!.text = widget.arguments['desc'];
+    super.initState();
   }
 
   @override
-  void initState() {
-    print("widget data: ${widget.arguments}");
-    super.initState();
-    titleController!.text = widget.arguments['title'];
-    descController!.text = widget.arguments['desc'];
+  void dispose() {
+    // TODO: implement dispose
+
+    super.dispose();
+    stopStreaming();
+    print("disposed");
   }
 
   @override
@@ -342,7 +349,7 @@ class _LogEntryState extends State<LogEntry> {
                         },
                         text: 'SUBMIT',
                         textSize: 20.0,
-                      ))
+                      )),
                 ],
               )),
             ],

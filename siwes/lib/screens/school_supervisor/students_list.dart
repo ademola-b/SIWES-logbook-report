@@ -141,8 +141,8 @@ class _StudentsListState extends State<StudentsList> {
                                     );
                                   },
                                 ),
-                                const Spacer(),
-                                // const SizedBox(height: 20.0),
+                                
+                                const SizedBox(height: 20.0),
                                 SizedBox(
                                     width: MediaQuery.of(context).size.width,
                                     child: DefaultButton(

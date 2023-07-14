@@ -68,7 +68,7 @@ class _LoginState extends State<Login> {
           [indProfile[0].user.username, indProfile[0].user.email, picEncode]);
     }
     // else {
-    //   Constants.DialogBox(
+    //   Constants.dialogBox(
     //       context, "Profile not found", Colors.white, Icons.warning_rounded);
     // }
   }
@@ -177,7 +177,7 @@ class _LoginState extends State<Login> {
                       filled: true,
                       prefixIcon: const Icon(Icons.person),
                       prefixIconColor: Constants.primaryColor,
-                      hintText: "Username/Email",
+                      hintText: "Username/",
                     ),
                   ),
                   const SizedBox(height: 25.0),

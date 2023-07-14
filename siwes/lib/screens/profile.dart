@@ -197,7 +197,13 @@ class _ProfileState extends State<Profile> {
                                             MediaQuery.of(context).size.width,
                                         child: DefaultButton(
                                             onPressed: () {
-                                              _updateInfo();
+                                              Constants.dialogBox(
+                                                  context,
+                                                  "Profile updating is not available at the moment",
+                                                  Constants.primaryColor,
+                                                  Icons.info_outline);
+                                              Navigator.pop(context);
+                                              // _updateInfo();
                                             },
                                             text: "UPDATE PROFILE",
                                             textSize: 20.0),

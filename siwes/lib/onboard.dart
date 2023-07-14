@@ -73,8 +73,7 @@ class _OnBoardState extends State<OnBoard> {
                     ),
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0))),
-                    backgroundColor:
-                        MaterialStateProperty.all(Constants.primaryColor),
+                    backgroundColor: MaterialStateProperty.all(Constants.backgroundColor),
                   ),
                   onPressed: () {
                     Navigator.popAndPushNamed(context, '/login');

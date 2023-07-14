@@ -17,17 +17,23 @@ class IndPlacementCentre extends StatefulWidget {
 
 class _IndPlacementCentreState extends State<IndPlacementCentre> {
   RemoteServices _remote = RemoteServices();
-  Position? _position;
+  // Position? _position;
   TextEditingController nameController = TextEditingController();
   TextEditingController longController = TextEditingController();
   TextEditingController latController = TextEditingController();
   TextEditingController radiusController = TextEditingController();
+  Position? position;
+  bool isReady = false;
 
-  Future _getCurrentLocation() async {
-    Position position = await _determinePosition();
-    setState(() {
-      _position = position;
-    });
+  Future getCurrentPosition() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    return position;
+
+    // setState(() {
+    //   _position = position;
+    // });
   }
 
   Future<Position> _determinePosition() async {
@@ -124,10 +130,18 @@ class _IndPlacementCentreState extends State<IndPlacementCentre> {
                 children: [
                   DefaultButton(
                       onPressed: () async {
-                        await _getCurrentLocation();
-                        longController.text = _position!.longitude.toString();
-                        latController.text = _position!.latitude.toString();
-                        radiusController.text = "100";
+                        Position? _position = await getCurrentPosition();
+                        if (_position != null) {
+                          longController.text = _position!.longitude.toString();
+                          latController.text = _position!.latitude.toString();
+                          radiusController.text = "100";
+                        } else {
+                          Constants.dialogBox(
+                              context,
+                              "Unable to get location, check if location is enabled or restart the app",
+                              Colors.amber,
+                              Icons.location_disabled);
+                        }
                       },
                       text: "Get Coordinates",
                       textSize: 15.0),

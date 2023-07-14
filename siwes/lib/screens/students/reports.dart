@@ -86,9 +86,11 @@ class _ReportsState extends State<Reports> {
                       child: DefaultButton(
                           onPressed: () async {
                             Constants.generateEntryCSV(
-                                entryRepo, "entry_report_${_fromDate.text}_${_toDate.text}", context);
+                                entryRepo,
+                                "entry_report_${_fromDate.text}_${_toDate.text}",
+                                context);
                             Navigator.pop(context);
-                            await Constants.DialogBox(
+                            await Constants.dialogBox(
                                 context,
                                 "Report Exported",
                                 Constants.primaryColor,
@@ -104,7 +106,7 @@ class _ReportsState extends State<Reports> {
             );
           });
     } else if (entryReport != null && entryReport.isEmpty) {
-      Constants.DialogBox(context, "No Record for the selected dates",
+      Constants.dialogBox(context, "No Record for the selected dates",
           Constants.primaryColor, Icons.info_outline_rounded);
     }
   }

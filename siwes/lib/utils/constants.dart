@@ -43,7 +43,7 @@ class Constants {
     await pref.clear();
   }
 
-  static Future<dynamic> DialogBox(
+  static Future<dynamic> dialogBox(
       context, String? text, Color? color, IconData? icon) {
     return showDialog(
         context: context,
@@ -60,7 +60,7 @@ class Constants {
                     ),
                     const SizedBox(height: 20.0),
                     DefaultText(
-                      size: 20.0,
+                      size: 15.0,
                       text: text!,
                       color: Colors.white,
                       align: TextAlign.center,

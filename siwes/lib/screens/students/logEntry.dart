@@ -132,7 +132,7 @@ class _LogEntryState extends State<LogEntry> {
       File? diagram) async {
     if (widget.arguments['comment_filled']) {
       await stopStreaming();
-      await Constants.DialogBox(
+      await Constants.dialogBox(
           context,
           "You can't submit logbook because both supervisors have commented",
           Colors.amber,
@@ -141,14 +141,14 @@ class _LogEntryState extends State<LogEntry> {
       // await getLocation();
       if (geofenceStatus == 'GeofenceStatus.exit') {
         await stopStreaming();
-        await Constants.DialogBox(context, "You are not in the designated area",
+        await Constants.dialogBox(context, "You are not in the designated area",
             Colors.red[900], Icons.location_off_outlined);
         Navigator.pop(context);
       } else if (geofenceStatus == 'GeofenceStatus.enter') {
         LogbookEntry? _logEntry = await RemoteServices.PostLogEntry(
             context, week.toString(), entry_date, title, description, diagram);
         await stopStreaming();
-        await Constants.DialogBox(context, "Entry Saved",
+        await Constants.dialogBox(context, "Entry Saved",
             Constants.primaryColor, Icons.check_circle_outline);
         Navigator.pop(context);
       }

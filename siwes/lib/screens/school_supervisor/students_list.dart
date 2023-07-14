@@ -103,8 +103,7 @@ class _StudentsListState extends State<StudentsList> {
                                     return Container(
                                       margin:
                                           const EdgeInsets.only(bottom: 10.0),
-                                      width:
-                                          MediaQuery.of(context).size.width,
+                                      width: MediaQuery.of(context).size.width,
                                       decoration: const BoxDecoration(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(20.0)),
@@ -135,25 +134,24 @@ class _StudentsListState extends State<StudentsList> {
                                           color: Colors.green,
                                           weight: FontWeight.w500,
                                         ),
-                                        trailing: const Icon(
-                                            Icons.arrow_forward_ios),
+                                        trailing:
+                                            const Icon(Icons.arrow_forward_ios),
                                       ),
                                     );
                                   },
                                 ),
-                                
                                 const SizedBox(height: 20.0),
                                 SizedBox(
                                     width: MediaQuery.of(context).size.width,
                                     child: DefaultButton(
                                         onPressed: () async {
                                           await exportList()
-                                              ? Constants.DialogBox(
+                                              ? Constants.dialogBox(
                                                   context,
                                                   "Students List Exported",
                                                   Constants.primaryColor,
                                                   Icons.info_outline_rounded)
-                                              : Constants.DialogBox(
+                                              : Constants.dialogBox(
                                                   context,
                                                   "An Error Occurred",
                                                   Colors.red,

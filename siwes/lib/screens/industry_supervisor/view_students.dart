@@ -128,12 +128,12 @@ class _IndStudentState extends State<IndStudent> {
                                 child: DefaultButton(
                                     onPressed: () async {
                                       await exportList()
-                                          ? Constants.DialogBox(
+                                          ? Constants.dialogBox(
                                               context,
                                               "Students List Exported",
                                               Constants.primaryColor,
                                               Icons.info_outline_rounded)
-                                          : Constants.DialogBox(
+                                          : Constants.dialogBox(
                                               context,
                                               "An Error Occurred",
                                               Colors.red,
